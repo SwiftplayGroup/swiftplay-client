@@ -21,7 +21,7 @@ export default function AboutPage() {
         <AboutUsCard
           name="Aiden Jastrzembski"
           title="Front End Lead"
-          description="Aiden is the front-end lead at Swiftplay. He is a full time Front End Developer at Atomic Industries and has built custom ERP systems utilizing unique data models."
+          description="Aiden is the front-end lead at Swiftplay. He is a full time Full Stack Engineer at Atomic Industries and has built custom ERP systems utilizing unique data models."
           githubUrl="https://github.com/aidenjastrzembski"
         />
         <AboutUsCard
@@ -41,12 +41,6 @@ export default function AboutPage() {
           title="Back End Developer"
           description="Bennett is a back-end developer at Swiftplay. He is a Computer Science major at Central Michigan University and has experience with Python, SQL, and Java."
           githubUrl="https://github.com/bennettELHS"
-        />
-        <AboutUsCard
-          name="Shannon Burkel"
-          title="Strategic Planner"
-          description="Shannon is a strategic planner at Swiftplay. She has helped build and manage the pipelines here at Swiftplay."
-          githubUrl="https://github.com/sbj1500"
         />
       </div>
       <PlaceholdersAndVanishInputDemo />
