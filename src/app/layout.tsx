@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import NavbarDemo from "~/components/example/navbar-menu-demo";
 
 export const metadata: Metadata = {
   title: "Script",
@@ -15,13 +15,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-        >
-          {children}
-        </ThemeProvider>
+        <NavbarDemo />
+        {children}
       </body>
     </html>
   );

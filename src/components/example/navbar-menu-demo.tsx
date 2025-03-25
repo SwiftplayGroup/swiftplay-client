@@ -34,7 +34,7 @@ export default function NavbarDemo() {
 function getCookie(name: string) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  return parts.length === 2 ? parts.pop()?.split(";").shift() ?? null : null;
+  return parts.length === 2 ? (parts.pop()?.split(";").shift() ?? null) : null;
 }
 
 function Navbar({ className }: { className?: string }) {
@@ -44,13 +44,13 @@ function Navbar({ className }: { className?: string }) {
     "signin" | "register"
   >("signin");
   const [sessionToken, setSessionToken] = useState<string | null>(
-    getCookie("sessionToken")
+    getCookie("sessionToken"),
   );
   const [accountID, setAccountID] = useState<string | null>(
-    getCookie("accountID")
+    getCookie("accountID"),
   );
   const [sessionID, setSessionID] = useState<string | null>(
-    getCookie("sessionID")
+    getCookie("sessionID"),
   );
 
   useEffect(() => {
@@ -74,7 +74,7 @@ function Navbar({ className }: { className?: string }) {
                   "account-id": accountID,
                 },
                 method: "DELETE",
-              }
+              },
             );
 
             if (!response.ok) {
@@ -140,7 +140,7 @@ function Navbar({ className }: { className?: string }) {
             </NavigationMenuList>
           </NavigationMenu>
         ) : (
-          <HoveredLink href="/auth">Sign in</HoveredLink>
+          <HoveredLink href="/login">Sign in</HoveredLink>
         )}
       </Menu>
     </div>
