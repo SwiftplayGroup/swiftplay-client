@@ -1,20 +1,20 @@
-# Use the official Node.js image as the base image
+# Use Node.js as base image
 FROM node:18
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy package.json and package-lock.json (or yarn.lock)
+COPY package.json package-lock.json* ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the entire project to the container
 COPY . .
 
-# Expose the port the app runs on
+# Expose port 3000 for the Next.js dev server
 EXPOSE 3000
 
-# Command to run the application
+# Start the Next.js development server
 CMD ["npm", "run", "dev"]

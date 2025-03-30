@@ -43,15 +43,9 @@ function Navbar({ className }: { className?: string }) {
   const [authenticatorMode, setAuthenticatorMode] = useState<
     "signin" | "register"
   >("signin");
-  const [sessionToken, setSessionToken] = useState<string | null>(
-    getCookie("sessionToken")
-  );
-  const [accountID, setAccountID] = useState<string | null>(
-    getCookie("accountID")
-  );
-  const [sessionID, setSessionID] = useState<string | null>(
-    getCookie("sessionID")
-  );
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [accountID, setAccountID] = useState<string | null>(null);
+  const [sessionID, setSessionID] = useState<string | null>(null);
 
   useEffect(() => {
     setSessionToken(getCookie("sessionToken"));
@@ -140,7 +134,7 @@ function Navbar({ className }: { className?: string }) {
             </NavigationMenuList>
           </NavigationMenu>
         ) : (
-          <HoveredLink href="/auth">Sign in</HoveredLink>
+          <HoveredLink href="/login">Sign in</HoveredLink>
         )}
       </Menu>
     </div>
