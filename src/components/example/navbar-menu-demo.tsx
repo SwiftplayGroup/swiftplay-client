@@ -34,7 +34,7 @@ export default function NavbarDemo() {
 function getCookie(name: string) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  return parts.length === 2 ? (parts.pop()?.split(";").shift() ?? null) : null;
+  return parts.length === 2 ? parts.pop()?.split(";").shift() ?? null : null;
 }
 
 function Navbar({ className }: { className?: string }) {
@@ -43,15 +43,9 @@ function Navbar({ className }: { className?: string }) {
   const [authenticatorMode, setAuthenticatorMode] = useState<
     "signin" | "register"
   >("signin");
-  const [sessionToken, setSessionToken] = useState<string | null>(
-    getCookie("sessionToken"),
-  );
-  const [accountID, setAccountID] = useState<string | null>(
-    getCookie("accountID"),
-  );
-  const [sessionID, setSessionID] = useState<string | null>(
-    getCookie("sessionID"),
-  );
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [accountID, setAccountID] = useState<string | null>(null);
+  const [sessionID, setSessionID] = useState<string | null>(null);
 
   useEffect(() => {
     setSessionToken(getCookie("sessionToken"));
@@ -74,7 +68,7 @@ function Navbar({ className }: { className?: string }) {
                   "account-id": accountID,
                 },
                 method: "DELETE",
-              },
+              }
             );
 
             if (!response.ok) {

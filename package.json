@@ -31,7 +31,7 @@
     "@tanstack/react-query-devtools": "^5.59.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "framer-motion": "^11.13.1",
+    "framer-motion": "^11.18.2",
     "lucide-react": "^0.464.0",
     "mini-svg-data-uri": "^1.4.4",
     "motion": "^12.6.2",
