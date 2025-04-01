@@ -8,7 +8,23 @@ import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
 export default function SignupFormPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+    //Someone put the api call here for signing up, thanks! !!!11
+    // Example:
+    // const response = await fetch('/api/signup', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     email: emailInput.value,
+    //     password: passwordInput.value,
+    //   }),
+    // });
+    // if (response.ok) {
+    //   // Handle successful signup
+    // } else {
+    //   // Handle error
+    // }
   };
   return (
     <div className="shadow-input mx-auto w-full mt-32 max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
