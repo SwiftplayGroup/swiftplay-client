@@ -3,7 +3,7 @@
 import { Box, Lock, Search, Settings, Sparkles } from "lucide-react";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 
-export function GlowingEffectDemo() {
+export function GlowingEffectBento() {
   return (
     <ul className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 md:grid-rows-3 lg:gap-4 xl:max-h-[34rem] xl:grid-rows-2">
       <GridItem

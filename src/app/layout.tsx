@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavbarDemo from "~/components/example/navbar-menu-demo";
+import NavbarDemo from "~/components/aceternity/navbar-menu";
 
 export const metadata: Metadata = {
   title: "Script",

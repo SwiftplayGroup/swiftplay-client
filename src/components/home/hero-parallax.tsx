@@ -2,7 +2,7 @@
 import React from "react";
 import { HeroParallax } from "../ui/hero-parallax";
 
-export default function HeroParallaxDemo() {
+export default function HeroParallaxSection() {
   return <HeroParallax products={products} />;
 }
 // eslint-disable-next-line react-refresh/only-export-components
