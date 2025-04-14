@@ -103,16 +103,16 @@ function Navbar({ className }: { className?: string }) {
             <HoveredLink href="/careers">Careers</HoveredLink>
           </div>
         </MenuItem>
-        <MenuItem setActive={setActive} active={active} item="Players">
-          <div className="  text-sm grid grid-cols-2 gap-10 p-4">
-            <HoveredLink href="/leaderboard">All players</HoveredLink>
-          </div>
-        </MenuItem>
         <MenuItem setActive={setActive} active={active} item="Speedruns">
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/leaderboard">Leaderboard</HoveredLink>
             <HoveredLink href="/account">Personal</HoveredLink>
             <HoveredLink href="/account">Account</HoveredLink>
+          </div>
+        </MenuItem>
+        <MenuItem setActive={setActive} active={active} item="Forums">
+          <div className="flex flex-col space-y-4 text-sm">
+            <HoveredLink href="/forums">All Forums</HoveredLink>
           </div>
         </MenuItem>
         {sessionToken ? (

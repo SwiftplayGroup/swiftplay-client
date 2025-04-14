@@ -16,7 +16,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className="dark">
       <body>
         <NavbarDemo />
-        {children}
+        <div className="h-[50rem] w-full dark:bg-black bg-white  dark:bg-dot-white/[0.2] bg-dot-black/[0.2]">
+            {children}
+        </div>
       </body>
     </html>
   );
