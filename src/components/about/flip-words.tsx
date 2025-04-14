@@ -2,7 +2,7 @@ import React from "react";
 import { FlipWords } from "../ui/flip-words";
 import { Highlight } from "../ui/hero-highlight";
 
-export function FlipWordsDemo() {
+export function FlipWordsSection() {
   const words = ["modern", "functional", "stunning", "unique"];
 
   return (

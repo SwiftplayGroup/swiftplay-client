@@ -1,6 +1,6 @@
 import React from "react";
-import { PlaceholdersAndVanishInputDemo } from "~/components/example/contact-us-input";
-import { FlipWordsDemo } from "~/components/example/flip-words-demo";
+import { PlaceholdersAndVanishInputDemo } from "~/components/contact/contact-us-input";
+import { FlipWordsSection } from "~/components/about/flip-words";
 import { AboutUsCard } from "~/components/ui/about-us-card";
 
 export default function AboutPage() {
@@ -8,7 +8,7 @@ export default function AboutPage() {
     <div className="w-full dark:bg-black bg-white  dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative ">
       {/* Radial gradient for the container to give a faded look */}
       <div className="absolute pointer-events-none inset-0  dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_50%,black)]"></div>
-      <FlipWordsDemo />
+      <FlipWordsSection />
       <div className="flex flex-wrap justify-center gap-4">
         <AboutUsCard
           name="Christian Toney"
