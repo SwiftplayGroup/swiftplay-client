@@ -1,8 +1,8 @@
-import ForumPage from "./forums";
+import ForumsPage from "./forums";
 export default function Page(){
     return(
         <div>
-            <ForumPage/ >
+            <ForumsPage/ >
         </div>
     )
 }
