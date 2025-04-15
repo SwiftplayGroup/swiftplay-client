@@ -20,11 +20,11 @@ export default function Search() {
   );
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center -mt-60">
       <NavbarDemo />
 
       {/* Title Section */}
-      <div className="w-full mb-2">
+      <div className="mt-40">
         <HeroHighlight>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -46,7 +46,7 @@ export default function Search() {
           placeholder="Search games..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="p-3 w-full max-w-lg rounded-xl text-black shadow-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+          className="p-3 w-full max-w-lg rounded-xl text-black shadow-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition -mt-40"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
