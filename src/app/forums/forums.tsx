@@ -55,10 +55,8 @@ export default function ForumsPage() {
                   <CardHeader className="pb-2">
                     <CardTitle className="text-xl">{forum.name}</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-sm text-gray-400">
+                  <CardContent className="text-sm text-gray-400">
                       {forum.description}
-                    </CardDescription>
                   </CardContent>
                 </Card>
               </Link>

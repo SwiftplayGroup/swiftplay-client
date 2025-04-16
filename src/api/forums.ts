@@ -5,7 +5,9 @@ export const getForums = async () => {
   return response.data;
 };
 
-export const getForumThreads = async (forumID: string) => {
-  const response = await api.get(`/forums/${forumID}/posts`);
+export const getPosts = async (forumID: string) => {
+  const response = await api.get(`/forums/${forumID}/posts?threads_only=true`);
   return response.data;
-};
+}
+
+

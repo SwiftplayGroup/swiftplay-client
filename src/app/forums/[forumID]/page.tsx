@@ -1,6 +1,9 @@
-import { getForumThreads, getForums } from "@/api/forums";
+import { getPosts, getForums } from "@/api/forums";
 import { Forum } from "@/types/forums";
+import { Post } from "@/types/posts";
+import { PostCard } from "@/components/forums/posts/post-card"
 
+// Maybe Christian should look at this. If we touch it, everything breaks and we don't know what it does.
 export async function generateStaticParams() {
   try {
     const forums = await getForums();
@@ -17,15 +20,18 @@ export default async function ForumPage({
 }: {
   params: { forumID: string };
 }) {
+  params = await params
+  const forumID = await params.forumID;
   try {
-    const forumID = await params; //await params to avoid disaster
-    const threads = await getForumThreads(forumID.forumID);
+    const posts = await getPosts(forumID);
 
     return (
-      <div className="h-[50rem] flex items-center justify-center">
-        <div className="text-white">
-          {threads.map((thread: Forum) => (
-            <div key={thread._id}>{thread._id}</div>
+      <div className="h-[50rem] pt-36">
+        <div className="text-white ">
+          {posts.map((post: Post) => (
+            <div key={post._id} className = "text-white ">
+              <PostCard {...post}/>
+            </div>
           ))}
         </div>
       </div>
