@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import NavbarDemo from "~/components/example/navbar-menu-demo";
 import { HeroHighlight, Highlight } from "~/components/ui/hero-highlight";
-
+import { Hexagon, Github, Twitter } from "lucide-react"
+import  Footer  from "~/components/ui/footer"
 const games = [
   { id: 1, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
   { id: 2, title: "God of War", cover: "https://cdn.mobygames.com/e7439ec0-ab80-11ed-aa5a-02420a0001a0.webp" },
@@ -85,6 +86,39 @@ export default function Search() {
           </AnimatePresence>
         </motion.div>
       </div>
+    <div className="w-full">
+      <Footer
+        logo={<Hexagon className="h-10 w-10" />}
+        brandName="Swiftplay"
+        socialLinks={[
+          {
+            icon: <Twitter className="h-5 w-5" />,
+            href: "https://twitter.com",
+            label: "Twitter",
+          },
+          {
+            icon: <Github className="h-5 w-5" />,
+            href: "https://github.com",
+            label: "GitHub",
+          },
+        ]}
+        mainLinks={[
+          { href: "/products", label: "Products" },
+          { href: "/about", label: "About" },
+          { href: "/forum", label: "Forum" },
+          { href: "/contact", label: "Contact" },
+        ]}
+        legalLinks={[
+          { href: "/privacy", label: "Privacy" },
+          { href: "/terms", label: "Terms" },
+        ]}
+        copyright={{
+          text: "© 2024 Swiftplay",
+          license: "All rights reserved",
+        }}
+      />
     </div>
+  </div>
+    
   );
 }
