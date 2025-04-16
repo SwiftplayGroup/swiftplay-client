@@ -4,6 +4,12 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { register } from "~/api/auth";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react";
 
 export default function SignupFormPage() {
   
@@ -11,6 +17,7 @@ export default function SignupFormPage() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [shouldProcessData, setShouldProcessData] = useState<boolean>(false);
+  const [error, setError] = useState(null);
 
   function handleSignUp(event: FormEvent) {
 
@@ -31,10 +38,11 @@ export default function SignupFormPage() {
 
           // Create the account.
           const accountData = await register(emailAddress, username, password);
+          console.log(accountData);
 
         } catch (error) {
 
-
+          // setError(error);
 
         }
 
@@ -50,6 +58,13 @@ export default function SignupFormPage() {
         Welcome to Swiftplay
       </h2>
       <p>Create an account to share your runs and join the community</p>
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Registration error</AlertTitle>
+        <AlertDescription>
+          Description
+        </AlertDescription>
+      </Alert>
       <form className="my-8" onSubmit={handleSignUp}>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
