@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import HeroParallaxDemo from "~/components/home/hero-parallax";
-import NavbarDemo from "~/components/aceternity/navbar-menu";
 import GoogleGeminiEffectDemo from "~/components/home/google-gemini-effect";
 import { HeroHighlight, Highlight } from "~/components/ui/hero-highlight";
 import { motion } from "framer-motion";
@@ -10,7 +9,6 @@ import { GlowingEffectBento } from "~/components/home/glowing-effect";
 export default function Page() {
   return (
     <div className="bg-black">
-      
       <div className="flex flex-col md:flex-row items-center justify-between w-full px-8 py-24">
         {/* Left Side: Title */}
         <div className="w-full md:w-1/2 flex justify-center">
@@ -21,9 +19,7 @@ export default function Page() {
               transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
               className="text-white px-4 md:text-4xl lg:text-5xl font-bold leading-relaxed lg:leading-snug text-center md:text-left"
             >
-              <div className="text-6xl mb-8">
-                Compete with
-              </div>
+              <div className="text-6xl mb-8">Compete with</div>
               <Highlight className="pb-2 text-black text-8xl dark:text-white">
                 Swiftplay
               </Highlight>
