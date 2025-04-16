@@ -1,51 +1,71 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
-import { getForums } from "@/api/forums"
-import { Forum } from "@/types/forums"
-import { Card, CardDescription, CardHeader } from "@/components/ui/card"
-import { DivideIcon } from "lucide-react";
+import { getForums } from "@/api/forums";
+import { Forum } from "@/types/forums";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Link from "next/link";
 
 export default function ForumsPage() {
-    const [forums, setForums] = useState<Forum[]>([]);
-    
-    useEffect(() => {
-        const fetchForums = async () => {
-          try {
-            const data = await getForums();
-            console.log("Forums fetched:", data);
-            setForums(data);
-          } catch (error) {
-            console.error("Error fetching forums:", error);
-          }
-        };
-        fetchForums();
-      }, []);
+  const [forums, setForums] = useState<Forum[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-    
+  useEffect(() => {
+    const fetchForums = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getForums();
+        setForums(data);
+      } catch (error) {
+        console.error("Error fetching forums:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchForums();
+  }, []);
 
-    return (
-        <div>
-            <div className="flex justify-center align-middle px-36">
-            <div>
-                {forums.map((forum, index) => (
-                    <div className={index === 0 ? "mt-36" : "mt-2"} key={forum._id}>
-                        <Link href={`/forums/${forum._id}`} passHref>
-                            <Card className="w-[80vw]">
-                                <CardHeader title="title" className="text-white text-4xl">
-                                    {forum.name}
-                                </CardHeader>
-                                <CardDescription className="ml-6">
-                                    {forum.description}
-                                </CardDescription>
-                            </Card>
-                        </Link>
-                    </div>
-                ))}
-            </div>
-            </div>
-        </div>
-    )
+  return (
+    <div className="min-h-screen py-12">
+      <div className="container mx-auto px-4 md:px-6">
+        <h1 className="text-3xl font-bold mb-8 text-center">Forums</h1>
 
+        {isLoading ? (
+          <div className="flex justify-center py-12">
+            <div className="animate-pulse">Loading forums...</div>
+          </div>
+        ) : forums.length === 0 ? (
+          <div className="text-center py-12">
+            <p>No forums found.</p>
+          </div>
+        ) : (
+          <div className="space-y-4 max-w-4xl mx-auto">
+            {forums.map((forum) => (
+              <Link
+                href={`/forums/${forum._id}`}
+                key={forum._id}
+                className="block"
+              >
+                <Card className="transition-all duration-300 hover:shadow-md hover:bg-zinc-900/50">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xl">{forum.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-sm text-gray-400">
+                      {forum.description}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
