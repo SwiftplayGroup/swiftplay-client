@@ -5,7 +5,6 @@
  * © 2025 Swiftplay Group
  */
 
-import BadRequestError from "./errors/HTTPError.ts";
 import UnknownError from "./errors/UnknownError.ts";
 import HTTPError from "./errors/HTTPError.ts";
 
