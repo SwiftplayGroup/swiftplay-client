@@ -10,6 +10,7 @@ export async function generateStaticParams() {
       forumID: forum._id,
     }));
   } catch (error) {
+        console.log(error);
     return [];
   }
 }
@@ -29,7 +30,7 @@ export default async function ForumPage({
         <div className="text-white ">
           {threads.map((thread: Thread) => (
             <div key={thread._id} className = "text-white ">
-              <ThreadCard {...post}/>
+              <ThreadCard {...thread}/>
             </div>
           ))}
         </div>

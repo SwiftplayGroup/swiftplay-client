@@ -8,7 +8,7 @@ export const login = async (email: string, password: string) => {
 export const register = async (
   emailAddress: string,
   username: string,
-  password: string,
+  password: string
 ) => {
   const response = await api.post("/users", {
     emailAddress,
