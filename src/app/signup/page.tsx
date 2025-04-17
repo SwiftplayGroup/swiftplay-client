@@ -38,11 +38,16 @@ export default function SignupFormPage() {
         try {
 
           // Create the user account.
-          await User.createUser({
-            emailAddress,
-            username,
-            password
-          });
+          const user = await User.createUser({emailAddress, username, password});
+
+          // Create a new session and save the data.
+          const session = await user.createSession(password);
+          document.cookie = `accountID=${session.accountID}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
+          document.cookie = `sessionToken=${session.token}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
+          document.cookie = `sessionID=${session._id}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
+
+          // Redirect the user back home.
+          location.replace("/");
 
         } catch (error) {
 
