@@ -11,6 +11,7 @@ import {
 import { AlertCircle } from "lucide-react";
 import User from "~/api/User.ts";
 import { useRouter } from "next/navigation";
+import Client from "~/api/Client";
 
 export default function SignupFormPage() {
   
@@ -44,9 +45,11 @@ export default function SignupFormPage() {
 
           // Create a new session and save the data.
           const session = await user.createSession(password);
-          document.cookie = `accountID=${session.accountID}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
-          document.cookie = `sessionToken=${session.token}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
+          document.cookie = `userID=${session.userID}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
+          document.cookie = `token=${session.token}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
           document.cookie = `sessionID=${session._id}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
+          Client.token = session.token;
+          Client.userID = session.userID;
 
           // Redirect the user back home.
           router.replace("/");
@@ -73,7 +76,7 @@ export default function SignupFormPage() {
 
     })();
 
-  }, [shouldProcessData]);
+  }, [emailAddress, password, router, shouldProcessData, username]);
 
   return (
     <div className="shadow-input mx-auto w-full mt-32 max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
