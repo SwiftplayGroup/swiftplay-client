@@ -1,7 +1,8 @@
 import { getThreads, getForums } from "@/api/forums";
 import { Forum } from "@/types/forums";
 import { Thread } from "@/types/threads";
-import { ThreadCard } from "@/components/forums/threads/thread-card"
+import { ThreadCard } from "@/components/forums/threads/thread-card";
+import { Link } from "next/link";
 
 export async function generateStaticParams() {
   try {
@@ -10,7 +11,7 @@ export async function generateStaticParams() {
       forumID: forum._id,
     }));
   } catch (error) {
-        console.log(error);
+    console.log(error);
     return [];
   }
 }
@@ -20,7 +21,7 @@ export default async function ForumPage({
 }: {
   params: { forumID: string };
 }) {
-  params = await params
+  params = await params;
   const forumID = await params.forumID;
   try {
     const threads = await getThreads(forumID);
@@ -28,16 +29,18 @@ export default async function ForumPage({
     return (
       <div className="h-[50rem] pt-36">
         <div className="text-white ">
-          {threads.map((thread: Thread) => (
-            <div key={thread._id} className = "text-white ">
-              <ThreadCard {...thread}/>
-            </div>
+          {threads.map((thread: Thread) => () => (
+            <Link href={`/threads/${thread._id}`}>
+              <div key={thread._id}>
+                <ThreadCard {...thread} />
+              </div>
+            </Link>
           ))}
         </div>
       </div>
     );
   } catch (error) {
-        console.log("Error: ", error);
+    console.log("Error: ", error);
     return (
       <div className="h-[50rem] flex items-center justify-center">
         <div className="text-red-500">
