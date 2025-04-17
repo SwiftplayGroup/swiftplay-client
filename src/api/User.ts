@@ -6,6 +6,7 @@
  */
 
 import Client from "./Client.ts";
+import Session from "./Session.ts";
 
 export type UserProperties = {
   _id: string;
@@ -21,11 +22,15 @@ export type NewUserProperties = Omit<UserProperties, "_id"> & {
 export default class User extends Client {
 
   _id: string;
+  emailAddress?: string;
+  username: string;
 
   constructor(properties: UserProperties) {
 
     super();
     this._id = properties._id;
+    this.emailAddress = properties.emailAddress;
+    this.username = properties.username;
 
   }
 
@@ -47,6 +52,15 @@ export default class User extends Client {
   static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<UserProperties> {
 
     return super.fetch(...parameters);
+
+  }
+
+  async createSession(password: string): Promise<Session> {
+
+    return await Session.createSession({
+      username: this.username,
+      password
+    });
 
   }
 
