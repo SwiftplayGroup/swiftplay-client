@@ -22,6 +22,7 @@ import {
   NavigationMenuTrigger,
 } from "../ui/navigation-menu";
 import { Link } from "react-router-dom";
+import getCookie from "~/lib/getCookie.ts";
 
 export default function NavbarDemo() {
   return (
@@ -31,12 +32,6 @@ export default function NavbarDemo() {
   );
 }
 
-function getCookie(name: string) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  return parts.length === 2 ? parts.pop()?.split(";").shift() ?? null : null;
-}
-
 function Navbar({ className }: { className?: string }) {
   const [active, setActive] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
@@ -44,13 +39,13 @@ function Navbar({ className }: { className?: string }) {
     "signin" | "register"
   >("signin");
   const [sessionToken, setSessionToken] = useState<string | null>(null);
-  const [accountID, setAccountID] = useState<string | null>(null);
+  const [userID, setUserID] = useState<string | null>(null);
   const [sessionID, setSessionID] = useState<string | null>(null);
 
   useEffect(() => {
-    setSessionToken(getCookie("sessionToken"));
-    setAccountID(getCookie("accountID"));
-    setSessionID(getCookie("sessionID"));
+    setSessionToken(getCookie("token") ?? null);
+    setUserID(getCookie("userID") ?? null);
+    setSessionID(getCookie("sessionID") ?? null);
   }, [isAuthenticating]);
 
   const [isSigningOut, setIsSigningOut] = useState<boolean>(false);
@@ -58,14 +53,14 @@ function Navbar({ className }: { className?: string }) {
     (async () => {
       if (isSigningOut) {
         try {
-          if (sessionID && sessionToken && accountID) {
+          if (sessionID && sessionToken && userID) {
             const response = await fetch(
               `https://speedrun-listings-server.onrender.com/account/sessions/${sessionID}`,
               {
                 headers: {
                   "Content-Type": "application/json",
                   token: sessionToken,
-                  "account-id": accountID,
+                  "account-id": userID,
                 },
                 method: "DELETE",
               }
@@ -84,12 +79,12 @@ function Navbar({ className }: { className?: string }) {
         document.cookie = `sessionToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC`;
         document.cookie = `sessionID=}; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC`;
         setSessionToken(null);
-        setAccountID(null);
+        setUserID(null);
         setSessionID(null);
         setIsSigningOut(false);
       }
     })();
-  }, [accountID, sessionID, sessionToken, isSigningOut]);
+  }, [userID, sessionID, sessionToken, isSigningOut]);
 
   return (
     <div

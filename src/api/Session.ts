@@ -9,7 +9,7 @@ import Client from "./Client.ts";
 
 export type SessionProperties = {
   _id: string;
-  accountID: string;
+  userID: string;
   expirationDate: Date;
   creationIP: string;
   token?: string;
@@ -18,7 +18,7 @@ export type SessionProperties = {
 export default class Session extends Client {
 
   _id: string;
-  accountID: string;
+  userID: string;
   expirationDate: Date;
   creationIP: string;
   token?: string;
@@ -27,7 +27,7 @@ export default class Session extends Client {
 
     super();
     this._id = properties._id;
-    this.accountID = properties.accountID;
+    this.userID = properties.userID;
     this.expirationDate = properties.expirationDate;
     this.creationIP = properties.creationIP;
     this.token = properties.token;
