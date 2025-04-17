@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react";
 import User from "~/api/User.ts";
+import { useRouter } from "next/navigation";
 
 export default function SignupFormPage() {
   
@@ -18,6 +19,7 @@ export default function SignupFormPage() {
   const [password, setPassword] = useState<string>("");
   const [shouldProcessData, setShouldProcessData] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   function handleSignUp(event: FormEvent) {
 
@@ -47,7 +49,7 @@ export default function SignupFormPage() {
           document.cookie = `sessionID=${session._id}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
 
           // Redirect the user back home.
-          location.replace("/");
+          router.replace("/");
 
         } catch (error) {
 
