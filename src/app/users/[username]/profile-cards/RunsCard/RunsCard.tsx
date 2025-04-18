@@ -7,6 +7,8 @@ import styles from "./RunsCard.module.css";
 import { Skeleton } from "~/components/ui/skeleton";
 import Run from "~/api/Run";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
+import Link from "next/link";
+import convertMillisecondsToTime from "~/lib/millisecondsToTime";
 
 export default function RunsCard({user}: {user: User}) {
 
@@ -38,21 +40,6 @@ export default function RunsCard({user}: {user: User}) {
 
   }, [user]);
 
-  function millisecondsToTime(milliseconds: number) {
-    const totalSeconds = Math.floor(milliseconds / 1000);
-    const totalMinutes = Math.floor(totalSeconds / 60);
-    const totalHours = Math.floor(totalMinutes / 60);
-  
-    const seconds = totalSeconds % 60;
-    const minutes = totalMinutes % 60;
-    const hours = totalHours;
-    const ms = milliseconds % 1000;
-  
-    const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(ms).padStart(3, '0')}`;
-  
-    return formattedTime;
-  }
-
   return (
     <Card className={styles.container}>
       <CardTitle>Runs</CardTitle>
@@ -73,9 +60,11 @@ export default function RunsCard({user}: {user: User}) {
                 {
                   runs.map((run) => (
                     <TableRow key={run._id}>
-                      <TableCell>{run.game.name}</TableCell>
+                      <TableCell>
+                        <Link href={`/games/${run.game._id}/runs/${run._id}`}>{run.game.name}</Link>
+                      </TableCell>
                       <TableCell>{run.category?.name ?? "Default"}</TableCell>
-                      <TableCell>{millisecondsToTime(run.time)}</TableCell>
+                      <TableCell>{convertMillisecondsToTime(run.durationMilliseconds)}</TableCell>
                     </TableRow>
                   ))
                 }

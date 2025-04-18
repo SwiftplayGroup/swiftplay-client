@@ -72,7 +72,7 @@ export default function UserPage() {
         </section>
       </Card>
       {
-        user ? <FavoriteRunCard user={user} /> : null
+        user?.favoriteRunID ? <FavoriteRunCard runID={user.favoriteRunID} /> : null
       }
       {
         user ? <RunsCard user={user} /> : null

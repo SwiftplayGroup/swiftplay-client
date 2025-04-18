@@ -14,6 +14,7 @@ export type UserProperties = {
   _id: string;
   emailAddress?: string;
   username: string;
+  favoriteRunID?: string;
 }
 
 export type NewUserProperties = Omit<UserProperties, "_id"> & {
@@ -25,6 +26,7 @@ export default class User extends Client {
 
   _id: string;
   emailAddress?: string;
+  favoriteRunID?: string;
   username: string;
 
   constructor(properties: UserProperties) {
@@ -32,6 +34,7 @@ export default class User extends Client {
     super();
     this._id = properties._id;
     this.emailAddress = properties.emailAddress;
+    this.favoriteRunID = properties.favoriteRunID;
     this.username = properties.username;
 
   }

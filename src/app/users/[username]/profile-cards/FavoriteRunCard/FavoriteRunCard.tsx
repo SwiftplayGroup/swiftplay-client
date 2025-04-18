@@ -1,27 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react"
-import User from "~/api/User.ts";
 import { Card, CardTitle } from "~/components/ui/card";
 import styles from "./FavoriteRunCard.module.css";
 import { Skeleton } from "~/components/ui/skeleton";
 import Run from "~/api/Run";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
+import convertMillisecondsToTime from "~/lib/millisecondsToTime";
+import Link from "next/link";
 
-export default function FavoriteRunCard({user}: {user: User}) {
+export default function FavoriteRunCard({runID}: {runID: string}) {
 
-  const [isLoading, setIsLoading] = useState<boolean>(!!user);
+  const [isLoading, setIsLoading] = useState<boolean>(!!runID);
   const [favoriteRun, setFavoriteRun] = useState<Run | null>(null);
 
   useEffect(() => {
 
     (async () => {
 
-      if (user) {
+      if (runID) {
 
         try {
 
-          
+          const run = await Run.getFromID(runID);
+          setFavoriteRun(run);
 
         } catch (error) {
 
@@ -39,51 +40,38 @@ export default function FavoriteRunCard({user}: {user: User}) {
 
     })();
 
-  }, [user]);
+  }, [runID]);
 
-  function millisecondsToTime(milliseconds: number) {
-    const totalSeconds = Math.floor(milliseconds / 1000);
-    const totalMinutes = Math.floor(totalSeconds / 60);
-    const totalHours = Math.floor(totalMinutes / 60);
-  
-    const seconds = totalSeconds % 60;
-    const minutes = totalMinutes % 60;
-    const hours = totalHours;
-    const ms = milliseconds % 1000;
-  
-    const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(ms).padStart(3, '0')}`;
-  
-    return formattedTime;
-  }
 
   return (
     <Card className={styles.container}>
       <CardTitle>Favorite run</CardTitle>
       {
-        isLoading || !user ? (
+        isLoading || !favoriteRun ? (
           <Skeleton className="h-4 w-[250px]" />
         ) : (
-          !favoriteRun ? (
+          favoriteRun ? (
             <section id={styles.runDataContainer}>
-              <iframe src="https://www.youtube.com/embed/NGV7yaVzxmo" id={styles.video} />
+              <iframe src={`https://www.youtube.com/embed/${favoriteRun.youtubeWatchID}`} id={styles.video} />
               <section>
                 <Card className={styles.runData}>
                   <CardTitle>Game</CardTitle>
                   <section>
-                    {/* {favoriteRun.game.name} */}
-                    American Dad
+                    {favoriteRun.game.name}
                   </section>
                 </Card>
                 <Card className={styles.runData}>
                   <CardTitle>Category</CardTitle>
                   <section>
-                    Glitchless
+                    {favoriteRun.category?.name ?? "Default"}
                   </section>
                 </Card>
                 <Card className={styles.runData}>
                   <CardTitle>Time</CardTitle>
                   <section>
-                    00:00:18.240
+                    <Link href={`/games/${favoriteRun.game._id}/runs/${favoriteRun._id}`}>
+                      {convertMillisecondsToTime(favoriteRun.durationMilliseconds)}
+                    </Link>
                   </section>
                 </Card>
               </section>
