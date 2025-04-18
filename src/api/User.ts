@@ -7,6 +7,7 @@
 
 import Client from "./Client.ts";
 import HTTPError from "./errors/HTTPError.ts";
+import { PermissionAccessLevel } from "./Permission.ts";
 import Run from "./Run.ts";
 import Session from "./Session.ts";
 
@@ -16,6 +17,9 @@ export type UserProperties = {
   username: string;
   favoriteRunID?: string;
   avatarURL?: string;
+  permissionOverrides?: {
+    [permissionID: string]: PermissionAccessLevel;
+  }
 }
 
 export type NewUserProperties = Omit<UserProperties, "_id"> & {
@@ -26,10 +30,11 @@ export type NewUserProperties = Omit<UserProperties, "_id"> & {
 export default class User extends Client {
 
   _id: string;
-  emailAddress?: string;
-  favoriteRunID?: string;
-  avatarURL?: string;
-  username: string;
+  emailAddress?: UserProperties["emailAddress"];
+  favoriteRunID?: UserProperties["favoriteRunID"];
+  avatarURL?: UserProperties["avatarURL"];
+  username: UserProperties["username"];
+  permissionOverrides?: UserProperties["permissionOverrides"];
 
   constructor(properties: UserProperties) {
 

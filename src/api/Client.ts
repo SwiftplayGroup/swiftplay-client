@@ -10,7 +10,7 @@ import HTTPError from "./errors/HTTPError.ts";
 
 export default abstract class Client {
 
-  static apiURI = "https://swiftplay.onrender.com"; // TODO: Set this automatically based on environment variables.
+  static apiURI = process.env.NEXT_PUBLIC_API_URI_OVERRIDE ?? "https://swiftplay.onrender.com"; // TODO: Set this automatically based on environment variables.
   static token?: string;
   static userID?: string;
 
