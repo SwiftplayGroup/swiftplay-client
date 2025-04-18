@@ -8,15 +8,14 @@
 
 #userContainer {
   min-height: 180px;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
-}
-
-#userContainer > section {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+}
+
+#userContainer > section:first-of-type {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .container {
