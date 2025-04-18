@@ -10,7 +10,8 @@ import styles from "./styles.module.css";
 import ObjectId from "bson-objectid";
 import { cn } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
-import RunsCard from "~/components/RunsCard/RunsCard";
+import RunsCard from "~/app/users/[username]/profile-cards/RunsCard/RunsCard";
+import FavoriteRunCard from "./profile-cards/FavoriteRunCard/FavoriteRunCard";
 
 export default function UserPage() {
 
@@ -70,6 +71,9 @@ export default function UserPage() {
           }
         </section>
       </Card>
+      {
+        user?.favoriteRunID ? <FavoriteRunCard runID={user.favoriteRunID} /> : null
+      }
       {
         user ? <RunsCard user={user} /> : null
       }

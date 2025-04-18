@@ -12,7 +12,8 @@ import User, { UserProperties } from "./User.ts";
 
 export type RunProperties = {
   _id: string;
-  time: number;
+  durationMilliseconds: number;
+  youtubeWatchID: string;
   category?: Category;
   owner: UserProperties;
   game: GameProperties;
@@ -22,21 +23,38 @@ export default class Run extends Client {
 
   _id: string;
   category?: Category;
-  time: number;
+  durationMilliseconds: number;
+  youtubeWatchID: string;
   game: Game;
   owner: User;
 
   constructor(properties: RunProperties) {
 
+    console.log(properties)
+
     super();
     this._id = properties._id;
-    this.time = properties.time;
+    this.durationMilliseconds = properties.durationMilliseconds;
+    this.youtubeWatchID = properties.youtubeWatchID;
     this.category = properties.category;
     this.game = new Game(properties.game);
     this.owner = new User(properties.owner);
 
   }
 
+  static async getFromID(runID: string): Promise<Run> {
+
+    const data = await this.fetch(`/runs/${runID}`, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    return new Run(data);
+
+  }
+
+  static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<Run>
   static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties> {
 
     return super.fetch(...parameters);
