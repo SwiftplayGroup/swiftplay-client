@@ -5,8 +5,7 @@ const nextConfig = {
       "api.microlink.io", // Microlink Image Preview
     ],
     unoptimized: true,
-  },
-  output: "export",
+  }
 };
 
 export default nextConfig;
