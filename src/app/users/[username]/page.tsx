@@ -1,8 +1,12 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react"
 import User from "~/api/User.ts";
+import { Card } from "~/components/ui/card";
+import styles from "./styles.module.css";
+import ObjectId from "bson-objectid";
 
 export default function UserPage() {
 
@@ -37,27 +41,30 @@ export default function UserPage() {
 
   }, [username]);
 
-  if (isLoading) {
-
-    return (
-      <section>
-        Please wait...
-      </section>
-    )
-
-  } else if (user) {
-
-    return (
-      <section>
-        {user.username}
-      </section>
-    )
-
-  }
-
   return (
-    <section>
-      That user doesn't exist yet. :(
+    <section id={styles.main}>
+      <Card id={styles.userContainer}>
+        <Avatar id={styles.profilePicture}>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        {
+          isLoading ? (
+            <p>Please wait...</p>
+          ) : (
+            user ? (
+              <section>
+                <section id={styles.username}>
+                  {user.username}
+                </section>
+                <section>
+                  Joined on {new Intl.DateTimeFormat("en-US").format(new ObjectId().getTimestamp())}
+                </section>
+              </section>
+            ) : null
+          )
+        }
+      </Card>
     </section>
   )
 
