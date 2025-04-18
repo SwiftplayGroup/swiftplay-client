@@ -8,6 +8,7 @@ import { Button } from "~/components/ui/button";
 import User from "~/api/User";
 import Permission, { PermissionAccessLevel } from "~/api/Permission";
 import { Skeleton } from "~/components/ui/skeleton";
+import Client from "~/api/Client";
 
 export default function PermissionDialog({user}: {user: User}) {
 
@@ -59,7 +60,7 @@ export default function PermissionDialog({user}: {user: User}) {
             {
               isLoading ? <Skeleton className="h-6 w-[300px]" /> : defaultPermissions.map((permission) => {
 
-                const permissionOverrideValue = user.permissionOverrides?.[permission._id];
+                const permissionOverrideValue = Client.authenticatedUser?.permissionOverrides?.[permission._id];
 
                 return (
                   <TableRow>
