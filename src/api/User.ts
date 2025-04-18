@@ -7,6 +7,7 @@
 
 import Client from "./Client.ts";
 import HTTPError from "./errors/HTTPError.ts";
+import Run from "./Run.ts";
 import Session from "./Session.ts";
 
 export type UserProperties = {
@@ -70,7 +71,8 @@ export default class User extends Client {
 
   static async fetch(path: "/users", properties: {method: "POST", body: string, headers: {["Content-Type"]: "application/json"}}): Promise<UserProperties>;
   static async fetch(path: `/users?username=${string}`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<UserProperties[]>;
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<UserProperties | UserProperties[]> {
+  static async fetch(path: `/users/${string}/runs`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<Run[]>;
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<UserProperties | UserProperties[] | Run[]> {
 
     return super.fetch(...parameters);
 
@@ -82,6 +84,16 @@ export default class User extends Client {
       username: this.username,
       password
     });
+
+  }
+
+  async getRuns(): Promise<Run[]> {
+
+    return await User.fetch(`/users/${this._id}/runs`, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
 
   }
 

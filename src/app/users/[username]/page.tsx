@@ -5,9 +5,12 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react"
 import User from "~/api/User.ts";
-import { Card } from "~/components/ui/card";
+import { Card, CardTitle } from "~/components/ui/card";
 import styles from "./styles.module.css";
 import ObjectId from "bson-objectid";
+import { cn } from "~/lib/utils";
+import { Skeleton } from "~/components/ui/skeleton";
+import RunsCard from "~/components/RunsCard/RunsCard";
 
 export default function UserPage() {
 
@@ -44,29 +47,32 @@ export default function UserPage() {
 
   return (
     <section id={styles.main}>
-      <Card id={styles.userContainer}>
+      <Card id={styles.userContainer} className={styles.container}>
         <Avatar id={styles.profilePicture} className={!user ? styles.notFound : undefined}>
           <AvatarImage src="https://github.com/shadcn.png" />
         </Avatar>
-        {
-          isLoading ? (
-            <p>Please wait...</p>
-          ) : (
-            <section>
+        <section>
+          {
+            isLoading ? <Skeleton className="h-6 w-[300px]" /> : (
               <section id={styles.username}>
                 {user?.username ?? "User not found"}
               </section>
-              {
-                user ? (
-                  <section>
-                    Joined on {new Intl.DateTimeFormat("en-US").format(new ObjectId(user._id).getTimestamp())}
-                  </section>
-                ) : null
-              }
-            </section>
-          )
-        }
+            )
+          }
+          {
+            isLoading || !user ? (
+              <Skeleton className="h-4 w-[250px]" />
+            ) : (
+              <section>
+                Joined on {new Intl.DateTimeFormat("en-US").format(new ObjectId(user._id).getTimestamp())}
+              </section>
+            )
+          }
+        </section>
       </Card>
+      {
+        user ? <RunsCard user={user} /> : null
+      }
     </section>
   )
 
