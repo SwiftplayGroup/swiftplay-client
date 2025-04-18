@@ -5,11 +5,12 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react"
 import User from "~/api/User.ts";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardTitle } from "~/components/ui/card";
 import styles from "./styles.module.css";
 import ObjectId from "bson-objectid";
 import { cn } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
+import RunsCard from "~/components/RunsCard/RunsCard";
 
 export default function UserPage() {
 
@@ -69,14 +70,9 @@ export default function UserPage() {
           }
         </section>
       </Card>
-      <Card className={cn(styles.container, !user ? styles.notFound : undefined)}>
-        <CardTitle>Runs</CardTitle>
-        {
-          isLoading || !user ? (
-            <Skeleton className="h-4 w-[250px]" />
-          ) : <p>None yet...</p>
-        }
-      </Card>
+      {
+        user ? <RunsCard user={user} /> : null
+      }
     </section>
   )
 
