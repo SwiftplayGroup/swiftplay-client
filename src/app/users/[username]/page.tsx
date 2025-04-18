@@ -44,24 +44,25 @@ export default function UserPage() {
   return (
     <section id={styles.main}>
       <Card id={styles.userContainer}>
-        <Avatar id={styles.profilePicture}>
+        <Avatar id={styles.profilePicture} className={!user ? styles.notFound : undefined}>
           <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         {
           isLoading ? (
             <p>Please wait...</p>
           ) : (
-            user ? (
-              <section>
-                <section id={styles.username}>
-                  {user.username}
-                </section>
-                <section>
-                  Joined on {new Intl.DateTimeFormat("en-US").format(new ObjectId().getTimestamp())}
-                </section>
+            <section>
+              <section id={styles.username}>
+                {user?.username ?? "User not found"}
               </section>
-            ) : null
+              {
+                user ? (
+                  <section>
+                    Joined on {new Intl.DateTimeFormat("en-US").format(new ObjectId(user._id).getTimestamp())}
+                  </section>
+                ) : null
+              }
+            </section>
           )
         }
       </Card>

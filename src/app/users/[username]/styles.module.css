@@ -21,3 +21,7 @@
 #username {
   font-size: 25px;
 }
+
+.notFound {
+  opacity: 0.5;
+}
