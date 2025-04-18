@@ -17,7 +17,7 @@ export type UserProperties = {
   username: string;
   favoriteRunID?: string;
   avatarURL?: string;
-  permissionOverrides: {
+  permissionOverrides?: {
     [permissionID: string]: PermissionAccessLevel;
   }
 }
