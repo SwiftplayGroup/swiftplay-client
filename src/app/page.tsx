@@ -8,13 +8,35 @@ import { motion } from "framer-motion";
 import { GlowingEffectBento } from "~/components/home/glowing-effect";
 import Client from "~/api/Client.ts";
 import getCookie from "~/lib/getCookie.ts";
+import User from "~/api/User";
 
 export default function Page() {
 
   useEffect(() => {
 
-    Client.token = getCookie("token");
-    Client.userID = getCookie("userID");
+    (async () => {
+
+      Client.token = getCookie("token");
+      Client.userID = getCookie("userID");
+
+      try {
+
+        if (Client.userID) {
+
+          Client.authenticatedUser = await User.getFromID(Client.userID);
+
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        Client.token = undefined;
+        Client.userID = undefined;
+
+      }
+
+    })();
 
   }, []);
 

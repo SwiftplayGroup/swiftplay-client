@@ -8,7 +8,7 @@
 import Client from "./Client.ts";
 import HTTPError from "./errors/HTTPError.ts";
 import { PermissionAccessLevel } from "./Permission.ts";
-import Run from "./Run.ts";
+import Run, { RunProperties } from "./Run.ts";
 import Session from "./Session.ts";
 
 export type UserProperties = {
@@ -81,10 +81,23 @@ export default class User extends Client {
 
   }
 
+  static async getFromID(userID: string): Promise<User> {
+
+    const data = await this.fetch(`/users/${userID}`, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    return new User(data);
+
+  }
+
   static async fetch(path: "/users", properties: {method: "POST", body: string, headers: {["Content-Type"]: "application/json"}}): Promise<UserProperties>;
   static async fetch(path: `/users?username=${string}`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<UserProperties[]>;
-  static async fetch(path: `/users/${string}/runs`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<Run[]>;
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<UserProperties | UserProperties[] | Run[]> {
+  static async fetch(path: `/users/${string}/runs`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<RunProperties[]>;
+  static async fetch(path: `/users/${string}`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<UserProperties>;
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<UserProperties | UserProperties[] | RunProperties[]> {
 
     return super.fetch(...parameters);
 
@@ -101,11 +114,23 @@ export default class User extends Client {
 
   async getRuns(): Promise<Run[]> {
 
-    return await User.fetch(`/users/${this._id}/runs`, {
+    const data = await User.fetch(`/users/${this._id}/runs`, {
       headers: {
         "Content-Type": "application/json"
       }
-    })
+    });
+
+    const runs = [];
+
+    for (const runObject of data) {
+
+      const run = new Run(runObject);
+      runs.push(run);
+
+    }
+
+    return runs;
+
 
   }
 

@@ -50,6 +50,7 @@ export default function SignupFormPage() {
           document.cookie = `sessionID=${session._id}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
           Client.token = session.token;
           Client.userID = session.userID;
+          Client.authenticatedUser = user;
 
           // Redirect the user back home.
           router.replace("/");
