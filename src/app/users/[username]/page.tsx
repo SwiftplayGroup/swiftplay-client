@@ -5,10 +5,9 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react"
 import User from "~/api/User.ts";
-import { Card, CardTitle } from "~/components/ui/card";
+import { Card } from "~/components/ui/card";
 import styles from "./styles.module.css";
 import ObjectId from "bson-objectid";
-import { cn } from "~/lib/utils";
 import { Skeleton } from "~/components/ui/skeleton";
 import RunsCard from "~/app/users/[username]/profile-cards/RunsCard/RunsCard";
 import FavoriteRunCard from "./profile-cards/FavoriteRunCard/FavoriteRunCard";
@@ -50,7 +49,7 @@ export default function UserPage() {
     <section id={styles.main}>
       <Card id={styles.userContainer} className={styles.container}>
         <Avatar id={styles.profilePicture} className={!user ? styles.notFound : undefined}>
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={user?.avatarURL} />
         </Avatar>
         <section>
           {
