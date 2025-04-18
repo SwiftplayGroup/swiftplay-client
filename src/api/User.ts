@@ -6,6 +6,7 @@
  */
 
 import Client from "./Client.ts";
+import HTTPError from "./errors/HTTPError.ts";
 import Session from "./Session.ts";
 
 export type UserProperties = {
@@ -48,8 +49,28 @@ export default class User extends Client {
 
   }
 
+  static async getFromUsername(username: string): Promise<User> {
+
+    const data = await this.fetch(`/users?username=${username}`, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    const userData = data[0];
+    if (!userData) {
+
+      throw new HTTPError(404, "User doesn't exist");
+
+    }
+
+    return new User(userData);
+
+  }
+
   static async fetch(path: "/users", properties: {method: "POST", body: string, headers: {["Content-Type"]: "application/json"}}): Promise<UserProperties>;
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<UserProperties> {
+  static async fetch(path: `/users?username=${string}`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<UserProperties[]>;
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<UserProperties | UserProperties[]> {
 
     return super.fetch(...parameters);
 
