@@ -15,6 +15,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { DialogHeader } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import PermissionDialog from "./dialogs/PermissionDialog";
+import { PermissionAccessLevel } from "~/api/Permission";
 
 export default function UserPage() {
 
@@ -48,6 +49,22 @@ export default function UserPage() {
     })();
 
   }, [username]);
+
+  let shouldShowPermissionEditor = false;
+  if (user?.permissionOverrides) {
+
+    for (const permissionID of Object.keys(user.permissionOverrides)) {
+
+      if (user.permissionOverrides[permissionID] >= PermissionAccessLevel.ADMIN) {
+
+        shouldShowPermissionEditor = true;
+        break;
+
+      }
+
+    }
+
+  }
 
   return (
     <section id={styles.main}>
@@ -99,7 +116,9 @@ export default function UserPage() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              <PermissionDialog user={user} />
+              {
+                shouldShowPermissionEditor ? <PermissionDialog user={user} /> : null
+              }
             </section>
           ) : null
         }

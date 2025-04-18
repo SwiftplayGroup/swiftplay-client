@@ -44,6 +44,7 @@ export default class User extends Client {
     this.favoriteRunID = properties.favoriteRunID;
     this.avatarURL = properties.avatarURL;
     this.username = properties.username;
+    this.permissionOverrides = properties.permissionOverrides;
 
   }
 

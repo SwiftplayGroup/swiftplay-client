@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { Button } from "~/components/ui/button";
 import User from "~/api/User";
-import Permission from "~/api/Permission";
+import Permission, { PermissionAccessLevel } from "~/api/Permission";
 import { Skeleton } from "~/components/ui/skeleton";
 
 export default function PermissionDialog({user}: {user: User}) {
@@ -57,24 +57,30 @@ export default function PermissionDialog({user}: {user: User}) {
           </TableHeader>
           <TableBody>
             {
-              isLoading ? <Skeleton className="h-6 w-[300px]" /> : defaultPermissions.map((permission) => (
-                <TableRow>
-                  <TableCell>{permission.name}</TableCell>
-                  <TableCell>{permission.description}</TableCell>
-                  <TableCell style={{display: "flex", justifyContent: "right"}}>
-                    <Select value={user.permissionOverrides?.[permission._id]?.toString()}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder={["Denied", "Granted", "Admin"][permission.defaultAccessLevel] ?? "Unknown"} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="2">Admin</SelectItem>
-                        <SelectItem value="1">Granted</SelectItem>
-                        <SelectItem value="0">Denied</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                </TableRow>
-              ))
+              isLoading ? <Skeleton className="h-6 w-[300px]" /> : defaultPermissions.map((permission) => {
+
+                const permissionOverrideValue = user.permissionOverrides?.[permission._id];
+                console.log(user.permissionOverrides)
+
+                return (
+                  <TableRow>
+                    <TableCell>{permission.name}</TableCell>
+                    <TableCell>{permission.description}</TableCell>
+                    <TableCell style={{display: "flex", justifyContent: "right"}}>
+                      <Select value={permissionOverrideValue?.toString()} disabled={(permissionOverrideValue ?? permission.defaultAccessLevel) < PermissionAccessLevel.ADMIN}>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder={["Denied", "Granted", "Admin"][permission.defaultAccessLevel] ?? "Unknown"} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="2">Admin</SelectItem>
+                          <SelectItem value="1">Granted</SelectItem>
+                          <SelectItem value="0">Denied</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
             }
           </TableBody>
         </Table>
