@@ -12,7 +12,11 @@ import Client from "~/api/Client";
 
 export default function PermissionDialog({user}: {user: User}) {
 
+  const [isOpen, setIsOpen] = useState<boolean>(true);
   const [defaultPermissions, setDefaultPermissions] = useState<Permission[]>([]);
+  const [newPermissionOverrides, setNewPermissionOverrides] = useState<{
+    [permissionID: string]: PermissionAccessLevel | null;
+  }>({})
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -37,7 +41,7 @@ export default function PermissionDialog({user}: {user: User}) {
   }, []);
 
   return (
-    <Dialog>
+    <Dialog open={isOpen}>
       <DialogTrigger>
         <Button type="button">Change permissions</Button>
       </DialogTrigger>
@@ -85,12 +89,8 @@ export default function PermissionDialog({user}: {user: User}) {
           </TableBody>
         </Table>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" disabled>Save</Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">Close</Button>
-          </DialogClose>
+          <Button type="button" disabled>Save</Button>
+          <Button type="button" variant="secondary">Close</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
