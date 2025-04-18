@@ -9,7 +9,7 @@ import Client from "./Client.ts";
 
 export enum PermissionAccessLevel {
   DENIED,
-  GRANTED,
+  USER,
   ADMIN
 }
 
