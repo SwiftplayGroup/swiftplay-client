@@ -1,6 +1,7 @@
 "use client";
+export const runtime = "edge";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react"
 import User from "~/api/User.ts";
