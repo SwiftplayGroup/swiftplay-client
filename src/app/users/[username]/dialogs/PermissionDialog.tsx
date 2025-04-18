@@ -60,7 +60,6 @@ export default function PermissionDialog({user}: {user: User}) {
               isLoading ? <Skeleton className="h-6 w-[300px]" /> : defaultPermissions.map((permission) => {
 
                 const permissionOverrideValue = user.permissionOverrides?.[permission._id];
-                console.log(user.permissionOverrides)
 
                 return (
                   <TableRow>
