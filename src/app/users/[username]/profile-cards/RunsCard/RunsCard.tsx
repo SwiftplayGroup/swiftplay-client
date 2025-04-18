@@ -6,7 +6,7 @@ import { Card, CardTitle } from "~/components/ui/card";
 import styles from "./RunsCard.module.css";
 import { Skeleton } from "~/components/ui/skeleton";
 import Run from "~/api/Run";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 
 export default function RunsCard({user}: {user: User}) {
 
