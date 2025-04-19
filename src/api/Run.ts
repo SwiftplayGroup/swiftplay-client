@@ -61,7 +61,8 @@ export default class Run extends Client {
 
   static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties>
   static async fetch(path: `/runs/${string}`, properties: {method: "DELETE", headers: {token: string, "user-id": string}}): Promise<void>
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | void> {
+  static async fetch(path: `/runs/${string}/verification`, properties: {method: "POST", headers: {"Content-Type": "application/json", token: string, "user-id": string}}): Promise<Verification>
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | Verification | void> {
 
     return super.fetch(...parameters);
 
@@ -78,6 +79,25 @@ export default class Run extends Client {
     await Run.fetch(`/runs/${this._id}`, {
       method: "DELETE",
       headers: {
+        "user-id": Run.authenticatedUser?._id,
+        "token": Run.token
+      }
+    });
+
+  }
+
+  async verify(): Promise<Verification> {
+
+    if (!Run.authenticatedUser || !Run.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    return await Run.fetch(`/runs/${this._id}/verification`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
         "user-id": Run.authenticatedUser?._id,
         "token": Run.token
       }
