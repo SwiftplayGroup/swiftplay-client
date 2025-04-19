@@ -25,6 +25,15 @@ export type RunProperties = {
   verification?: Verification;
 }
 
+export type EditableRunProperties = Partial<Omit<RunProperties, "category" | "owner" | "game" | "verification"> & {
+  categoryID: string;
+  ownerID: string;
+  gameID: string;
+  verification: {
+    ownerID: string
+  } | null
+}>;
+
 export default class Run extends Client {
 
   _id: string;
@@ -87,6 +96,28 @@ export default class Run extends Client {
 
   }
 
+  async edit(properties: EditableRunProperties): Promise<Run> {
+
+    if (!Run.authenticatedUser || !Run.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    const editedRunData = await Run.fetch(`/runs/${this._id}`, {
+      method: "PATCH",
+      body: JSON.stringify(properties),
+      headers: {
+        "Content-Type": "application/json",
+        "user-id": Run.authenticatedUser?._id,
+        "token": Run.token
+      }
+    });
+
+    return new Run(editedRunData);
+
+  }
+
   async verify(): Promise<Run> {
 
     if (!Run.authenticatedUser || !Run.token) {
@@ -95,21 +126,25 @@ export default class Run extends Client {
 
     }
 
-    const verifiedRunData = await Run.fetch(`/runs/${this._id}`, {
-      method: "PATCH",
-      body: JSON.stringify({
-        verification: {
-          ownerID: Run.authenticatedUser._id
-        }
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        "user-id": Run.authenticatedUser?._id,
-        "token": Run.token
+    return await this.edit({
+      verification: {
+        ownerID: Run.authenticatedUser._id
       }
     });
 
-    return new Run(verifiedRunData);
+  }
+
+  async unverify(): Promise<Run> {
+
+    if (!Run.authenticatedUser || !Run.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    return await this.edit({
+      verification: null
+    });
 
   }
 

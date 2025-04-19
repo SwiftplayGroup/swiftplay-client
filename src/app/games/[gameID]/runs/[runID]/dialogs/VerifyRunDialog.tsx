@@ -20,8 +20,8 @@ export default function VerifyRunDialog({run, setRun}: {run: Run, setRun: (run: 
 
         try {
 
-          const verifiedRun = await run.verify();
-          setRun(verifiedRun);
+          const editedRun = run.verification ? await run.unverify() : await run.verify();
+          setRun(editedRun);
 
         } catch (error) {
 
@@ -41,20 +41,24 @@ export default function VerifyRunDialog({run, setRun}: {run: Run, setRun: (run: 
   return (
     <Dialog open={isOpen} onOpenChange={(isOpen) => setIsOpen(isOpen)}>
       <DialogTrigger asChild>
-        <Button type="button" variant="secondary" disabled={!!run.verification}>Verify run</Button>
+        <Button type="button" variant={run.verification ? "destructive" : "secondary"}>
+          {run.verification ? "Unv" : "V"}erify run
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Verify run
+            {run.verification ? "Unv" : "V"}erify run
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to verify this run?
+            Are you sure you want to {run.verification ? "un" : ""}verify this run?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="button" onClick={() => setIsProcessing(true)}>Verify run</Button>
+            <Button type="button" variant={run.verification ? "destructive" : undefined} onClick={() => setIsProcessing(true)}>
+              {run.verification ? "Unv" : "V"}erify run
+            </Button>
           </DialogClose>
           <DialogClose asChild>
             <Button type="button" variant="secondary">Nevermind</Button>
