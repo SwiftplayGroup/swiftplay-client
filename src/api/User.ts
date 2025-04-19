@@ -136,7 +136,6 @@ export default class User extends Client {
     });
 
     const user = new User(newProperties);
-    console.log(user);
     return user;
 
   }

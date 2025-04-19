@@ -51,8 +51,6 @@ export default function UserPage() {
 
   }, [username]);
 
-  useEffect(() => console.log(user), [user]);
-
   let shouldShowPermissionEditor = false;
   const { authenticatedUser } = Client;
   if (authenticatedUser?.permissionOverrides) {

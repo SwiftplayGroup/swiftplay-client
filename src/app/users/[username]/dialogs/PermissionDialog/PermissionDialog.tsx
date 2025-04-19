@@ -116,7 +116,6 @@ export default function PermissionDialog({user, setUser}: {user: User, setUser: 
 
                   if (currentOverrideValue === newAccessLevel || (newAccessLevel === null && currentOverrideValue === undefined)) {
 
-                    console.log("intercept")
                     delete newOverrides[permission._id];
 
                   }
