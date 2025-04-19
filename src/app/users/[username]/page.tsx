@@ -14,7 +14,7 @@ import FavoriteRunCard from "./profile-cards/FavoriteRunCard/FavoriteRunCard";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { DialogHeader } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
-import PermissionDialog from "./dialogs/PermissionDialog";
+import PermissionDialog from "./dialogs/PermissionDialog/PermissionDialog";
 import { PermissionAccessLevel } from "~/api/Permission";
 import Client from "~/api/Client";
 

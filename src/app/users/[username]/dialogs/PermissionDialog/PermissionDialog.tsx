@@ -9,6 +9,7 @@ import User from "~/api/User";
 import Permission, { PermissionAccessLevel } from "~/api/Permission";
 import { Skeleton } from "~/components/ui/skeleton";
 import Client from "~/api/Client";
+import styles from "./PermissionDialog.module.css"
 
 export default function PermissionDialog({user}: {user: User}) {
 
@@ -40,6 +41,8 @@ export default function PermissionDialog({user}: {user: User}) {
 
   }, []);
 
+  console.log(Object.keys(newPermissionOverrides)[0]);
+
   return (
     <Dialog open={isOpen}>
       <DialogTrigger>
@@ -64,14 +67,41 @@ export default function PermissionDialog({user}: {user: User}) {
             {
               isLoading ? <Skeleton className="h-6 w-[300px]" /> : defaultPermissions.map((permission) => {
 
-                const permissionOverrideValue = Client.authenticatedUser?.permissionOverrides?.[permission._id];
+                const currentOverrideValue = Client.authenticatedUser?.permissionOverrides?.[permission._id];
+                const newOverrideValue = newPermissionOverrides[permission._id];
+                const shownOverrideValue = newOverrideValue !== undefined ? newOverrideValue : currentOverrideValue;
+                const isDisabled = (currentOverrideValue ?? permission.defaultAccessLevel) < PermissionAccessLevel.ADMIN;
+
+                function setAccessLevel(newAccessLevel: number | null) {
+
+                  const newOverrides = {
+                    ...newPermissionOverrides,
+                    [permission._id]: newAccessLevel
+                  };
+
+                  if (currentOverrideValue === newAccessLevel || (newAccessLevel === null && !currentOverrideValue)) {
+
+                    delete newOverrides[permission._id];
+
+                  }
+
+                  setNewPermissionOverrides(newOverrides);
+
+                }
+
+                console.log(shownOverrideValue);
 
                 return (
-                  <TableRow>
+                  <TableRow key={permission._id}>
                     <TableCell>{permission.name}</TableCell>
                     <TableCell>{permission.description}</TableCell>
-                    <TableCell style={{display: "flex", justifyContent: "right"}}>
-                      <Select value={permissionOverrideValue?.toString()} disabled={(permissionOverrideValue ?? permission.defaultAccessLevel) < PermissionAccessLevel.ADMIN}>
+                    <TableCell className={styles.accessCell}>
+                      <Button className={styles.defaultButton} disabled={isDisabled || shownOverrideValue === undefined || shownOverrideValue === null} onClick={() => setAccessLevel(null)}>
+                        <span className="material-symbols-outlined">
+                          close
+                        </span>
+                      </Button>
+                      <Select value={shownOverrideValue?.toString() ?? ""} disabled={isDisabled} onValueChange={(value) => setAccessLevel(parseInt(value, 10))}>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder={["Denied", "Granted", "Admin"][permission.defaultAccessLevel] ?? "Unknown"} />
                         </SelectTrigger>
@@ -89,7 +119,7 @@ export default function PermissionDialog({user}: {user: User}) {
           </TableBody>
         </Table>
         <DialogFooter>
-          <Button type="button" disabled>Save</Button>
+          <Button type="button" disabled={!Object.keys(newPermissionOverrides)[0]}>Save</Button>
           <Button type="button" variant="secondary">Close</Button>
         </DialogFooter>
       </DialogContent>
