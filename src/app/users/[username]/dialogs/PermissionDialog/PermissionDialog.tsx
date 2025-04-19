@@ -41,8 +41,6 @@ export default function PermissionDialog({user}: {user: User}) {
 
   }, []);
 
-  console.log(Object.keys(newPermissionOverrides)[0]);
-
   return (
     <Dialog open={isOpen}>
       <DialogTrigger>
