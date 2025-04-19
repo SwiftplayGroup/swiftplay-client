@@ -118,7 +118,7 @@ export default function PermissionDialog({user}: {user: User}) {
         </Table>
         <DialogFooter>
           <Button type="button" disabled={!Object.keys(newPermissionOverrides)[0]}>Save</Button>
-          <Button type="button" variant="secondary">Close</Button>
+          <Button type="button" variant="secondary" onClick={() => setIsOpen(false)}>Close</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
