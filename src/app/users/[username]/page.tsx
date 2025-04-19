@@ -17,11 +17,13 @@ import { Button } from "~/components/ui/button";
 import PermissionDialog from "./dialogs/PermissionDialog/PermissionDialog";
 import { PermissionAccessLevel } from "~/api/Permission";
 import Client from "~/api/Client";
+import Run from "~/api/Run";
 
 export default function UserPage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
+  const [favoriteRun, setFavoriteRun] = useState<Run | null>(null);
   const { username } = useParams()
 
   useEffect(() => {
@@ -38,6 +40,13 @@ export default function UserPage() {
 
         const user = await User.getFromUsername(username);
         setUser(user);
+
+        if (user.favoriteRunID) {
+
+          const run = await Run.getFromID(user.favoriteRunID);
+          setFavoriteRun(run);
+
+        }
 
       } catch (error) {
 
@@ -132,7 +141,7 @@ export default function UserPage() {
         }
       </Card>
       {
-        user?.favoriteRunID ? <RunCard runID={user.favoriteRunID} /> : null
+        user ? <RunCard run={favoriteRun} isLoading={isLoading} /> : null
       }
       {
         user ? <RunsCard user={user} /> : null
