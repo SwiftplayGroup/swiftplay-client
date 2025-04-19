@@ -1,24 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { Button } from "~/components/ui/button";
-import User from "~/api/User";
+import User, { NewPermissionOverrides } from "~/api/User";
 import Permission, { PermissionAccessLevel } from "~/api/Permission";
 import { Skeleton } from "~/components/ui/skeleton";
 import Client from "~/api/Client";
 import styles from "./PermissionDialog.module.css"
 
-export default function PermissionDialog({user}: {user: User}) {
+export default function PermissionDialog({user, setUser}: {user: User, setUser: (user: User) => void}) {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [defaultPermissions, setDefaultPermissions] = useState<Permission[]>([]);
-  const [newPermissionOverrides, setNewPermissionOverrides] = useState<{
-    [permissionID: string]: PermissionAccessLevel | null;
-  }>({})
+  const [newPermissionOverrides, setNewPermissionOverrides] = useState<NewPermissionOverrides>({})
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   useEffect(() => {
 
@@ -41,9 +40,47 @@ export default function PermissionDialog({user}: {user: User}) {
 
   }, []);
 
+  useEffect(() => {
+
+    (async () => {
+
+      if (isProcessing) {
+
+        try {
+
+          const combinedPermissionOverrides: NewPermissionOverrides = {...user.permissionOverrides};
+          for (const key of Object.keys(newPermissionOverrides)) {
+
+            combinedPermissionOverrides[key] = newPermissionOverrides[key];
+
+          }
+
+          const newUser = await user.edit({
+            permissionOverrides: combinedPermissionOverrides
+          });
+
+          setIsProcessing(false);
+          setIsOpen(false);
+          setNewPermissionOverrides({});
+          setUser(newUser);
+
+        } catch (error) {
+
+          console.error(error);
+
+        }
+
+        setIsProcessing(false);
+
+      }
+
+    })();
+
+  }, [isProcessing, newPermissionOverrides, user, setUser]);
+
   return (
     <Dialog open={isOpen} onOpenChange={(isOpen) => setIsOpen(isOpen)}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button type="button">Change permissions</Button>
       </DialogTrigger>
       <DialogContent style={{maxWidth: "1080px"}}>
@@ -65,10 +102,10 @@ export default function PermissionDialog({user}: {user: User}) {
             {
               isLoading ? <Skeleton className="h-6 w-[300px]" /> : defaultPermissions.map((permission) => {
 
-                const currentOverrideValue = Client.authenticatedUser?.permissionOverrides?.[permission._id];
+                const currentOverrideValue = user.permissionOverrides?.[permission._id];
                 const newOverrideValue = newPermissionOverrides[permission._id];
                 const shownOverrideValue = newOverrideValue !== undefined ? newOverrideValue : currentOverrideValue;
-                const isDisabled = (currentOverrideValue ?? permission.defaultAccessLevel) < PermissionAccessLevel.ADMIN;
+                const isDisabled = (Client.authenticatedUser?.permissionOverrides?.[permission._id] ?? permission.defaultAccessLevel) < PermissionAccessLevel.ADMIN;
 
                 function setAccessLevel(newAccessLevel: number | null) {
 
@@ -77,8 +114,9 @@ export default function PermissionDialog({user}: {user: User}) {
                     [permission._id]: newAccessLevel
                   };
 
-                  if (currentOverrideValue === newAccessLevel || (newAccessLevel === null && !currentOverrideValue)) {
+                  if (currentOverrideValue === newAccessLevel || (newAccessLevel === null && currentOverrideValue === undefined)) {
 
+                    console.log("intercept")
                     delete newOverrides[permission._id];
 
                   }
@@ -86,8 +124,6 @@ export default function PermissionDialog({user}: {user: User}) {
                   setNewPermissionOverrides(newOverrides);
 
                 }
-
-                console.log(shownOverrideValue);
 
                 return (
                   <TableRow key={permission._id}>
@@ -117,7 +153,7 @@ export default function PermissionDialog({user}: {user: User}) {
           </TableBody>
         </Table>
         <DialogFooter>
-          <Button type="button" disabled={!Object.keys(newPermissionOverrides)[0]}>Save</Button>
+          <Button type="button" disabled={isProcessing || !Object.keys(newPermissionOverrides)[0]} onClick={() => setIsProcessing(true)}>Save</Button>
           <Button type="button" variant="secondary" onClick={() => setIsOpen(false)}>Close</Button>
         </DialogFooter>
       </DialogContent>

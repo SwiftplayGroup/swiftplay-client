@@ -51,6 +51,8 @@ export default function UserPage() {
 
   }, [username]);
 
+  useEffect(() => console.log(user), [user]);
+
   let shouldShowPermissionEditor = false;
   const { authenticatedUser } = Client;
   if (authenticatedUser?.permissionOverrides) {
@@ -98,7 +100,7 @@ export default function UserPage() {
           user ? (
             <section>
               <Dialog>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                   <Button type="button">Change profile picture</Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -119,7 +121,7 @@ export default function UserPage() {
                 </DialogContent>
               </Dialog>
               {
-                shouldShowPermissionEditor ? <PermissionDialog user={user} /> : null
+                shouldShowPermissionEditor ? <PermissionDialog user={user} setUser={(newUser) => setUser(newUser)} /> : null
               }
             </section>
           ) : null

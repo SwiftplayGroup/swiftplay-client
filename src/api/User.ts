@@ -27,6 +27,10 @@ export type NewUserProperties = Omit<UserProperties, "_id"> & {
   emailAddress: string;
 }
 
+export type NewPermissionOverrides = {
+  [permissionID: string]: PermissionAccessLevel | null;
+};
+
 export default class User extends Client {
 
   _id: string;
@@ -97,6 +101,7 @@ export default class User extends Client {
   static async fetch(path: `/users?username=${string}`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<UserProperties[]>;
   static async fetch(path: `/users/${string}/runs`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<RunProperties[]>;
   static async fetch(path: `/users/${string}`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<UserProperties>;
+  static async fetch(path: `/users/${string}`, properties: {method: "PATCH", headers: {["Content-Type"]: "application/json", "user-id": string, token: string}, body: string}): Promise<UserProperties>;
   static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<UserProperties | UserProperties[] | RunProperties[]> {
 
     return super.fetch(...parameters);
@@ -109,6 +114,30 @@ export default class User extends Client {
       username: this.username,
       password
     });
+
+  }
+
+  async edit(properties: Partial<Omit<UserProperties, "_id" | "permissionOverrides"> & {permissionOverrides: NewPermissionOverrides}>): Promise<User> {
+
+    if (!User.userID || !User.token) {
+
+      throw new Error("User is unauthenticated.");
+
+    }
+
+    const newProperties = await User.fetch(`/users/${this._id}`, {
+      method: "PATCH",
+      body: JSON.stringify(properties),
+      headers: {
+        "Content-Type": "application/json",
+        "user-id": User.userID,
+        "token": User.token
+      }
+    });
+
+    const user = new User(newProperties);
+    console.log(user);
+    return user;
 
   }
 
