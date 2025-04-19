@@ -10,6 +10,10 @@ import Client from "./Client.ts";
 import Game, { GameProperties } from "./Game.ts";
 import User, { UserProperties } from "./User.ts";
 
+export type Verification = {
+  owner: UserProperties;
+}
+
 export type RunProperties = {
   _id: string;
   durationMilliseconds: number;
@@ -17,6 +21,7 @@ export type RunProperties = {
   category?: Category;
   owner: UserProperties;
   game: GameProperties;
+  verification?: Verification;
 }
 
 export default class Run extends Client {
@@ -27,6 +32,7 @@ export default class Run extends Client {
   youtubeWatchID: string;
   game: Game;
   owner: User;
+  verification: RunProperties["verification"];
 
   constructor(properties: RunProperties) {
 
@@ -37,6 +43,7 @@ export default class Run extends Client {
     this.category = properties.category;
     this.game = new Game(properties.game);
     this.owner = new User(properties.owner);
+    this.verification = properties.verification;
 
   }
 

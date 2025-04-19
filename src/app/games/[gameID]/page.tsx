@@ -10,7 +10,7 @@ import styles from "./styles.module.css";
 import ObjectId from "bson-objectid";
 import { Skeleton } from "~/components/ui/skeleton";
 import RunsCard from "~/app/users/[username]/profile-cards/RunsCard/RunsCard";
-import RunCard from "~/components/RunCard/RunCard";
+import FavoriteRunCard from "./profile-cards/FavoriteRunCard/FavoriteRunCard";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { DialogHeader } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
@@ -33,7 +33,7 @@ export default function UserPage() {
         if (typeof(username) !== "string") {
 
           throw new Error("User doesn't exist.");
- 
+
         }
 
         const user = await User.getFromUsername(username);
@@ -132,7 +132,7 @@ export default function UserPage() {
         }
       </Card>
       {
-        user?.favoriteRunID ? <RunCard runID={user.favoriteRunID} /> : null
+        user?.favoriteRunID ? <FavoriteRunCard runID={user.favoriteRunID} /> : null
       }
       {
         user ? <RunsCard user={user} /> : null
