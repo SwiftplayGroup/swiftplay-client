@@ -18,6 +18,12 @@
   gap: 20px;
 }
 
+#actionList {
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+}
+
 .container {
   padding: 25px;
   display: flex;
@@ -42,4 +48,12 @@
 
 .notFound {
   opacity: 0.5;
+}
+
+@media screen and (min-width: 820px) {
+  
+  #actionList {
+    flex-direction: row;
+  }
+
 }
