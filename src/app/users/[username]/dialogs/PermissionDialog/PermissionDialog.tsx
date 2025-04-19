@@ -13,7 +13,7 @@ import styles from "./PermissionDialog.module.css"
 
 export default function PermissionDialog({user}: {user: User}) {
 
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [defaultPermissions, setDefaultPermissions] = useState<Permission[]>([]);
   const [newPermissionOverrides, setNewPermissionOverrides] = useState<{
     [permissionID: string]: PermissionAccessLevel | null;
@@ -42,7 +42,7 @@ export default function PermissionDialog({user}: {user: User}) {
   }, []);
 
   return (
-    <Dialog open={isOpen}>
+    <Dialog open={isOpen} onOpenChange={(isOpen) => setIsOpen(isOpen)}>
       <DialogTrigger>
         <Button type="button">Change permissions</Button>
       </DialogTrigger>
