@@ -12,6 +12,7 @@ import User, { UserProperties } from "./User.ts";
 
 export type Verification = {
   owner: UserProperties;
+  timestamp: Date;
 }
 
 export type RunProperties = {
@@ -61,7 +62,7 @@ export default class Run extends Client {
 
   static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties>
   static async fetch(path: `/runs/${string}`, properties: {method: "DELETE", headers: {token: string, "user-id": string}}): Promise<void>
-  static async fetch(path: `/runs/${string}/verification`, properties: {method: "POST", headers: {"Content-Type": "application/json", token: string, "user-id": string}}): Promise<Verification>
+  static async fetch(path: `/runs/${string}`, properties: {method: "PATCH", body: string, headers: {"Content-Type": "application/json", token: string, "user-id": string}}): Promise<RunProperties>
   static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | Verification | void> {
 
     return super.fetch(...parameters);
@@ -86,7 +87,7 @@ export default class Run extends Client {
 
   }
 
-  async verify(): Promise<Verification> {
+  async verify(): Promise<Run> {
 
     if (!Run.authenticatedUser || !Run.token) {
 
@@ -94,14 +95,21 @@ export default class Run extends Client {
 
     }
 
-    return await Run.fetch(`/runs/${this._id}/verification`, {
-      method: "POST",
+    const verifiedRunData = await Run.fetch(`/runs/${this._id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        verification: {
+          ownerID: Run.authenticatedUser._id
+        }
+      }),
       headers: {
         "Content-Type": "application/json",
         "user-id": Run.authenticatedUser?._id,
         "token": Run.token
       }
     });
+
+    return new Run(verifiedRunData);
 
   }
 

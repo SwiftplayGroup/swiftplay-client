@@ -20,13 +20,7 @@ export default function VerifyRunDialog({run, setRun}: {run: Run, setRun: (run: 
 
         try {
 
-          const verification = await run.verify();
-          const verifiedRun = new Run(
-            {
-              ...run,
-              verification
-            }
-          );
+          const verifiedRun = await run.verify();
           setRun(verifiedRun);
 
         } catch (error) {
@@ -47,7 +41,7 @@ export default function VerifyRunDialog({run, setRun}: {run: Run, setRun: (run: 
   return (
     <Dialog open={isOpen} onOpenChange={(isOpen) => setIsOpen(isOpen)}>
       <DialogTrigger asChild>
-        <Button type="button" variant="secondary">Verify run</Button>
+        <Button type="button" variant="secondary" disabled={!!run.verification}>Verify run</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
