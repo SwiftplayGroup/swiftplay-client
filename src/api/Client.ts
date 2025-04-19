@@ -7,12 +7,14 @@
 
 import UnknownError from "./errors/UnknownError.ts";
 import HTTPError from "./errors/HTTPError.ts";
+import User from "./User.ts";
 
 export default abstract class Client {
 
   static apiURI = process.env.NEXT_PUBLIC_API_URI_OVERRIDE ?? "https://swiftplay.onrender.com"; // TODO: Set this automatically based on environment variables.
   static token?: string;
   static userID?: string;
+  static authenticatedUser?: User;
 
   constructor() {
 

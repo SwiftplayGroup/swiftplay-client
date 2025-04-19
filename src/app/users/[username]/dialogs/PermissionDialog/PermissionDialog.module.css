@@ -1,0 +1,14 @@
+.defaultButton {
+  background: transparent;
+  color: white;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+}
+
+.accessCell {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  gap: 5px;
+}

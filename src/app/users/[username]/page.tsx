@@ -14,8 +14,9 @@ import FavoriteRunCard from "./profile-cards/FavoriteRunCard/FavoriteRunCard";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { DialogHeader } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
-import PermissionDialog from "./dialogs/PermissionDialog";
+import PermissionDialog from "./dialogs/PermissionDialog/PermissionDialog";
 import { PermissionAccessLevel } from "~/api/Permission";
+import Client from "~/api/Client";
 
 export default function UserPage() {
 
@@ -51,11 +52,12 @@ export default function UserPage() {
   }, [username]);
 
   let shouldShowPermissionEditor = false;
-  if (user?.permissionOverrides) {
+  const { authenticatedUser } = Client;
+  if (authenticatedUser?.permissionOverrides) {
 
-    for (const permissionID of Object.keys(user.permissionOverrides)) {
+    for (const permissionID of Object.keys(authenticatedUser.permissionOverrides)) {
 
-      if (user.permissionOverrides[permissionID] >= PermissionAccessLevel.ADMIN) {
+      if (authenticatedUser.permissionOverrides[permissionID] >= PermissionAccessLevel.ADMIN) {
 
         shouldShowPermissionEditor = true;
         break;
@@ -96,7 +98,7 @@ export default function UserPage() {
           user ? (
             <section>
               <Dialog>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                   <Button type="button">Change profile picture</Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -117,7 +119,7 @@ export default function UserPage() {
                 </DialogContent>
               </Dialog>
               {
-                shouldShowPermissionEditor ? <PermissionDialog user={user} /> : null
+                shouldShowPermissionEditor ? <PermissionDialog user={user} setUser={(newUser) => setUser(newUser)} /> : null
               }
             </section>
           ) : null

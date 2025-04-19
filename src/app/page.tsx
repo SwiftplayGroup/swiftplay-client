@@ -1,22 +1,13 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import HeroParallaxDemo from "~/components/home/hero-parallax";
 import NavbarDemo from "~/components/aceternity/navbar-menu";
 import GoogleGeminiEffectDemo from "~/components/home/google-gemini-effect";
 import { HeroHighlight, Highlight } from "~/components/ui/hero-highlight";
 import { motion } from "framer-motion";
 import { GlowingEffectBento } from "~/components/home/glowing-effect";
-import Client from "~/api/Client.ts";
-import getCookie from "~/lib/getCookie.ts";
 
 export default function Page() {
-
-  useEffect(() => {
-
-    Client.token = getCookie("token");
-    Client.userID = getCookie("userID");
-
-  }, []);
 
   return (
     <div className="bg-black">
