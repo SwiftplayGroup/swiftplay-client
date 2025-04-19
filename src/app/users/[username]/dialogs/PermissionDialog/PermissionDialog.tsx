@@ -136,12 +136,12 @@ export default function PermissionDialog({user, setUser}: {user: User, setUser: 
                       </Button>
                       <Select value={shownOverrideValue?.toString() ?? ""} disabled={isDisabled} onValueChange={(value) => setAccessLevel(parseInt(value, 10))}>
                         <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder={["Denied", "Granted", "Admin"][permission.defaultAccessLevel] ?? "Unknown"} />
+                          <SelectValue placeholder={["No access", "User", "Admin"][permission.defaultAccessLevel] ?? "Unknown"} />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="2">Admin</SelectItem>
-                          <SelectItem value="1">Granted</SelectItem>
-                          <SelectItem value="0">Denied</SelectItem>
+                          <SelectItem value="1">User</SelectItem>
+                          <SelectItem value="0">No access</SelectItem>
                         </SelectContent>
                       </Select>
                     </TableCell>
