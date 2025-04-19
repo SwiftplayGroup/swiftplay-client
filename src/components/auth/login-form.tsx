@@ -9,11 +9,34 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Session from "@/api/Session.ts";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setError(null);
+
+    const formData = new FormData(event.currentTarget);
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      const session = await Session.createSession({ username, password });
+      if (session.token) {
+        localStorage.setItem("token", session.token);
+        router.push("/");
+      }
+    } catch (err) {
+      setError(err as string);
+    }
+  };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -24,14 +47,14 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
+                  id="username"
+                  type="username"
+                  placeholder="itsAidenJai"
                   required
                 />
               </div>
@@ -50,6 +73,9 @@ export function LoginForm({
               <Button type="submit" className="w-full">
                 Login
               </Button>
+              {error && (
+                <div className="text-sm text-red-500 text-center">{error}</div>
+              )}
               <Button variant="outline" className="w-full">
                 Login with Google
               </Button>
