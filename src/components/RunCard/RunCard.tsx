@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react"
 import { Card, CardTitle } from "~/components/ui/card";
 import styles from "./RunCard.module.css";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -8,39 +7,7 @@ import Run from "~/api/Run";
 import convertMillisecondsToTime from "~/lib/millisecondsToTime";
 import Link from "next/link";
 
-export default function RunCard({runID}: {runID?: string}) {
-
-  const [isLoading, setIsLoading] = useState<boolean>(!!runID);
-  const [run, setRun] = useState<Run | null>(null);
-
-  useEffect(() => {
-
-    (async () => {
-
-      if (runID) {
-
-        try {
-
-          const run = await Run.getFromID(runID);
-          setRun(run);
-
-        } catch (error) {
-
-          console.error(error);
-
-        }
-
-        setIsLoading(false);
-
-      } else {
-
-        setRun(null);
-
-      }
-
-    })();
-
-  }, [runID]);
+export default function RunCard({run, isLoading}: {run: Run | null, isLoading: boolean}) {
 
   return (
     <Card className={styles.container}>

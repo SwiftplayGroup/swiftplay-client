@@ -59,10 +59,29 @@ export default class Run extends Client {
 
   }
 
-  static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<Run>
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties> {
+  static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties>
+  static async fetch(path: `/runs/${string}`, properties: {method: "DELETE", headers: {token: string, "user-id": string}}): Promise<void>
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | void> {
 
     return super.fetch(...parameters);
+
+  }
+
+  async delete(): Promise<void> {
+
+    if (!Run.authenticatedUser || !Run.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    await Run.fetch(`/runs/${this._id}`, {
+      method: "DELETE",
+      headers: {
+        "user-id": Run.authenticatedUser?._id,
+        "token": Run.token
+      }
+    });
 
   }
 

@@ -5,3 +5,8 @@
   flex-direction: column;
   gap: 25px;
 }
+
+#main > section, #main > div {
+  margin: 0 20px;
+  padding: 25px;
+}
