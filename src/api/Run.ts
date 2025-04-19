@@ -30,8 +30,6 @@ export default class Run extends Client {
 
   constructor(properties: RunProperties) {
 
-    console.log(properties)
-
     super();
     this._id = properties._id;
     this.durationMilliseconds = properties.durationMilliseconds;
