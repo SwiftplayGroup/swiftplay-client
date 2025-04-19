@@ -18,6 +18,7 @@ export type PermissionProperties = {
   name: string;
   description: string;
   defaultAccessLevel: number;
+  hierarchicalName: string;
 }
 
 export default class Permission extends Client {
@@ -26,6 +27,8 @@ export default class Permission extends Client {
   name: string;
   description: string;
   defaultAccessLevel: PermissionAccessLevel;
+  hierarchicalName: PermissionProperties["hierarchicalName"];
+  static defaultPermissions?: Permission[];
 
   constructor(properties: PermissionProperties) {
 
@@ -33,23 +36,31 @@ export default class Permission extends Client {
     this._id = properties._id;
     this.description = properties.description;
     this.defaultAccessLevel = properties.defaultAccessLevel;
+    this.hierarchicalName = properties.hierarchicalName;
     this.name = properties.name;
 
   }
 
   static async find(): Promise<Permission[]> {
 
-    const data = await this.fetch("/permissions", {
-      headers: {
-        "Content-Type": "application/json"
+    const permissions = this.defaultPermissions ?? [];
+
+    if (!this.defaultPermissions) {
+
+      const data = await this.fetch("/permissions", {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      for (const permissionData of data) {
+
+        const permission = new Permission(permissionData);
+        permissions.push(permission);
+
       }
-    });
 
-    const permissions = [];
-    for (const permissionData of data) {
-
-      const permission = new Permission(permissionData);
-      permissions.push(permission);
+      this.defaultPermissions = permissions;
 
     }
 

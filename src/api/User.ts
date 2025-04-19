@@ -7,7 +7,7 @@
 
 import Client from "./Client.ts";
 import HTTPError from "./errors/HTTPError.ts";
-import { PermissionAccessLevel } from "./Permission.ts";
+import Permission, { PermissionAccessLevel } from "./Permission.ts";
 import Run, { RunProperties } from "./Run.ts";
 import Session from "./Session.ts";
 
@@ -105,6 +105,19 @@ export default class User extends Client {
   static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<UserProperties | UserProperties[] | RunProperties[]> {
 
     return super.fetch(...parameters);
+
+  }
+
+  getAccessLevel(permission: Permission): number {
+
+    const accessLevel = this.permissionOverrides?.[permission._id];
+    if (typeof(accessLevel) === "number") {
+
+      return accessLevel;
+
+    }
+
+    return permission.defaultAccessLevel;
 
   }
 

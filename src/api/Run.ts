@@ -12,6 +12,7 @@ import User, { UserProperties } from "./User.ts";
 
 export type Verification = {
   owner: UserProperties;
+  timestamp: Date;
 }
 
 export type RunProperties = {
@@ -61,7 +62,8 @@ export default class Run extends Client {
 
   static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties>
   static async fetch(path: `/runs/${string}`, properties: {method: "DELETE", headers: {token: string, "user-id": string}}): Promise<void>
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | void> {
+  static async fetch(path: `/runs/${string}`, properties: {method: "PATCH", body: string, headers: {"Content-Type": "application/json", token: string, "user-id": string}}): Promise<RunProperties>
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | Verification | void> {
 
     return super.fetch(...parameters);
 
@@ -82,6 +84,32 @@ export default class Run extends Client {
         "token": Run.token
       }
     });
+
+  }
+
+  async verify(): Promise<Run> {
+
+    if (!Run.authenticatedUser || !Run.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    const verifiedRunData = await Run.fetch(`/runs/${this._id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        verification: {
+          ownerID: Run.authenticatedUser._id
+        }
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        "user-id": Run.authenticatedUser?._id,
+        "token": Run.token
+      }
+    });
+
+    return new Run(verifiedRunData);
 
   }
 

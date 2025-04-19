@@ -8,6 +8,8 @@ import styles from "./styles.module.css";
 import Run from "~/api/Run";
 import RunCard from "~/components/RunCard/RunCard";
 import DeleteRunDialog from "./dialogs/DeleteRunDialog";
+import Permission, { PermissionAccessLevel } from "~/api/Permission";
+import VerifyRunDialog from "./dialogs/VerifyRunDialog";
 
 export default function RunPage() {
 
@@ -17,6 +19,7 @@ export default function RunPage() {
     gameID: string;
   }>();
   const [run, setRun] = useState<Run | null>(null);
+  const [canVerifyRun, setCanVerifyRun] = useState<boolean>(false);
 
   useEffect(() => {
 
@@ -26,6 +29,17 @@ export default function RunPage() {
 
         const run = await Run.getFromID(runID);
         setRun(run);
+
+        let canVerifyRun = false;
+        if (Run.authenticatedUser) {
+
+          const permissions = await Permission.find();
+          const verifyPermission = permissions.find((permission) => permission.hierarchicalName === "games.runs.verify");
+          canVerifyRun = verifyPermission ? (Run.authenticatedUser.getAccessLevel(verifyPermission) ?? 0) >= PermissionAccessLevel.USER : false;
+
+        }
+        
+        setCanVerifyRun(canVerifyRun);
 
       } catch (error) {
 
@@ -39,16 +53,25 @@ export default function RunPage() {
 
   }, [runID]);
 
+  const canDeleteRun = run?.owner._id === Run.authenticatedUser?._id;
+
   return (
     <section id={styles.main}>
       <RunCard run={run} isLoading={isLoading} />
       {
-        run ? (
-          run.owner._id === Run.authenticatedUser?._id ? (
-            <Card>
-              <DeleteRunDialog run={run} />
-            </Card>
-          ) : null
+        run && canDeleteRun && canVerifyRun ? (
+          <Card id={styles.options}>
+            {
+              canVerifyRun ? (
+                <VerifyRunDialog run={run} setRun={(verifiedRun) => setRun(verifiedRun)} />
+              ) : null
+            }
+            {
+              canDeleteRun ? (
+                <DeleteRunDialog run={run} />
+              ) : null
+            }
+          </Card>
         ) : null
       }
     </section>
