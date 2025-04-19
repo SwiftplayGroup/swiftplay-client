@@ -1,20 +1,7 @@
-import { getThreads, getForums } from "@/api/forums";
-import { Forum } from "@/types/forums";
+import { getThreads } from "@/api/forums";
 import { Thread } from "@/types/threads";
 import { ThreadCard } from "@/components/forums/threads/thread-card";
 import Link from "next/link";
-
-export async function generateStaticParams() {
-  try {
-    const forums = await getForums();
-    return forums.map((forum: Forum) => ({
-      forumID: forum._id,
-    }));
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
-}
 
 export default async function ForumPage({
   params,
