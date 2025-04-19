@@ -6,7 +6,7 @@ import Run from "~/api/Run";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 
-export default function VerifyRunDialog({run, setRun}: {run: Run, setRun: (run: Run) => void}) {
+export default function RemoveRunDialog({run, setRun}: {run: Run, setRun: (run: Run) => void}) {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
@@ -20,7 +20,7 @@ export default function VerifyRunDialog({run, setRun}: {run: Run, setRun: (run: 
 
         try {
 
-          const editedRun = run.verification ? await run.unverify() : await run.verify();
+          const editedRun = run.removal ? await run.restore() : await run.remove();
           setRun(editedRun);
 
         } catch (error) {
@@ -41,23 +41,23 @@ export default function VerifyRunDialog({run, setRun}: {run: Run, setRun: (run: 
   return (
     <Dialog open={isOpen} onOpenChange={(isOpen) => setIsOpen(isOpen)}>
       <DialogTrigger asChild>
-        <Button type="button" variant={run.verification ? "destructive" : "secondary"} disabled={isProcessing}>
-          {run.verification ? "Unv" : "V"}erify run
+        <Button type="button" variant={run.removal ? "secondary" : "destructive"} disabled={isProcessing}>
+          R{run.removal ? "estore" : "emove"} run
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {run.verification ? "Unv" : "V"}erify run
+            R{run.removal ? "estore" : "emove"} run
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to {run.verification ? "un" : ""}verify this run?
+            Are you sure you want to r{run.removal ? "estore" : "emove"} this run? This will {run.removal ? "make the run accessible to the public again." : "hide it from non-moderators, except the submitter."}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="button" variant={run.verification ? "destructive" : undefined} onClick={() => setIsProcessing(true)}>
-              {run.verification ? "Unv" : "V"}erify run
+            <Button type="button" variant={run.removal ? undefined : "destructive"} onClick={() => setIsProcessing(true)}>
+              R{run.removal ? "estore" : "emove"} run
             </Button>
           </DialogClose>
           <DialogClose asChild>

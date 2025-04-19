@@ -29,7 +29,7 @@ export default function DeleteRunDialog({run}: {run: Run}) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button" variant="destructive">Delete run</Button>
+        <Button type="button" variant="destructive" disabled={isProcessing}>Delete run</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
