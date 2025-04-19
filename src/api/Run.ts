@@ -10,9 +10,15 @@ import Client from "./Client.ts";
 import Game, { GameProperties } from "./Game.ts";
 import User, { UserProperties } from "./User.ts";
 
-export type Verification = {
+export type RunVerification = {
   owner: UserProperties;
   timestamp: Date;
+}
+
+export type RunRemoval = {
+  owner: UserProperties;
+  timestamp: Date;
+  reason?: string;
 }
 
 export type RunProperties = {
@@ -22,15 +28,20 @@ export type RunProperties = {
   category?: Category;
   owner: UserProperties;
   game: GameProperties;
-  verification?: Verification;
+  verification?: RunVerification;
+  removal?: RunRemoval;
 }
 
-export type EditableRunProperties = Partial<Omit<RunProperties, "category" | "owner" | "game" | "verification"> & {
+export type EditableRunProperties = Partial<Omit<RunProperties, "category" | "owner" | "game" | "verification" | "removal"> & {
   categoryID: string;
   ownerID: string;
   gameID: string;
   verification: {
     ownerID: string
+  } | null;
+  removal: {
+    ownerID: string;
+    reason?: string;
   } | null
 }>;
 
@@ -43,6 +54,7 @@ export default class Run extends Client {
   game: Game;
   owner: User;
   verification: RunProperties["verification"];
+  removal: RunProperties["removal"];
 
   constructor(properties: RunProperties) {
 
@@ -54,6 +66,7 @@ export default class Run extends Client {
     this.game = new Game(properties.game);
     this.owner = new User(properties.owner);
     this.verification = properties.verification;
+    this.removal = properties.removal;
 
   }
 
@@ -72,7 +85,7 @@ export default class Run extends Client {
   static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties>
   static async fetch(path: `/runs/${string}`, properties: {method: "DELETE", headers: {token: string, "user-id": string}}): Promise<void>
   static async fetch(path: `/runs/${string}`, properties: {method: "PATCH", body: string, headers: {"Content-Type": "application/json", token: string, "user-id": string}}): Promise<RunProperties>
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | Verification | void> {
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | RunRemoval | void> {
 
     return super.fetch(...parameters);
 
@@ -144,6 +157,37 @@ export default class Run extends Client {
 
     return await this.edit({
       verification: null
+    });
+
+  }
+
+  async remove(reason?: string): Promise<Run> {
+
+    if (!Run.authenticatedUser || !Run.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    return await this.edit({
+      removal: {
+        ownerID: Run.authenticatedUser._id,
+        reason
+      }
+    });
+
+  }
+
+  async restore(): Promise<Run> {
+
+    if (!Run.authenticatedUser || !Run.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    return await this.edit({
+      removal: null
     });
 
   }
