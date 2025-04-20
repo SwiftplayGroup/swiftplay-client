@@ -51,7 +51,7 @@ export default function SignupFormPage() {
 
           // Let the rest of the scripts know.
           const channel = new BroadcastChannel("authentication");
-          channel.postMessage(user);
+          channel.postMessage(null);
 
           // Redirect the user back home.
           router.replace("/");

@@ -46,7 +46,10 @@ export default class Session extends Client {
       }
     })
 
-    return new Session(data);
+    return new Session({
+      ...data,
+      token: `Bearer ${data.token}`
+    });
 
   }
 
