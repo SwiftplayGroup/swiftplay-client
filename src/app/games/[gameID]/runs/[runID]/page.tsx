@@ -15,11 +15,12 @@ import RemoveRunDialog from "./dialogs/RemoveRunDialog";
 export default function RunPage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { gameID, runID } = useParams<{
+  const { runID } = useParams<{
     runID: string;
     gameID: string;
   }>();
   const [run, setRun] = useState<Run | null>(null);
+  const [canDeleteRun, setCanDeleteRun] = useState<boolean>(false);
   const [canVerifyRun, setCanVerifyRun] = useState<boolean>(false);
   const [canRemoveRun, setCanRemoveRun] = useState<boolean>(false);
 
@@ -34,17 +35,22 @@ export default function RunPage() {
 
         let canVerifyRun = false;
         let canRemoveRun = false;
-        if (Run.authenticatedUser) {
+        let canDeleteRun = false;
+        const authenticatedUser = await Run.session?.getUser();
+        if (authenticatedUser) {
 
           const permissions = await Permission.find();
           const verifyPermission = permissions.find((permission) => permission.hierarchicalName === "games.runs.verify");
-          canVerifyRun = verifyPermission ? (Run.authenticatedUser.getAccessLevel(verifyPermission) ?? 0) >= PermissionAccessLevel.USER : false;
+          canVerifyRun = verifyPermission ? (authenticatedUser.getAccessLevel(verifyPermission) ?? 0) >= PermissionAccessLevel.USER : false;
           
           const removePermission = permissions.find((permission) => permission.hierarchicalName === "games.runs.remove");
-          canRemoveRun = removePermission ? (Run.authenticatedUser.getAccessLevel(removePermission) ?? 0) >= PermissionAccessLevel.USER : false;
+          canRemoveRun = removePermission ? (authenticatedUser.getAccessLevel(removePermission) ?? 0) >= PermissionAccessLevel.USER : false;
+
+          canDeleteRun = run?.owner._id === authenticatedUser?._id
 
         }
         
+        setCanDeleteRun(canDeleteRun);
         setCanVerifyRun(canVerifyRun);
         setCanRemoveRun(canRemoveRun);
 
@@ -59,8 +65,6 @@ export default function RunPage() {
     })();
 
   }, [runID]);
-
-  const canDeleteRun = run?.owner._id === Run.authenticatedUser?._id;
 
   return (
     <main>
