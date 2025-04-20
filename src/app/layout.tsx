@@ -1,11 +1,11 @@
 "use client";
 
 import "./globals.css";
-import NavbarDemo from "~/components/aceternity/navbar-menu";
 import { useEffect, useState } from "react";
 import Client from "~/api/Client";
 import getCookie from "~/lib/getCookie";
 import User from "~/api/User";
+import Header from "~/components/Header/Header";
 
 export default function RootLayout({
   children,
@@ -27,6 +27,9 @@ export default function RootLayout({
         if (Client.userID) {
 
           Client.authenticatedUser = await User.getFromID(Client.userID);
+          const channel = new BroadcastChannel("authentication");
+          
+          channel.postMessage(Client.authenticatedUser);
 
         }
 
@@ -54,7 +57,7 @@ export default function RootLayout({
         {
           !isAuthenticating ? (
             <>
-              <NavbarDemo />
+              <Header />
               {children}
             </>
           ) : null

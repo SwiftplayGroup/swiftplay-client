@@ -52,6 +52,10 @@ export default function SignupFormPage() {
           Client.userID = session.userID;
           Client.authenticatedUser = user;
 
+          // Let the rest of the scripts know.
+          const channel = new BroadcastChannel("authentication");
+          channel.postMessage(user);
+
           // Redirect the user back home.
           router.replace("/");
 
@@ -80,45 +84,47 @@ export default function SignupFormPage() {
   }, [emailAddress, password, router, shouldProcessData, username]);
 
   return (
-    <div className="shadow-input mx-auto w-full mt-32 max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
-      <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Welcome to Swiftplay
-      </h2>
-      <p>Create an account to share your runs and join the community</p>
-      {
-        errorMessage ? (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Registration error</AlertTitle>
-            <AlertDescription>
-              {errorMessage}
-            </AlertDescription>
-          </Alert>
-        ) : null
-      }
-      <form className="my-8" onSubmit={handleSignUp}>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
-          <Input id="email" type="email" value={emailAddress} onChange={(event) => setEmailAddress(event.target.value)} required disabled={shouldProcessData} />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="username">Username</Label>
-          <Input id="username" type="text" value={username} onChange={(event) => setUsername(event.target.value)} required disabled={shouldProcessData} />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required disabled={shouldProcessData} />
-        </LabelInputContainer>
-        <button
-          className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
-          type="submit"
-          disabled={shouldProcessData} 
-        >
-          Sign up &rarr;
-          <BottomGradient />
-        </button>
-      </form>
-    </div>
+    <main>
+      <section className="shadow-input mx-auto w-full mt-32 max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+        <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
+          Welcome to Swiftplay
+        </h2>
+        <p>Create an account to share your runs and join the community</p>
+        {
+          errorMessage ? (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Registration error</AlertTitle>
+              <AlertDescription>
+                {errorMessage}
+              </AlertDescription>
+            </Alert>
+          ) : null
+        }
+        <form className="my-8" onSubmit={handleSignUp}>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="email">Email Address</Label>
+            <Input id="email" type="email" value={emailAddress} onChange={(event) => setEmailAddress(event.target.value)} required disabled={shouldProcessData} />
+          </LabelInputContainer>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="username">Username</Label>
+            <Input id="username" type="text" value={username} onChange={(event) => setUsername(event.target.value)} required disabled={shouldProcessData} />
+          </LabelInputContainer>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="password">Password</Label>
+            <Input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required disabled={shouldProcessData} />
+          </LabelInputContainer>
+          <button
+            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
+            type="submit"
+            disabled={shouldProcessData} 
+          >
+            Sign up &rarr;
+            <BottomGradient />
+          </button>
+        </form>
+      </section>
+    </main>
   );
 }
 

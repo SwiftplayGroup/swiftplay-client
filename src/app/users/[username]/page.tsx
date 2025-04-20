@@ -24,7 +24,7 @@ export default function UserPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const [favoriteRun, setFavoriteRun] = useState<Run | null>(null);
-  const { username } = useParams()
+  const { username } = useParams<{username: string}>()
 
   useEffect(() => {
 
@@ -80,73 +80,75 @@ export default function UserPage() {
   const canChangeProfilePhoto = user ? Client.authenticatedUser?._id === user._id : false;
 
   return (
-    <section id={styles.main}>
-      <Card id={styles.userContainer} className={styles.container}>
-        <section>
-          <Avatar id={styles.profilePicture} className={!user ? styles.notFound : undefined}>
-            <AvatarImage src={user?.avatarURL} />
-          </Avatar>
+    <main id={styles.main}>
+      <section id={styles.content}>
+        <Card id={styles.userContainer} className={styles.container}>
           <section>
-            {
-              isLoading ? <Skeleton className="h-6 w-[300px]" /> : (
-                <section id={styles.username}>
-                  {user?.username ?? "User not found"}
-                </section>
-              )
-            }
-            {
-              isLoading || !user ? (
-                <Skeleton className="h-4 w-[250px]" />
-              ) : (
-                <section>
-                  Joined on {new Intl.DateTimeFormat("en-US").format(new ObjectId(user._id).getTimestamp())}
-                </section>
-              )
-            }
-          </section>
-        </section>
-        {
-          user ? (
-            <section id={styles.actionList}>
+            <Avatar id={styles.profilePicture} className={!user ? styles.notFound : undefined}>
+              <AvatarImage src={user?.avatarURL} />
+            </Avatar>
+            <section>
               {
-                canChangeProfilePhoto ? (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button type="button">Change profile picture</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Change profile picture</DialogTitle>
-                        <DialogDescription>
-                          Your profile picture is retrieved from Gravatar using your email address. You can change it by using their website.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter>
-                        <DialogClose asChild>
-                          <Button type="button" onClick={() => window.open("https://gravatar.com/", "_blank")}>Go to Gravatar</Button>
-                        </DialogClose>
-                        <DialogClose asChild>
-                          <Button type="button" variant="secondary">Nevermind</Button>
-                        </DialogClose>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                ) : null
+                isLoading ? <Skeleton className="h-6 w-[300px]" /> : (
+                  <section id={styles.username}>
+                    {user?.username ?? "User not found"}
+                  </section>
+                )
               }
               {
-                shouldShowPermissionEditor ? <PermissionDialog user={user} setUser={(newUser) => setUser(newUser)} /> : null
+                isLoading || !user ? (
+                  <Skeleton className="h-4 w-[250px]" />
+                ) : (
+                  <section>
+                    Joined on {new Intl.DateTimeFormat("en-US").format(new ObjectId(user._id).getTimestamp())}
+                  </section>
+                )
               }
             </section>
-          ) : null
+          </section>
+          {
+            user ? (
+              <section id={styles.actionList}>
+                {
+                  canChangeProfilePhoto ? (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button type="button">Change profile picture</Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Change profile picture</DialogTitle>
+                          <DialogDescription>
+                            Your profile picture is retrieved from Gravatar using your email address. You can change it by using their website.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                          <DialogClose asChild>
+                            <Button type="button" onClick={() => window.open("https://gravatar.com/", "_blank")}>Go to Gravatar</Button>
+                          </DialogClose>
+                          <DialogClose asChild>
+                            <Button type="button" variant="secondary">Nevermind</Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  ) : null
+                }
+                {
+                  shouldShowPermissionEditor ? <PermissionDialog user={user} setUser={(newUser) => setUser(newUser)} /> : null
+                }
+              </section>
+            ) : null
+          }
+        </Card>
+        {
+          user ? <RunCard run={favoriteRun} isLoading={isLoading} /> : null
         }
-      </Card>
-      {
-        user ? <RunCard run={favoriteRun} isLoading={isLoading} /> : null
-      }
-      {
-        user ? <RunsCard user={user} /> : null
-      }
-    </section>
+        {
+          user ? <RunsCard user={user} /> : null
+        }
+      </section>
+    </main>
   )
 
 }
