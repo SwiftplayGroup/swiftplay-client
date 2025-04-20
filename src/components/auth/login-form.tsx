@@ -21,6 +21,8 @@ export function LoginForm({
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); //NOTE: Research this -Aiden
+    //Cause like ... tell me why tf this didnt work until I added this line.
     setError(null);
 
     const formData = new FormData(event.currentTarget);
@@ -31,11 +33,9 @@ export function LoginForm({
     if (data.error) {
       setError(data.error);
     }
-    if (data.sessionToken) {
-      localStorage.setItem("token", data.sessionToken);
-      localStorage.setItem("session", data.sessionID);
-      router.push("/");
-    }
+    localStorage.setItem("token", data.sessionToken);
+    localStorage.setItem("session", data.sessionID);
+    router.push("/");
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -53,6 +53,7 @@ export function LoginForm({
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
+                  name="username"
                   type="username"
                   placeholder="itsAidenJai"
                   required
@@ -68,7 +69,7 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input name="password" id="password" type="password" required />
               </div>
               <Button type="submit" className="w-full">
                 Login
