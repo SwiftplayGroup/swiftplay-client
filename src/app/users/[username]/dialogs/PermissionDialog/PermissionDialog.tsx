@@ -105,7 +105,7 @@ export default function PermissionDialog({user, setUser}: {user: User, setUser: 
                 const currentOverrideValue = user.permissionOverrides?.[permission._id];
                 const newOverrideValue = newPermissionOverrides[permission._id];
                 const shownOverrideValue = newOverrideValue !== undefined ? newOverrideValue : currentOverrideValue;
-                const isDisabled = (Client.authenticatedUser?.permissionOverrides?.[permission._id] ?? permission.defaultAccessLevel) < PermissionAccessLevel.ADMIN;
+                const isDisabled = (Client.session?.user?.permissionOverrides?.[permission._id] ?? permission.defaultAccessLevel) < PermissionAccessLevel.ADMIN;
 
                 function setAccessLevel(newAccessLevel: number | null) {
 

@@ -9,18 +9,19 @@ import { Avatar, AvatarImage } from "~/components/ui/avatar"
 export default function Header() {
 
   const router = useRouter();
-  const [authenticatedUser, setAuthenticatedUser] = useState<User | undefined>(User.authenticatedUser);
+  const [authenticatedUser, setAuthenticatedUser] = useState<User | undefined>();
 
   useEffect(() => {
 
     const authenticationChannel = new BroadcastChannel("authentication");
 
-    function update() {
-
-      setAuthenticatedUser(User.authenticatedUser);
+    async function update() {
+      
+      setAuthenticatedUser(await User.session?.getUser());
 
     }
 
+    update();
 
     authenticationChannel.addEventListener("message", update);
 
