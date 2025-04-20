@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Session from "@/api/Session.ts";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { login } from "@/api/auth";
 
 export function LoginForm({
   className,
@@ -26,15 +26,15 @@ export function LoginForm({
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
-
-    try {
-      const session = await Session.createSession({ username, password });
-      if (session.token) {
-        localStorage.setItem("token", session.token);
-        router.push("/");
-      }
-    } catch (err) {
-      setError(err as string);
+    const data = await login(username, password);
+    console.log(data);
+    if (data.error) {
+      setError(data.error);
+    }
+    if (data.sessionToken) {
+      localStorage.setItem("token", data.sessionToken);
+      localStorage.setItem("session", data.sessionID);
+      router.push("/");
     }
   };
   return (
