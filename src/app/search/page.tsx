@@ -9,7 +9,7 @@ const games = [
   { id: 1, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
   { id: 2, title: "God of War", cover: "https://cdn.mobygames.com/e7439ec0-ab80-11ed-aa5a-02420a0001a0.webp" },
   { id: 3, title: "Hades", cover: "https://cdn.mobygames.com/a681555e-ac10-11ed-92cb-02420a000132.webp" },
-  { id: 5, title: "Cyberpunk 2077", cover: "https://cdn.mobygames.com/7edc0cbc-abf5-11ed-9fde-02420a000132.webp" },
+  { id: 5, title: "Stardew", cover: "https://cdn.mobygames.com/7edc0cbc-abf5-11ed-9fde-02420a000132.webp" },
   { id: 6, title: "Mario and Wario", cover: "https://cdn.mobygames.com/beac7fac-abf0-11ed-b6e7-02420a000135.webp" },
 ];
 
@@ -25,7 +25,7 @@ export default function Search() {
       <NavbarDemo />
 
       {/* Title Section */}
-      <div className="mt-40">
+      <div className="mt-20">
         <HeroHighlight>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -33,7 +33,7 @@ export default function Search() {
             transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
             className="text-white md:text-4xl lg:text-5xl font-bold text-center md:text-left leading-tight"
           >
-            <Highlight className="pb-2 text-black text-8xl dark:text-white">
+            <Highlight className="pb-2 text-black text-5xl dark:text-white">
               Games
             </Highlight>
           </motion.h1>
@@ -41,7 +41,7 @@ export default function Search() {
       </div>
 
       {/* Search & Game Grid */}
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 -mt-20">
         <motion.input
           type="text"
           placeholder="Search games..."
@@ -54,7 +54,7 @@ export default function Search() {
         />
 
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+          className="grid grid-cols-4 grid-rows-4 gap-4"
           initial="hidden"
           animate="visible"
           variants={{
@@ -76,7 +76,7 @@ export default function Search() {
                 <img
                   src={game.cover}
                   alt={game.title}
-                  className="w-full h-72 object-cover"
+                  className="w-full h-40 object-cover"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 text-center text-lg">
                   {game.title}
