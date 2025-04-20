@@ -5,7 +5,7 @@ import NavbarDemo from "~/components/example/navbar-menu-demo";
 import { HeroHighlight, Highlight } from "~/components/ui/hero-highlight";
 import { Hexagon, Github, Twitter } from "lucide-react"
 import  Footer  from "~/components/ui/footer"
-const games = [
+const game = [
   { id: 1, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
   { id: 2, title: "God of War", cover: "https://cdn.mobygames.com/e7439ec0-ab80-11ed-aa5a-02420a0001a0.webp" },
   { id: 3, title: "Hades", cover: "https://cdn.mobygames.com/a681555e-ac10-11ed-92cb-02420a000132.webp" },
@@ -32,11 +32,11 @@ const games = [
   { id: 24, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
 ];
 
-export default function Search() {
+export default function games() {
   const [query, setQuery] = useState("");
 
-  const filteredGames = games.filter(game =>
-    game.title.toLowerCase().includes(query.toLowerCase())
+  const filteredGames = game.filter(gamer =>
+    gamer.title.toLowerCase().includes(query.toLowerCase())
   );
 
   return (

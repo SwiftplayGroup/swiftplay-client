@@ -113,7 +113,7 @@ function Navbar({ className }: { className?: string }) {
             <HoveredLink href="/leaderboard">Leaderboard</HoveredLink>
             <HoveredLink href="/account">Personal</HoveredLink>
             <HoveredLink href="/account">Account</HoveredLink>
-            <HoveredLink href="/search">Search</HoveredLink>
+            <HoveredLink href="/games">Games</HoveredLink>
           </div>
         </MenuItem>
         {sessionToken ? (
