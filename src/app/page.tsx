@@ -1,16 +1,15 @@
 "use client";
 import React from "react";
-import HeroParallaxDemo from "~/components/example/hero-parallax-demo";
-import NavbarDemo from "~/components/example/navbar-menu-demo";
-import GoogleGeminiEffectDemo from "~/components/example/google-gemini-effect-demo";
+import HeroParallaxDemo from "~/components/home/hero-parallax";
+import GoogleGeminiEffectDemo from "~/components/home/google-gemini-effect";
 import { HeroHighlight, Highlight } from "~/components/ui/hero-highlight";
 import { motion } from "framer-motion";
-import { GlowingEffectDemo } from "~/components/example/glowing-effect-demo";
+import { GlowingEffectBento } from "~/components/home/glowing-effect";
 
 export default function Page() {
+
   return (
-    <div className="bg-black">
-      <NavbarDemo />
+    <main>
       <div className="flex flex-col md:flex-row items-center justify-between w-full px-8 py-24">
         {/* Left Side: Title */}
         <div className="w-full md:w-1/2 flex justify-center">
@@ -36,7 +35,7 @@ export default function Page() {
           transition={{ duration: 1, ease: [0.4, 0.0, 0.2, 1] }}
           className="w-full md:w-1/2 flex justify-center"
         >
-          <GlowingEffectDemo />
+          <GlowingEffectBento />
         </motion.div>
       </div>
 
@@ -46,6 +45,6 @@ export default function Page() {
       <div>
         <HeroParallaxDemo />
       </div>
-    </div>
+    </main>
   );
 }

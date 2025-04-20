@@ -1,103 +1,130 @@
 "use client";
-import React from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react";
+import User from "~/api/User.ts";
+import { useRouter } from "next/navigation";
+import Client from "~/api/Client";
 
 export default function SignupFormPage() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    //Someone put the api call here for signing up, thanks! !!!11
-    // Example:
-    // const response = await fetch('/api/signup', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     email: emailInput.value,
-    //     password: passwordInput.value,
-    //   }),
-    // });
-    // if (response.ok) {
-    //   // Handle successful signup
-    // } else {
-    //   // Handle error
-    // }
-  };
+  
+  const [emailAddress, setEmailAddress] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [shouldProcessData, setShouldProcessData] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
+
+  function handleSignUp(event: FormEvent) {
+
+    // Prevent the website from refreshing.
+    event.preventDefault();
+
+    setErrorMessage(null);
+    setShouldProcessData(true);
+
+  }
+
+  useEffect(() => {
+
+    (async () => {
+
+      if (shouldProcessData) {
+
+        try {
+
+          // Create the user account.
+          const user = await User.createUser({emailAddress, username, password});
+
+          // Create a new session and save the data.
+          const session = await user.createSession(password);
+          document.cookie = `userID=${session.userID}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
+          document.cookie = `token=${session.token}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
+          document.cookie = `sessionID=${session._id}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
+          Client.token = session.token;
+          Client.userID = session.userID;
+          Client.authenticatedUser = user;
+
+          // Let the rest of the scripts know.
+          const channel = new BroadcastChannel("authentication");
+          channel.postMessage(user);
+
+          // Redirect the user back home.
+          router.replace("/");
+
+        } catch (error) {
+
+          console.error(error);
+
+          if (error instanceof Error) {
+
+            setErrorMessage(error.message);
+
+          } else {
+
+            setErrorMessage("Unknown error. Try that again.");
+
+          }
+
+          setShouldProcessData(false);
+
+        }
+
+      }
+
+    })();
+
+  }, [emailAddress, password, router, shouldProcessData, username]);
+
   return (
-    <div className="shadow-input mx-auto w-full mt-32 max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
-      <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Welcome to Swiftplay
-      </h2>
-      <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-        Login to Swiftplay if you can because we don&apos;t have a login flow
-        yet
-      </p>
-
-      <form className="my-8" onSubmit={handleSubmit}>
-        <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
-          <LabelInputContainer>
-            <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" placeholder="Tyler" type="text" />
+    <main>
+      <section className="shadow-input mx-auto w-full mt-32 max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+        <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
+          Welcome to Swiftplay
+        </h2>
+        <p>Create an account to share your runs and join the community</p>
+        {
+          errorMessage ? (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Registration error</AlertTitle>
+              <AlertDescription>
+                {errorMessage}
+              </AlertDescription>
+            </Alert>
+          ) : null
+        }
+        <form className="my-8" onSubmit={handleSignUp}>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="email">Email Address</Label>
+            <Input id="email" type="email" value={emailAddress} onChange={(event) => setEmailAddress(event.target.value)} required disabled={shouldProcessData} />
           </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" placeholder="Durden" type="text" />
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="username">Username</Label>
+            <Input id="username" type="text" value={username} onChange={(event) => setUsername(event.target.value)} required disabled={shouldProcessData} />
           </LabelInputContainer>
-        </div>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label htmlFor="twitterpassword">Your twitter password</Label>
-          <Input
-            id="twitterpassword"
-            placeholder="••••••••"
-            type="twitterpassword"
-          />
-        </LabelInputContainer>
-
-        <button
-          className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
-          type="submit"
-        >
-          Sign up &rarr;
-          <BottomGradient />
-        </button>
-
-        <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
-
-        <div className="flex flex-col space-y-4">
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="password">Password</Label>
+            <Input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required disabled={shouldProcessData} />
+          </LabelInputContainer>
           <button
-            className="group/btn shadow-input relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
+            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
             type="submit"
+            disabled={shouldProcessData} 
           >
-            <IconBrandGithub className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-sm text-neutral-700 dark:text-neutral-300">
-              GitHub
-            </span>
+            Sign up &rarr;
             <BottomGradient />
           </button>
-          <button
-            className="group/btn shadow-input relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
-            type="submit"
-          >
-            <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-sm text-neutral-700 dark:text-neutral-300">
-              Google
-            </span>
-            <BottomGradient />
-          </button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </section>
+    </main>
   );
 }
 
