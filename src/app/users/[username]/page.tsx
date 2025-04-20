@@ -65,10 +65,10 @@ export default function UserPage() {
 
   useEffect(() => {
 
-    function updateAuthenticatedView() {
+    async function updateAuthenticatedView() {
 
       let shouldShowPermissionEditor = false;
-      const { authenticatedUser } = Client;
+      const authenticatedUser = await User.session?.getUser();
       if (authenticatedUser?.permissionOverrides) {
 
         for (const permissionID of Object.keys(authenticatedUser.permissionOverrides)) {
@@ -86,7 +86,7 @@ export default function UserPage() {
 
       setShouldShowPermissionEditor(shouldShowPermissionEditor);
 
-      const canChangeProfilePhoto = user ? Client.authenticatedUser?._id === user._id : false;
+      const canChangeProfilePhoto = user ? authenticatedUser?._id === user._id : false;
       setCanChangeProfilePhoto(canChangeProfilePhoto);
 
     }
@@ -173,9 +173,7 @@ export default function UserPage() {
 
                       document.cookie = "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
                       document.cookie = "sessionID=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-                      document.cookie = "userID=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
                       Client.session = undefined;
-                      Client.authenticatedUser = undefined;
                       const channel = new BroadcastChannel("authentication");
                       channel.postMessage(null);
                     

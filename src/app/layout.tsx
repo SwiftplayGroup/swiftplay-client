@@ -2,11 +2,10 @@
 
 import "./globals.css";
 import { useEffect, useState } from "react";
-import Client from "~/api/Client";
 import getCookie from "~/lib/getCookie";
-import User from "~/api/User";
 import Header from "~/components/Header/Header";
 import Session from "~/api/Session";
+import Client from "~/api/Client";
 
 export default function RootLayout({
   children,
@@ -20,26 +19,21 @@ export default function RootLayout({
 
     (async () => {
 
-      const token = getCookie("token");
-      const userID = getCookie("userID");
       const sessionID = getCookie("sessionID");
-      
-      if (token && userID && sessionID) {
+      const token = getCookie("token");
+      if (sessionID && token) {
 
-        Client.session = new Session({token, userID, _id: sessionID, expirationDate: new Date()}); // TODO: Fix this with JWT
+        const bearerToken = `Bearer ${token}` as const
+        Client.session = new Session({_id: sessionID, token: bearerToken});
 
         try {
 
-          Client.authenticatedUser = await User.getFromID(Client.session.userID);
           const channel = new BroadcastChannel("authentication");
           channel.postMessage(null);
 
         } catch (error) {
 
           console.error(error);
-
-          Client.token = undefined;
-          Client.userID = undefined;
 
         }
 

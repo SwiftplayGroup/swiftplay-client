@@ -45,12 +45,9 @@ export default function SignupFormPage() {
 
           // Create a new session and save the data.
           const session = await user.createSession(password);
-          document.cookie = `userID=${session.userID}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
-          document.cookie = `token=${session.token}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
-          document.cookie = `sessionID=${session._id}; SameSite=Strict; Secure; Path=/; Expires=${new Date(session.expirationDate)}`;
-          Client.token = session.token;
-          Client.userID = session.userID;
-          Client.authenticatedUser = user;
+          document.cookie = `sessionID=${session._id}; SameSite=Strict; Secure; Path=/; ${session.expirationDate ? `Expires=${new Date(session.expirationDate)}` : ""}`;
+          document.cookie = `token=${session.token}; SameSite=Strict; Secure; Path=/; ${session.expirationDate ? `Expires=${new Date(session.expirationDate)}` : ""}`;
+          Client.session = session;
 
           // Let the rest of the scripts know.
           const channel = new BroadcastChannel("authentication");

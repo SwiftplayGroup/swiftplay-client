@@ -83,8 +83,8 @@ export default class Run extends Client {
   }
 
   static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties>
-  static async fetch(path: `/runs/${string}`, properties: {method: "DELETE", headers: {token: string, "user-id": string}}): Promise<void>
-  static async fetch(path: `/runs/${string}`, properties: {method: "PATCH", body: string, headers: {"Content-Type": "application/json", token: string, "user-id": string}}): Promise<RunProperties>
+  static async fetch(path: `/runs/${string}`, properties: {method: "DELETE", headers: {authorization: `Bearer ${string}`}}): Promise<void>
+  static async fetch(path: `/runs/${string}`, properties: {method: "PATCH", body: string, headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}}): Promise<RunProperties>
   static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | RunRemoval | void> {
 
     return super.fetch(...parameters);
@@ -93,7 +93,7 @@ export default class Run extends Client {
 
   async delete(): Promise<void> {
 
-    if (!Run.authenticatedUser || !Run.token) {
+    if (!Run.session?.token) {
 
       throw new Error("User is not authenticated.");
 
@@ -102,8 +102,7 @@ export default class Run extends Client {
     await Run.fetch(`/runs/${this._id}`, {
       method: "DELETE",
       headers: {
-        "user-id": Run.authenticatedUser?._id,
-        "token": Run.token
+        authorization: Run.session.token
       }
     });
 
@@ -111,7 +110,7 @@ export default class Run extends Client {
 
   async edit(properties: EditableRunProperties): Promise<Run> {
 
-    if (!Run.authenticatedUser || !Run.token) {
+    if (!Run.session?.token) {
 
       throw new Error("User is not authenticated.");
 
@@ -122,8 +121,7 @@ export default class Run extends Client {
       body: JSON.stringify(properties),
       headers: {
         "Content-Type": "application/json",
-        "user-id": Run.authenticatedUser?._id,
-        "token": Run.token
+        authorization: Run.session.token
       }
     });
 
@@ -133,7 +131,7 @@ export default class Run extends Client {
 
   async verify(): Promise<Run> {
 
-    if (!Run.authenticatedUser || !Run.token) {
+    if (!Run.session?.token) {
 
       throw new Error("User is not authenticated.");
 
@@ -141,19 +139,13 @@ export default class Run extends Client {
 
     return await this.edit({
       verification: {
-        ownerID: Run.authenticatedUser._id
+        ownerID: (await Run.session.getUser())._id
       }
     });
 
   }
 
   async unverify(): Promise<Run> {
-
-    if (!Run.authenticatedUser || !Run.token) {
-
-      throw new Error("User is not authenticated.");
-
-    }
 
     return await this.edit({
       verification: null
@@ -163,7 +155,7 @@ export default class Run extends Client {
 
   async remove(reason?: string): Promise<Run> {
 
-    if (!Run.authenticatedUser || !Run.token) {
+    if (!Run.session?.token) {
 
       throw new Error("User is not authenticated.");
 
@@ -171,7 +163,7 @@ export default class Run extends Client {
 
     return await this.edit({
       removal: {
-        ownerID: Run.authenticatedUser._id,
+        ownerID: Run.session.token,
         reason
       }
     });
@@ -179,12 +171,6 @@ export default class Run extends Client {
   }
 
   async restore(): Promise<Run> {
-
-    if (!Run.authenticatedUser || !Run.token) {
-
-      throw new Error("User is not authenticated.");
-
-    }
 
     return await this.edit({
       removal: null
