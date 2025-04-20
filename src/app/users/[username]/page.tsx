@@ -60,24 +60,48 @@ export default function UserPage() {
 
   }, [username]);
 
-  let shouldShowPermissionEditor = false;
-  const { authenticatedUser } = Client;
-  if (authenticatedUser?.permissionOverrides) {
+  const [shouldShowPermissionEditor, setShouldShowPermissionEditor] = useState(false);
+  const [canChangeProfilePhoto, setCanChangeProfilePhoto] = useState(false);
 
-    for (const permissionID of Object.keys(authenticatedUser.permissionOverrides)) {
+  useEffect(() => {
 
-      if (authenticatedUser.permissionOverrides[permissionID] >= PermissionAccessLevel.ADMIN) {
+    function updateAuthenticatedView() {
 
-        shouldShowPermissionEditor = true;
-        break;
+      let shouldShowPermissionEditor = false;
+      const { authenticatedUser } = Client;
+      if (authenticatedUser?.permissionOverrides) {
+
+        for (const permissionID of Object.keys(authenticatedUser.permissionOverrides)) {
+
+          if (authenticatedUser.permissionOverrides[permissionID] >= PermissionAccessLevel.ADMIN) {
+
+            shouldShowPermissionEditor = true;
+            break;
+
+          }
+
+        }
 
       }
 
+      setShouldShowPermissionEditor(shouldShowPermissionEditor);
+
+      const canChangeProfilePhoto = user ? Client.authenticatedUser?._id === user._id : false;
+      setCanChangeProfilePhoto(canChangeProfilePhoto);
+
     }
 
-  }
+    const channel = new BroadcastChannel("authentication");
+    channel.addEventListener("message", updateAuthenticatedView);
+    updateAuthenticatedView();
 
-  const canChangeProfilePhoto = user ? Client.authenticatedUser?._id === user._id : false;
+    return () => {
+
+      channel.removeEventListener("message", updateAuthenticatedView);
+
+    }
+
+  }, [user]);
 
   return (
     <main id={styles.main}>
@@ -107,7 +131,7 @@ export default function UserPage() {
             </section>
           </section>
           {
-            user ? (
+            user && (shouldShowPermissionEditor || canChangeProfilePhoto) ? (
               <section id={styles.actionList}>
                 {
                   canChangeProfilePhoto ? (
@@ -137,12 +161,33 @@ export default function UserPage() {
                 {
                   shouldShowPermissionEditor ? <PermissionDialog user={user} setUser={(newUser) => setUser(newUser)} /> : null
                 }
+                {
+                  canChangeProfilePhoto ? (
+                    <Button type="button" variant="destructive" onClick={async () => {
+
+                      if (Client.session) {
+                        
+                        await Client.session.delete();
+
+                      }
+
+                      document.cookie = "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+                      document.cookie = "sessionID=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+                      document.cookie = "userID=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+                      Client.session = undefined;
+                      Client.authenticatedUser = undefined;
+                      const channel = new BroadcastChannel("authentication");
+                      channel.postMessage(null);
+                    
+                    }}>Sign out</Button>
+                  ) : null
+                }
               </section>
             ) : null
           }
         </Card>
         {
-          user ? <RunCard run={favoriteRun} isLoading={isLoading} /> : null
+          user && favoriteRun ? <RunCard run={favoriteRun} isLoading={isLoading} /> : null
         }
         {
           user ? <RunsCard user={user} /> : null

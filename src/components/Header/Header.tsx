@@ -21,6 +21,7 @@ export default function Header() {
 
     }
 
+
     authenticationChannel.addEventListener("message", update);
 
     return () => {
