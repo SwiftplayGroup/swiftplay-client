@@ -63,29 +63,31 @@ export default function RunPage() {
   const canDeleteRun = run?.owner._id === Run.authenticatedUser?._id;
 
   return (
-    <section id={styles.main}>
-      <RunCard run={run} isLoading={isLoading} />
-      {
-        run && canDeleteRun && canVerifyRun ? (
-          <Card id={styles.options}>
-            {
-              canVerifyRun ? (
-                <VerifyRunDialog run={run} setRun={(run) => setRun(run)} />
-              ) : null
-            }
-            {
-              canDeleteRun ? (
-                <DeleteRunDialog run={run} />
-              ) : null
-            }
-            {
-              canRemoveRun ? (
-                <RemoveRunDialog run={run} setRun={(run) => setRun(run)} />
-              ) : null
-            }
-          </Card>
-        ) : null
-      }
-    </section>
+    <main>
+      <section id={styles.content}>
+        <RunCard run={run} isLoading={isLoading} />
+        {
+          run && canDeleteRun && canVerifyRun ? (
+            <Card id={styles.options}>
+              {
+                canVerifyRun ? (
+                  <VerifyRunDialog run={run} setRun={(run) => setRun(run)} />
+                ) : null
+              }
+              {
+                canDeleteRun ? (
+                  <DeleteRunDialog run={run} />
+                ) : null
+              }
+              {
+                canRemoveRun ? (
+                  <RemoveRunDialog run={run} setRun={(run) => setRun(run)} />
+                ) : null
+              }
+            </Card>
+          ) : null
+        }
+      </section>
+    </main>
   )
 }

@@ -11,7 +11,7 @@ export type SessionProperties = {
   _id: string;
   userID: string;
   expirationDate: Date;
-  creationIP: string;
+  creationIP?: string;
   token?: string;
 }
 
@@ -20,7 +20,7 @@ export default class Session extends Client {
   _id: string;
   userID: string;
   expirationDate: Date;
-  creationIP: string;
+  creationIP?: string;
   token?: string;
 
   constructor(properties: SessionProperties) {
@@ -48,10 +48,29 @@ export default class Session extends Client {
 
   }
 
+  static async fetch(path: `/user/sessions/${string}`, properties: {method: "DELETE", headers: {"user-id": string, "token": string}}): Promise<void>;
   static async fetch(path: "/user/sessions", properties: {method: "POST", body: string, headers: {["Content-Type"]: "application/json"}}): Promise<SessionProperties>;
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<SessionProperties> {
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<SessionProperties | void> {
 
-    return super.fetch(...parameters);
+    return await super.fetch(...parameters);
+
+  }
+
+  async delete(): Promise<void> {
+
+    if (!Session.session?.token) {
+
+      throw new Error("User is unauthenticated.");
+
+    }
+
+    await Session.fetch(`/user/sessions/${this._id}`, {
+      method: "DELETE",
+      headers: {
+        "user-id": Session.session.userID,
+        "token": Session.session.token
+      }
+    });
 
   }
 

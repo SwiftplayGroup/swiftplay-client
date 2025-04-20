@@ -1,11 +1,12 @@
 "use client";
 
 import "./globals.css";
-import NavbarDemo from "~/components/aceternity/navbar-menu";
 import { useEffect, useState } from "react";
 import Client from "~/api/Client";
 import getCookie from "~/lib/getCookie";
 import User from "~/api/User";
+import Header from "~/components/Header/Header";
+import Session from "~/api/Session";
 
 export default function RootLayout({
   children,
@@ -19,23 +20,28 @@ export default function RootLayout({
 
     (async () => {
 
-      Client.token = getCookie("token");
-      Client.userID = getCookie("userID");
+      const token = getCookie("token");
+      const userID = getCookie("userID");
+      const sessionID = getCookie("sessionID");
+      
+      if (token && userID && sessionID) {
 
-      try {
+        Client.session = new Session({token, userID, _id: sessionID, expirationDate: new Date()}); // TODO: Fix this with JWT
 
-        if (Client.userID) {
+        try {
 
-          Client.authenticatedUser = await User.getFromID(Client.userID);
+          Client.authenticatedUser = await User.getFromID(Client.session.userID);
+          const channel = new BroadcastChannel("authentication");
+          channel.postMessage(null);
+
+        } catch (error) {
+
+          console.error(error);
+
+          Client.token = undefined;
+          Client.userID = undefined;
 
         }
-
-      } catch (error) {
-
-        console.error(error);
-
-        Client.token = undefined;
-        Client.userID = undefined;
 
       }
 
@@ -54,7 +60,7 @@ export default function RootLayout({
         {
           !isAuthenticating ? (
             <>
-              <NavbarDemo />
+              <Header />
               {children}
             </>
           ) : null
