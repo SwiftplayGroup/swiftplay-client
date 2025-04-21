@@ -62,9 +62,13 @@ export default function UserRunsCard({user}: {user?: User, game?: Game}) {
                   runs.map((run) => (
                     <TableRow key={run._id}>
                       <TableCell>
-                        <Link href={`/games/${run.game._id}/runs/${run._id}`}>{run.game.name}</Link>
+                        <Link href={`/games/${run.game._id}`}>{run.game.name}</Link>
                       </TableCell>
-                      <TableCell>{run.category?.name ?? "Default"}</TableCell>
+                      <TableCell>
+                        <Link href={`/games/${run.game._id}/categories/${run.category?.name ?? "default"}`}>
+                          {run.category?.name ?? "Default"}
+                        </Link>
+                      </TableCell>
                       <TableCell>
                         <Link href={`/games/${run.game._id}/runs/${run._id}`}>
                           {convertMillisecondsToTime(run.durationMilliseconds)}
