@@ -23,8 +23,7 @@ export default function RootLayout({
       const token = getCookie("token");
       if (sessionID && token) {
 
-        const bearerToken = `Bearer ${token}` as const
-        Client.session = new Session({_id: sessionID, token: bearerToken});
+        Client.session = new Session({_id: sessionID, token});
 
         try {
 

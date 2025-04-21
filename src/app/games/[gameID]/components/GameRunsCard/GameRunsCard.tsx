@@ -10,6 +10,7 @@ import Link from "next/link";
 import convertMillisecondsToTime from "~/lib/millisecondsToTime";
 import Game from "~/api/Game";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import CategoryDeletionDialog from "../CategoryDeletionDialog/CategoryCreationDialog";
 
 export default function GameRunsCard({game, setGame}: {game: Game, setGame: (game: Game) => void}) {
 
@@ -63,11 +64,12 @@ export default function GameRunsCard({game, setGame}: {game: Game, setGame: (gam
   }, [game]);
 
   const filteredRuns = runs.filter((run) => (!run.category && selectedCategoryID === "default") || (run.category?._id === selectedCategoryID));
+  const selectedCategory = game.categories.find((category) => selectedCategoryID === category._id);
 
   return (
     <Card className={styles.container}>
       <CardTitle>Runs</CardTitle>
-      <section>
+      <section id={styles.actions}>
         <Select value={selectedCategoryID} disabled={game.categories.length < 1} onValueChange={(newSelectedCategoryID) => setSelectedCategoryID(newSelectedCategoryID)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue />
@@ -83,6 +85,14 @@ export default function GameRunsCard({game, setGame}: {game: Game, setGame: (gam
             }
           </SelectContent>
         </Select>
+        {
+          selectedCategory ? <CategoryDeletionDialog category={selectedCategory} onDelete={() => {
+            
+            setGame(new Game({...game, categories: game.categories.filter((category) => category._id !== selectedCategory._id)}));
+            setSelectedCategoryID("default");
+          
+          }} /> : null
+        }
       </section>
       {
         isLoading ? (

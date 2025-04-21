@@ -13,7 +13,7 @@ export type SessionProperties = {
   userID?: string;
   expirationDate?: Date;
   creationIP?: string;
-  token?: `Bearer ${string}`;
+  token?: string;
 }
 
 export default class Session extends Client {
@@ -48,7 +48,7 @@ export default class Session extends Client {
 
     return new Session({
       ...data,
-      token: `Bearer ${data.token}`
+      token: data.token
     });
 
   }
@@ -82,13 +82,13 @@ export default class Session extends Client {
 
     if (!this.user) {
 
-      if (!Session.session?.token) {
+      if (!Client.session?.token) {
 
         throw new Error("User is unauthenticated.");
 
       }
 
-      this.user = await User.getFromToken(Session.session.token);
+      this.user = await User.getFromToken(Client.session.token);
 
     }
 
