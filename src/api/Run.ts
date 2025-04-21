@@ -32,18 +32,20 @@ export type RunProperties = {
   removal?: RunRemoval;
 }
 
-export type EditableRunProperties = Partial<Omit<RunProperties, "category" | "owner" | "game" | "verification" | "removal"> & {
-  categoryID: string;
-  ownerID: string;
-  gameID: string;
-  verification: {
+export type NewRunProperties = Omit<RunProperties, "_id" | "category" | "owner" | "game" | "verification" | "removal"> & {
+  categoryID?: string;
+  ownerID?: string;
+  gameID?: string;
+  verification?: {
     ownerID: string
   } | null;
-  removal: {
+  removal?: {
     ownerID: string;
     reason?: string;
   } | null
-}>;
+};
+
+export type EditableRunProperties = Partial<NewRunProperties>;
 
 export default class Run extends Client {
 
