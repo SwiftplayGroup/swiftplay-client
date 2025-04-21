@@ -6,22 +6,24 @@
  */
 
 import Client from "./Client.ts";
+import User from "./User.ts";
 
 export type SessionProperties = {
   _id: string;
-  userID: string;
-  expirationDate: Date;
+  userID?: string;
+  expirationDate?: Date;
   creationIP?: string;
-  token?: string;
+  token?: `Bearer ${string}`;
 }
 
 export default class Session extends Client {
 
   _id: string;
-  userID: string;
-  expirationDate: Date;
-  creationIP?: string;
-  token?: string;
+  userID: SessionProperties["userID"];
+  expirationDate: SessionProperties["expirationDate"];
+  creationIP: SessionProperties["creationIP"];
+  token: SessionProperties["token"];
+  user?: User;
 
   constructor(properties: SessionProperties) {
 
@@ -44,11 +46,14 @@ export default class Session extends Client {
       }
     })
 
-    return new Session(data);
+    return new Session({
+      ...data,
+      token: `Bearer ${data.token}`
+    });
 
   }
 
-  static async fetch(path: `/user/sessions/${string}`, properties: {method: "DELETE", headers: {"user-id": string, "token": string}}): Promise<void>;
+  static async fetch(path: `/user/sessions/${string}`, properties: {method: "DELETE", headers: {"authorization": string}}): Promise<void>;
   static async fetch(path: "/user/sessions", properties: {method: "POST", body: string, headers: {["Content-Type"]: "application/json"}}): Promise<SessionProperties>;
   static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<SessionProperties | void> {
 
@@ -58,7 +63,7 @@ export default class Session extends Client {
 
   async delete(): Promise<void> {
 
-    if (!Session.session?.token) {
+    if (!Session?.session?.token) {
 
       throw new Error("User is unauthenticated.");
 
@@ -67,10 +72,27 @@ export default class Session extends Client {
     await Session.fetch(`/user/sessions/${this._id}`, {
       method: "DELETE",
       headers: {
-        "user-id": Session.session.userID,
-        "token": Session.session.token
+        authorization: Session.session.token
       }
     });
+
+  }
+
+  async getUser(): Promise<User> {
+
+    if (!this.user) {
+
+      if (!Session.session?.token) {
+
+        throw new Error("User is unauthenticated.");
+
+      }
+
+      this.user = await User.getFromToken(Session.session.token);
+
+    }
+
+    return this.user;
 
   }
 
