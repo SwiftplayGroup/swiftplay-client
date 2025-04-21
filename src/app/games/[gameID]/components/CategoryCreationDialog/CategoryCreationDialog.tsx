@@ -38,6 +38,7 @@ export default function CategoryCreationDialog({game, setGame}: {game: Game, set
           });
 
           setGame(newGame);
+          setCategoryName("");
           setIsOpen(false);
 
         } catch (error) {
