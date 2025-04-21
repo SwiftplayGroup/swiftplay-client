@@ -7,6 +7,7 @@ import { Card } from "~/components/ui/card";
 import styles from "./styles.module.css";
 import Game from "~/api/Game";
 import { Skeleton } from "~/components/ui/skeleton";
+import GameRunsCard from "./components/GameRunsCard/GameRunsCard";
 
 export default function GamePage() {
 
@@ -15,9 +16,6 @@ export default function GamePage() {
     gameID: string;
   }>();
   const [game, setGame] = useState<Game | null>(null);
-  const [canDeleteRun, setCanDeleteRun] = useState<boolean>(false);
-  const [canVerifyRun, setCanVerifyRun] = useState<boolean>(false);
-  const [canRemoveRun, setCanRemoveRun] = useState<boolean>(false);
 
   useEffect(() => {
 
@@ -68,6 +66,9 @@ export default function GamePage() {
             </section>
           </section>
         </Card>
+        {
+          game ? <GameRunsCard game={game} /> : null
+        }
       </section>
     </main>
   )

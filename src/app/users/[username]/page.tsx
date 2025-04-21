@@ -9,7 +9,7 @@ import { Card } from "~/components/ui/card";
 import styles from "./styles.module.css";
 import ObjectId from "bson-objectid";
 import { Skeleton } from "~/components/ui/skeleton";
-import RunsCard from "~/app/users/[username]/profile-cards/RunsCard/RunsCard";
+import RunsCard from "~/app/users/[username]/components/RunsCard/UserRunsCard";
 import RunCard from "~/components/RunCard/RunCard";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { DialogHeader } from "~/components/ui/dialog";

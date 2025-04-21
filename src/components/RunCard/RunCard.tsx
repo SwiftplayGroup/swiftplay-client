@@ -69,7 +69,7 @@ export default function RunCard({run, isLoading}: {run: Run | null, isLoading: b
                 isLoading || !run ? (
                   <Skeleton className="h-4 w-[250px]" />
                 ) : (
-                  <Link href={`/users/${run.owner._id}`}>
+                  <Link href={`/users/${run.owner.username}`}>
                     {run.owner.username}
                   </Link>
                 )

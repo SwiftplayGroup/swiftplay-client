@@ -6,6 +6,7 @@
  */
 
 import Client from "./Client.ts";
+import Run, { RunProperties } from "./Run.ts";
 import { UserProperties } from "./User.ts";
 
 export type GameProperties = {
@@ -38,8 +39,10 @@ export default class Game extends Client {
     this.coverArtURL = properties.coverArtURL;
 
   }
-
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<GameProperties> {
+  
+  static async fetch(path: `/games/${string}/runs${string | undefined}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties[]>;
+  static async fetch(path: `/games/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<GameProperties>;
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<GameProperties | RunProperties[]> {
 
     return super.fetch(...parameters);
 
@@ -54,6 +57,27 @@ export default class Game extends Client {
     });
 
     return new Game(data);
+
+  }
+
+  async getRuns(filter: {includeUnverified?: boolean, unverifiedOnly?: boolean, includeRemoved?: boolean, removedOnly?: boolean} = {}): Promise<Run[]> {
+
+    const params = new URLSearchParams();
+    if (filter.includeUnverified) params.append("include_removed", "true");
+    if (filter.unverifiedOnly) params.append("unverified_only", "true");
+    if (filter.includeRemoved) params.append("include_removed", "true");
+    if (filter.removedOnly) params.append("removed_only", "true");
+    const searchParams = params.toString();
+
+    const data = await Game.fetch(`/games/${this._id}/runs${searchParams ? `?${searchParams}` : ""}`, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    const games = data.map((data) => new Run(data));
+
+    return games;
 
   }
 
