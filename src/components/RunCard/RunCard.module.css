@@ -10,15 +10,15 @@
 #runDataContainer, #runDataContainer > section {
   display: flex;
   gap: 15px;
-}
-
-#runDataContainer {
-
   flex-direction: column;
 }
 
+#runDataContainer > section {
+  flex-wrap: wrap;
+}
+
 .runData {
-  flex: 1;
+  flex: 1 1 24%;
   padding: 25px;
 }
 
@@ -28,8 +28,16 @@
   border-radius: 0.75rem;
 }
 
+.person {
+  flex-basis: 49%;
+}
+
 @media screen and (min-width: 830px) {
   
+  #runDataContainer {
+    flex-direction: column;
+  }
+
   #runDataContainer > section {
     flex-direction: row;
   }

@@ -7,34 +7,47 @@
 
 import UnknownError from "./errors/UnknownError.ts";
 import HTTPError from "./errors/HTTPError.ts";
+import Session from "./Session.ts";
 
 export default abstract class Client {
-  static apiURI =
-    process.env.NEXT_PUBLIC_API_URI_OVERRIDE ??
-    "https://swiftplay.onrender.com"; // TODO: Set this automatically based on environment variables.
-  static token?: string;
-  static userID?: string;
+
+  static apiURI = process.env.NEXT_PUBLIC_API_URI_OVERRIDE ?? "https://swiftplay.onrender.com";
+  static session?: Session;
 
   constructor() {}
 
   static async fetch(path: string, properties: RequestInit): Promise<any> {
     const response = await fetch(`${this.apiURI}${path}`, properties);
 
-    if (response.ok) {
-      return await response.json();
-    }
+      if (properties.headers && "Content-Type" in properties.headers && properties.headers["Content-Type"] === "application/json") {
 
-    try {
-      const { message } = await response.json();
-      throw new HTTPError(response.status, message);
-    } catch (error) {
-      if (error instanceof HTTPError) {
-        throw error;
-      } else {
-        console.error(response);
-        console.error(error);
-        throw new UnknownError();
+        return await response.json();
+
       }
+
+    } else {
+
+      try {
+
+        const { message } = await response.json();
+        throw new HTTPError(response.status, message);
+
+      } catch (error) {
+
+        if (error instanceof HTTPError) {
+
+          throw error;
+
+        } else {
+
+          console.error(response);
+          console.error(error);
+          throw new UnknownError();
+
+        }
+        
+      }
+
     }
   }
 }

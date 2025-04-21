@@ -2,23 +2,62 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "~/components/navigation/navbar-menu";
 
-export const metadata: Metadata = {
-  title: "Script",
-  description: "Development server for Script Website",
-};
+
+import "./globals.css";
+import { useEffect, useState } from "react";
+import getCookie from "~/lib/getCookie";
+import Header from "~/components/Header/Header";
+import Session from "~/api/Session";
+import Client from "~/api/Client";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const [isAuthenticating, setIsAuthenticating] = useState<boolean>(true);
+  
+  useEffect(() => {
+
+    (async () => {
+
+      const sessionID = getCookie("sessionID");
+      const token = getCookie("token");
+      if (sessionID && token) {
+
+        Client.session = new Session({_id: sessionID, token});
+
+        try {
+
+          const channel = new BroadcastChannel("authentication");
+          channel.postMessage(null);
+
+        } catch (error) {
+
+          console.error(error);
+
+        }
+
+      }
+
+      setIsAuthenticating(false);
+
+    })();
+
+  }, []);
+
   return (
     <html lang="en" suppressHydrationWarning className="dark">
+      <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=close" />
+      </head>
       <body>
         <Navbar className="top-2" />
         <div className="dark:bg-black bg-white  dark:bg-dot-white/[0.2] bg-dot-black/[0.2]">
           {children}
         </div>
+
       </body>
     </html>
   );

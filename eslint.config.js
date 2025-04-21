@@ -27,6 +27,7 @@ export default tseslint.config(
       "no-var": "warn",
       "@typescript-eslint/no-unused-vars": "warn",
       "no-empty": "warn",
+      "prefer-const": "warn"
     },
   },
 );

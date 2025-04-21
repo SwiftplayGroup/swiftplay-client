@@ -6,21 +6,23 @@
  */
 
 import Client from "./Client.ts";
+import User from "./User.ts";
 
 export type SessionProperties = {
   _id: string;
-  userID: string;
-  expirationDate: Date;
-  creationIP: string;
+  userID?: string;
+  expirationDate?: Date;
+  creationIP?: string;
   token?: string;
 };
 
 export default class Session extends Client {
   _id: string;
-  userID: string;
-  expirationDate: Date;
-  creationIP: string;
-  token?: string;
+  userID: SessionProperties["userID"];
+  expirationDate: SessionProperties["expirationDate"];
+  creationIP: SessionProperties["creationIP"];
+  token: SessionProperties["token"];
+  user?: User;
 
   constructor(properties: SessionProperties) {
     super();
@@ -43,20 +45,53 @@ export default class Session extends Client {
       },
     });
 
-    return new Session(data);
+
+    return new Session({
+      ...data,
+      token: data.token
+    });
+
   }
 
-  static async fetch(
-    path: "/user/sessions",
-    properties: {
-      method: "POST";
-      body: string;
-      headers: { ["Content-Type"]: "application/json" };
-    },
-  ): Promise<SessionProperties>;
-  static async fetch(
-    ...parameters: Parameters<(typeof Client)["fetch"]>
-  ): Promise<SessionProperties> {
-    return super.fetch(...parameters);
+  static async fetch(path: `/user/sessions/${string}`, properties: {method: "DELETE", headers: {"authorization": string}}): Promise<void>;
+  static async fetch(path: "/user/sessions", properties: {method: "POST", body: string, headers: {["Content-Type"]: "application/json"}}): Promise<SessionProperties>;
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<SessionProperties | void> {
+
+    return await super.fetch(...parameters);
+
+  }
+
+  async delete(): Promise<void> {
+
+    if (!Session?.session?.token) {
+
+      throw new Error("User is unauthenticated.");
+
+    }
+
+    await Session.fetch(`/user/sessions/${this._id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: Session.session.token
+      }
+    });
+
+  }
+
+  async getUser(): Promise<User> {
+
+    if (!this.user) {
+
+      if (!Client.session?.token) {
+
+        throw new Error("User is unauthenticated.");
+
+      }
+
+      this.user = await User.getFromToken(Client.session.token);
+
+    }
+
+    return this.user;
   }
 }

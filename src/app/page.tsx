@@ -1,24 +1,15 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import HeroParallaxDemo from "~/components/home/hero-parallax";
 import GoogleGeminiEffectDemo from "~/components/home/google-gemini-effect";
 import { HeroHighlight, Highlight } from "~/components/ui/hero-highlight";
 import { motion } from "framer-motion";
 import { GlowingEffectBento } from "~/components/home/glowing-effect";
-import Client from "~/api/Client.ts";
-import getCookie from "~/lib/getCookie.ts";
 
 export default function Page() {
 
-  useEffect(() => {
-
-    Client.token = getCookie("token");
-    Client.userID = getCookie("userID");
-
-  }, []);
-
   return (
-    <div className="bg-black">
+    <main>
       <div className="flex flex-col md:flex-row items-center justify-between w-full px-8 py-24">
         {/* Left Side: Title */}
         <div className="w-full md:w-1/2 flex justify-center">
@@ -54,6 +45,6 @@ export default function Page() {
       <div>
         <HeroParallaxDemo />
       </div>
-    </div>
+    </main>
   );
 }

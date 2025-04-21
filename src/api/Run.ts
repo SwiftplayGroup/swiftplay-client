@@ -10,6 +10,17 @@ import Client from "./Client.ts";
 import Game, { GameProperties } from "./Game.ts";
 import User, { UserProperties } from "./User.ts";
 
+export type RunVerification = {
+  owner: UserProperties;
+  timestamp: Date;
+}
+
+export type RunRemoval = {
+  owner: UserProperties;
+  timestamp: Date;
+  reason?: string;
+}
+
 export type RunProperties = {
   _id: string;
   durationMilliseconds: number;
@@ -17,7 +28,24 @@ export type RunProperties = {
   category?: Category;
   owner: UserProperties;
   game: GameProperties;
+  verification?: RunVerification;
+  removal?: RunRemoval;
+}
+
+export type NewRunProperties = Omit<RunProperties, "_id" | "category" | "owner" | "game" | "verification" | "removal"> & {
+  categoryID?: string;
+  ownerID?: string;
+  gameID?: string;
+  verification?: {
+    ownerID: string
+  } | null;
+  removal?: {
+    ownerID: string;
+    reason?: string;
+  } | null
 };
+
+export type EditableRunProperties = Partial<NewRunProperties>;
 
 export default class Run extends Client {
   _id: string;
@@ -26,6 +54,8 @@ export default class Run extends Client {
   youtubeWatchID: string;
   game: Game;
   owner: User;
+  verification: RunProperties["verification"];
+  removal: RunProperties["removal"];
 
   constructor(properties: RunProperties) {
     super();
@@ -35,6 +65,8 @@ export default class Run extends Client {
     this.category = properties.category;
     this.game = new Game(properties.game);
     this.owner = new User(properties.owner);
+    this.verification = properties.verification;
+    this.removal = properties.removal;
   }
 
   static async getFromID(runID: string): Promise<Run> {
@@ -47,16 +79,98 @@ export default class Run extends Client {
     return new Run(data);
   }
 
-  static async fetch(
-    path: `/runs/${string}`,
-    properties: {
-      method?: "GET";
-      headers: { ["Content-Type"]: "application/json" };
-    },
-  ): Promise<Run>;
-  static async fetch(
-    ...parameters: Parameters<(typeof Client)["fetch"]>
-  ): Promise<RunProperties> {
-    return super.fetch(...parameters);
+  static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties>
+  static async fetch(path: `/runs/${string}`, properties: {method: "DELETE", headers: {authorization: `Bearer ${string}`}}): Promise<void>
+  static async fetch(path: `/runs/${string}`, properties: {method: "PATCH", body: string, headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}}): Promise<RunProperties>
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | RunRemoval | void> {
+  return super.fetch(...parameters);
+  }
+
+
+  async delete(): Promise<void> {
+
+    if (!Run.session?.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    await Run.fetch(`/runs/${this._id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${Run.session.token}`
+      }
+    });
+
+  }
+
+  async edit(properties: EditableRunProperties): Promise<Run> {
+
+    if (!Run.session?.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    const editedRunData = await Run.fetch(`/runs/${this._id}`, {
+      method: "PATCH",
+      body: JSON.stringify(properties),
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${Run.session.token}`
+      }
+    });
+
+    return new Run(editedRunData);
+
+  }
+
+  async verify(): Promise<Run> {
+
+    if (!Run.session?.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    return await this.edit({
+      verification: {
+        ownerID: (await Run.session.getUser())._id
+      }
+    });
+
+  }
+
+  async unverify(): Promise<Run> {
+
+    return await this.edit({
+      verification: null
+    });
+
+  }
+
+  async remove(reason?: string): Promise<Run> {
+
+    if (!Run.session?.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    return await this.edit({
+      removal: {
+        ownerID: Run.session.token,
+        reason
+      }
+    });
+
+  }
+
+  async restore(): Promise<Run> {
+
+    return await this.edit({
+      removal: null
+    });
+
   }
 }
