@@ -38,10 +38,9 @@ export default function RunSubmissionDialog({game}: {game: Game}) {
         } catch (error) {
 
           console.error(error);
+          setIsProcessing(false);
 
         }
-
-        setIsProcessing(false);
 
       }
 

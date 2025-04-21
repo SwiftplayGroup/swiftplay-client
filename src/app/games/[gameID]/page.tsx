@@ -51,7 +51,7 @@ export default function GamePage() {
             {
               game?.coverArtURL ? <img src={game.coverArtURL} id={styles.coverArt} /> : <Skeleton id={styles.coverArt} />
             }
-            <section>
+            <section id={styles.gameTextData}>
               {
                 !isLoading ? (
                   <section id={styles.gameName}>
