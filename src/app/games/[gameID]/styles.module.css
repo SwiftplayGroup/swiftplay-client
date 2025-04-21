@@ -12,10 +12,16 @@
   flex-direction: column;
 }
 
+#gameTextData {
+  flex-grow: 1;
+  flex-basis: 75%;
+}
+
 #gameMetadata > section {
   display: flex;
   gap: 25px;
   flex-direction: column;
+  flex-wrap: wrap;
 }
 
 .container {

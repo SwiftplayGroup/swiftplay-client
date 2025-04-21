@@ -8,6 +8,8 @@ import styles from "./styles.module.css";
 import Game from "~/api/Game";
 import { Skeleton } from "~/components/ui/skeleton";
 import GameRunsCard from "./components/GameRunsCard/GameRunsCard";
+import Client from "~/api/Client";
+import RunSubmissionDialog from "./components/RunSubmissionDialog/RunSubmissionDialog";
 
 export default function GamePage() {
 
@@ -38,6 +40,9 @@ export default function GamePage() {
 
   }, [gameID]);
 
+  const authenticatedUser = Client.session?.user;
+  const canSubmitRun = true;
+
   return (
     <main>
       <section id={styles.content}>
@@ -46,7 +51,7 @@ export default function GamePage() {
             {
               game?.coverArtURL ? <img src={game.coverArtURL} id={styles.coverArt} /> : <Skeleton id={styles.coverArt} />
             }
-            <section>
+            <section id={styles.gameTextData}>
               {
                 !isLoading ? (
                   <section id={styles.gameName}>
@@ -64,6 +69,17 @@ export default function GamePage() {
                 )
               }
             </section>
+            {
+              authenticatedUser ? (
+                <section id={styles.actionList}>
+                  {
+                    canSubmitRun && game ? (
+                      <RunSubmissionDialog game={game} />
+                    ) : null
+                  }
+                </section>
+              ) : null
+            }
           </section>
         </Card>
         {
