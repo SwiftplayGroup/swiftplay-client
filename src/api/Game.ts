@@ -16,7 +16,7 @@ export type GameProperties = {
   coverArtURL?: string;
   publisherName: string;
   approval?: GameApproval;
-  categories: CategoryProperties[];
+  categories: Category[];
 }
 
 export type GameApproval = {
@@ -62,11 +62,19 @@ export default class Game extends Client {
       }
     });
 
-    return new Game(data);
+    const categories = [];
+    for (const categoryData of data.categories) {
+
+      const category = new Category(categoryData);
+      categories.push(category);
+
+    }
+
+    return new Game({...data, categories});
 
   }
 
-  async createRunCategory(properties: Omit<CategoryProperties, "_id">): Promise<Category> {
+  async createRunCategory(properties: Omit<CategoryProperties, "_id" | "gameID">): Promise<Category> {
 
     if (!Client.session?.token) {
 
