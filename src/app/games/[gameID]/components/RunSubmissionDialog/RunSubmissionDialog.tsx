@@ -25,6 +25,13 @@ export default function RunSubmissionDialog({game}: {game: Game}) {
 
       if (isProcessing) {
 
+        if (youtubeWatchID.length < 11) {
+
+          setIsProcessing(false);
+          return;
+
+        }
+
         try {
 
           const run = await game.submitRun({
@@ -105,7 +112,7 @@ export default function RunSubmissionDialog({game}: {game: Game}) {
           </form>
         </Form>
         <DialogFooter>
-          <Button type="button" disabled={isProcessing || !youtubeWatchID} onClick={() => setIsProcessing(true)}>Submit run</Button>
+          <Button type="button" disabled={isProcessing || youtubeWatchID.length < 11} onClick={() => setIsProcessing(true)}>Submit run</Button>
           <Button type="button" variant="secondary" disabled={isProcessing} onClick={() => setIsOpen(false)}>Close</Button>
         </DialogFooter>
       </DialogContent>
