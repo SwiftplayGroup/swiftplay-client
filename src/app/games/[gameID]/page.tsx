@@ -17,7 +17,6 @@ import CoverArtEditDialog from "./components/CoverArtEditDialog/CoverArtEditDial
 export default function GamePage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [canApproveGame, setCanApproveGame] = useState<boolean>(false);
   const { gameID } = useParams<{
     gameID: string;
   }>();
