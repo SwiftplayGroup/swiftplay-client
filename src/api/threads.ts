@@ -1,6 +1,7 @@
 import { api } from "./api";
 import { Thread } from "@/types/threads";
 import { Post } from "@/types/posts";
+import { CreateThreadPayload } from "@/types/threads";
 
 export const getReplies = async (threadID: string): Promise<Post[]> => {
   const { data } = await api.get(`/threads/${threadID}/posts`);

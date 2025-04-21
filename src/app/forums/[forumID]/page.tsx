@@ -3,6 +3,7 @@ import { ThreadCard } from "@/components/forums/threads/thread-card";
 import Link from "next/link";
 import Forum from "@/api/forums";
 import { PostToThreadButton } from "@/components/forums/threads/post-to-thread-button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function ForumThreadsPage({
   params,
@@ -10,25 +11,31 @@ export default async function ForumThreadsPage({
   params: Promise<{ forumID: string }>;
 }) {
   const { forumID } = await params;
+  const forum = await Forum.getFromID(forumID);
   try {
     const threads = await Forum.getThreads(forumID);
-    if (threads.message) {
-      return (
-        <div className="h-[50rem] flex items-center justify-center">
-          Issue with Token: {threads.message}
-        </div>
-      );
-    }
     return (
-      <div className="h-screen pt-36 flex flex-col items-center justify-center">
-        <PostToThreadButton />
-        {threads.map((thread: Thread) => (
-          <Link href={`/threads/${thread._id}`} key={thread._id}>
-            <div>
-              <ThreadCard {...thread} />
-            </div>
-          </Link>
-        ))}
+      <div className="h-screen pt-36 mx-auto px-4 md:px-6 space-y-4 ">
+        <Card className="transition-all duration-300 hover:shadow-md hover:bg-zinc-900/50 sticky top-0 z-10">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xl">{forum.name}</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-gray-400">
+            {forum.description}
+          </CardContent>
+        </Card>
+        <div className="flex justify-center">
+          <PostToThreadButton forumID={forumID} />
+        </div>
+        <div className="space-y-4 max-w-4xl mx-auto">
+          {threads.map((thread: Thread) => (
+            <Link href={`/threads/${thread._id}`} key={thread._id}>
+              <div>
+                <ThreadCard {...thread} />
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     );
   } catch (error) {

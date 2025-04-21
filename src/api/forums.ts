@@ -33,6 +33,27 @@ export default class Forum extends Client {
     return data;
   }
 
+  static async createThread(forumID: string, thread: CreateThreadPayload) {
+    const data = await this.fetch(`/forums/${forumID}/threads`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Forum.session.token}`,
+      },
+      method: "POST",
+      body: JSON.stringify(thread),
+    });
+    return data;
+  }
+
+  static async getFromID(forumID: string): Promise<Forum> {
+    const data = await this.fetch(`/forums/${forumID}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return data;
+  }
+
   static async fetch(
     path: "/forums",
     properties: {

@@ -1,13 +1,12 @@
 export interface Post {
-    _id: string;
-    user: string;
-    content: string;
-    parentPost?: string;
-    tags?: string[];
-    date: Date;
-    views: number;
-    likes: number;
-    isDeleted: boolean;
+  _id: string;
+  authorID: string;
+  parentPostID?: string;
+  title: string;
+  content: string;
+  threadID: string;
+  forumID: string;
+  embeddings: number[];
 }
 
-export type CreateForumPayload = Omit<Post, 'id'>
+export type CreatePostPayload = Omit<Post, "id" | "embeddings">;

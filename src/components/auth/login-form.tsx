@@ -50,8 +50,7 @@ export function LoginForm({
       )}`;
 
       // Set up Client for API requests
-      Client.token = session.token;
-      Client.userID = session.userID;
+      Client.session = session;
 
       // Redirect to home page
       router.replace("/");
