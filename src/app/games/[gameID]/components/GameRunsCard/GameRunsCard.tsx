@@ -74,6 +74,8 @@ export default function GameRunsCard({game}: {game: Game}) {
 
   }
 
+  const filteredRuns = runs.filter((run) => (!run.category && selectedCategoryID === "default") || (run.category?._id === selectedCategoryID));
+
   return (
     <Card className={styles.container}>
       <CardTitle>Runs</CardTitle>
@@ -83,6 +85,7 @@ export default function GameRunsCard({game}: {game: Game}) {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="default">Default</SelectItem>
             {
               categoryOptions.map((category) => (
                 <SelectItem key={category._id} value={category._id}>
@@ -90,7 +93,6 @@ export default function GameRunsCard({game}: {game: Game}) {
                 </SelectItem>
               ))
             }
-            <SelectItem value="default">Default</SelectItem>
           </SelectContent>
         </Select>
       </section>
@@ -98,7 +100,7 @@ export default function GameRunsCard({game}: {game: Game}) {
         isLoading ? (
           <Skeleton className="h-4 w-[250px]" />
         ) : (
-          runs[0] ? (
+          filteredRuns[0] ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -109,7 +111,7 @@ export default function GameRunsCard({game}: {game: Game}) {
               </TableHeader>
               <TableBody>
                 {
-                  runs.filter((run) => (!run.category && selectedCategoryID === "default") || (run.category?._id === selectedCategoryID)).map((run, index) => (
+                  filteredRuns.map((run, index) => (
                     <TableRow key={run._id}>
                       <TableCell>
                         {index + 1}
