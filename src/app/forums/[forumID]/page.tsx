@@ -2,6 +2,7 @@ import { Thread } from "@/types/threads";
 import { ThreadCard } from "@/components/forums/threads/thread-card";
 import Link from "next/link";
 import Forum from "@/api/forums";
+import { PostToThreadButton } from "@/components/forums/threads/post-to-thread-button";
 
 export default async function ForumThreadsPage({
   params,
@@ -19,16 +20,15 @@ export default async function ForumThreadsPage({
       );
     }
     return (
-      <div className="h-[50rem] pt-36">
-        <div className="text-white ">
-          {threads.map((thread: Thread) => (
-            <Link href={`/threads/${thread._id}`} key={thread._id}>
-              <div>
-                <ThreadCard {...thread} />
-              </div>
-            </Link>
-          ))}
-        </div>
+      <div className="h-screen pt-36 flex flex-col items-center justify-center">
+        <PostToThreadButton />
+        {threads.map((thread: Thread) => (
+          <Link href={`/threads/${thread._id}`} key={thread._id}>
+            <div>
+              <ThreadCard {...thread} />
+            </div>
+          </Link>
+        ))}
       </div>
     );
   } catch (error) {
