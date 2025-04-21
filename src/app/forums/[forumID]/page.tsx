@@ -3,13 +3,12 @@ import { ThreadCard } from "@/components/forums/threads/thread-card";
 import Link from "next/link";
 import Forum from "@/api/forums";
 
-export default async function ForumPage({
+export default async function ForumThreadsPage({
   params,
 }: {
-  params: { forumID: string };
+  params: Promise<{ forumID: string }>;
 }) {
-  params = await params;
-  const forumID = await params.forumID;
+  const { forumID } = await params;
   try {
     const threads = await Forum.getThreads(forumID);
     if (threads.message) {

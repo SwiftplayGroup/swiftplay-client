@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 export default async function ForumPage({
   params,
 }: {
-  params: { threadID: string };
+  params: Promise<{ threadID: string }>;
 }) {
-  const threadID = params.threadID;
+  const { threadID } = await params;
 
   try {
     const thread = await getThread(threadID);

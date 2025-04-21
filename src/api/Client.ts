@@ -13,6 +13,8 @@ export default abstract class Client {
     process.env.NEXT_PUBLIC_API_URI_OVERRIDE ??
     "https://swiftplay.onrender.com";
   static session?: Session;
+  static userID: string;
+  static token: string;
 
   constructor() {}
 
