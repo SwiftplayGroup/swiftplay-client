@@ -59,8 +59,9 @@ export default class Game extends Client {
   static async fetch(path: `/games/${string}/runs${string | undefined}`, properties: {method: "POST", headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}, body: string}): Promise<RunProperties>;
   static async fetch(path: `/games/${string}/runs${string | undefined}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties[]>;
   static async fetch(path: `/games/${string}`, properties: {method: "PATCH", headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}, body: string}): Promise<GameProperties>;
+  static async fetch(path: `/games/${string}`, properties: {method: "DELETE", headers: {authorization: `Bearer ${string}`}}): Promise<void>;
   static async fetch(path: `/games/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<GameProperties>;
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<GameProperties | RunProperties[] | RunProperties | CategoryProperties> {
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<GameProperties | RunProperties[] | RunProperties | CategoryProperties | void> {
 
     return super.fetch(...parameters);
 
@@ -162,6 +163,23 @@ export default class Game extends Client {
     });
 
     return new Run(data);
+
+  }
+
+  async delete(): Promise<void> {
+  
+    if (!Client.session?.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    await Game.fetch(`/games/${this._id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${Client.session.token}`
+      }
+    });
 
   }
 

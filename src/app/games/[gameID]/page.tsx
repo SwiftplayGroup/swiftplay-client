@@ -13,6 +13,7 @@ import RunSubmissionDialog from "./components/RunSubmissionDialog/RunSubmissionD
 import CategoryCreationDialog from "./components/CategoryCreationDialog/CategoryCreationDialog";
 import GameApprovalDialog from "./components/GameApprovalDialog/GameApprovalDialog";
 import CoverArtEditDialog from "./components/CoverArtEditDialog/CoverArtEditDialog";
+import GameDeletionDialog from "./components/GameDeletionDialog/GameDeletionDialog";
 
 export default function GamePage() {
 
@@ -93,6 +94,11 @@ export default function GamePage() {
                   {
                     game ? (
                       <CoverArtEditDialog game={game} setGame={setGame} />
+                    ) : null
+                  }
+                  {
+                    game ? (
+                      <GameDeletionDialog game={game} />
                     ) : null
                   }
                 </section>
