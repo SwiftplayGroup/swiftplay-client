@@ -12,7 +12,7 @@ export default async function ForumPage({
   const forumID = await params.forumID;
   try {
     const threads = await Forum.getThreads(forumID);
-
+    console.log("Threads: ", threads);
     return (
       <div className="h-[50rem] pt-36">
         <div className="text-white ">
