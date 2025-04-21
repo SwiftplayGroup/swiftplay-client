@@ -1,6 +1,6 @@
 /**
  * A class that represents a run.
- * 
+ *
  * Programmer: Christian Toney (https://github.com/Christian-Toney)
  * © 2025 Swiftplay Group
  */
@@ -48,7 +48,6 @@ export type NewRunProperties = Omit<RunProperties, "_id" | "category" | "owner" 
 export type EditableRunProperties = Partial<NewRunProperties>;
 
 export default class Run extends Client {
-
   _id: string;
   category?: Category;
   durationMilliseconds: number;
@@ -59,7 +58,6 @@ export default class Run extends Client {
   removal: RunProperties["removal"];
 
   constructor(properties: RunProperties) {
-
     super();
     this._id = properties._id;
     this.durationMilliseconds = properties.durationMilliseconds;
@@ -69,29 +67,25 @@ export default class Run extends Client {
     this.owner = new User(properties.owner);
     this.verification = properties.verification;
     this.removal = properties.removal;
-
   }
 
   static async getFromID(runID: string): Promise<Run> {
-
     const data = await this.fetch(`/runs/${runID}`, {
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
 
     return new Run(data);
-
   }
 
   static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties>
   static async fetch(path: `/runs/${string}`, properties: {method: "DELETE", headers: {authorization: `Bearer ${string}`}}): Promise<void>
   static async fetch(path: `/runs/${string}`, properties: {method: "PATCH", body: string, headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}}): Promise<RunProperties>
   static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | RunRemoval | void> {
-
-    return super.fetch(...parameters);
-
+  return super.fetch(...parameters);
   }
+
 
   async delete(): Promise<void> {
 
@@ -179,5 +173,4 @@ export default class Run extends Client {
     });
 
   }
-
 }
