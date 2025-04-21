@@ -24,7 +24,11 @@ export type GameApproval = {
   timestamp: Date;
 }
 
-export type EditableGameProperties = Partial<Omit<GameProperties, "_id" | "approval"> & {
+type OrNull<T> = {
+  [P in keyof T]?: T[P] | null;
+};
+
+export type EditableGameProperties = OrNull<Omit<GameProperties, "_id" | "approval"> & {
   approval: {
     ownerID: string;
   } | null
