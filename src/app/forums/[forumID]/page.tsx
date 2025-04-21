@@ -13,6 +13,13 @@ export default async function ForumPage({
   try {
     const threads = await Forum.getThreads(forumID);
     console.log("Threads: ", threads);
+    if (threads.message) {
+      return (
+        <div className="h-[50rem] flex items-center justify-center">
+          Issue with Token: {threads.message}
+        </div>
+      );
+    }
     return (
       <div className="h-[50rem] pt-36">
         <div className="text-white ">
