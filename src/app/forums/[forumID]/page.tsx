@@ -1,7 +1,7 @@
-import { getThreads } from "@/api/forums";
 import { Thread } from "@/types/threads";
 import { ThreadCard } from "@/components/forums/threads/thread-card";
 import Link from "next/link";
+import Forum from "@/api/forums";
 
 export default async function ForumPage({
   params,
@@ -11,7 +11,7 @@ export default async function ForumPage({
   params = await params;
   const forumID = await params.forumID;
   try {
-    const threads = await getThreads(forumID);
+    const threads = await Forum.getThreads(forumID);
 
     return (
       <div className="h-[50rem] pt-36">

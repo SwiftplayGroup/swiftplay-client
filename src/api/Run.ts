@@ -1,6 +1,6 @@
 /**
  * A class that represents a run.
- * 
+ *
  * Programmer: Christian Toney (https://github.com/Christian-Toney)
  * © 2025 Swiftplay Group
  */
@@ -17,10 +17,9 @@ export type RunProperties = {
   category?: Category;
   owner: UserProperties;
   game: GameProperties;
-}
+};
 
 export default class Run extends Client {
-
   _id: string;
   category?: Category;
   durationMilliseconds: number;
@@ -29,7 +28,6 @@ export default class Run extends Client {
   owner: User;
 
   constructor(properties: RunProperties) {
-
     super();
     this._id = properties._id;
     this.durationMilliseconds = properties.durationMilliseconds;
@@ -37,26 +35,28 @@ export default class Run extends Client {
     this.category = properties.category;
     this.game = new Game(properties.game);
     this.owner = new User(properties.owner);
-
   }
 
   static async getFromID(runID: string): Promise<Run> {
-
     const data = await this.fetch(`/runs/${runID}`, {
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
 
     return new Run(data);
-
   }
 
-  static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {["Content-Type"]: "application/json"}}): Promise<Run>
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties> {
-
+  static async fetch(
+    path: `/runs/${string}`,
+    properties: {
+      method?: "GET";
+      headers: { ["Content-Type"]: "application/json" };
+    },
+  ): Promise<Run>;
+  static async fetch(
+    ...parameters: Parameters<(typeof Client)["fetch"]>
+  ): Promise<RunProperties> {
     return super.fetch(...parameters);
-
   }
-
 }

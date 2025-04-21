@@ -4,12 +4,13 @@
   display: flex;
   flex-direction: column;
   gap: 25px;
+  min-height: calc(100vh - 128px);
+  width: 100%;
 }
 
 #userContainer {
   min-height: 180px;
   display: flex;
-  flex-direction: column;
 }
 
 #userContainer > section:first-of-type {

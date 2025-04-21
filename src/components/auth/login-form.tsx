@@ -9,33 +9,59 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { login } from "@/api/auth";
+import { useRouter } from "next/navigation";
+import Client from "~/api/Client";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); //NOTE: Research this -Aiden
-    //Cause like ... tell me why tf this didnt work until I added this line.
+    event.preventDefault();
     setError(null);
 
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
-    const data = await login(username, password);
-    console.log(data);
-    if (data.error) {
-      setError(data.error);
+
+    try {
+      const session = await login(username, password);
+
+      // Store session data in cookies
+      document.cookie = `userID=${
+        session.userID
+      }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
+        session.expirationDate,
+      )}`;
+      document.cookie = `token=${
+        session.token
+      }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
+        session.expirationDate,
+      )}`;
+      document.cookie = `sessionID=${
+        session._id
+      }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
+        session.expirationDate,
+      )}`;
+
+      // Set up Client for API requests
+      Client.token = session.token;
+      Client.userID = session.userID;
+
+      // Redirect to home page
+      router.replace("/");
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     }
-    localStorage.setItem("token", data.sessionToken);
-    localStorage.setItem("session", data.sessionID);
-    router.push("/");
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

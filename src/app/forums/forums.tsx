@@ -1,14 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getForums } from "@/api/forums";
-import { Forum } from "@/types/forums";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import Forum from "@/api/forums";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 
 export default function ForumsPage() {
@@ -19,7 +12,7 @@ export default function ForumsPage() {
     const fetchForums = async () => {
       try {
         setIsLoading(true);
-        const data = await getForums();
+        const data = await Forum.getAll();
         setForums(data);
       } catch (error) {
         console.error("Error fetching forums:", error);
@@ -56,7 +49,7 @@ export default function ForumsPage() {
                     <CardTitle className="text-xl">{forum.name}</CardTitle>
                   </CardHeader>
                   <CardContent className="text-sm text-gray-400">
-                      {forum.description}
+                    {forum.description}
                   </CardContent>
                 </Card>
               </Link>
