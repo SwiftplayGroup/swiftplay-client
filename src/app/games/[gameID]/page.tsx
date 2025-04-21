@@ -10,6 +10,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import GameRunsCard from "./components/GameRunsCard/GameRunsCard";
 import Client from "~/api/Client";
 import RunSubmissionDialog from "./components/RunSubmissionDialog/RunSubmissionDialog";
+import CategoryCreationDialog from "./components/CategoryCreationDialog/CategoryCreationDialog";
 
 export default function GamePage() {
 
@@ -77,13 +78,18 @@ export default function GamePage() {
                       <RunSubmissionDialog game={game} />
                     ) : null
                   }
+                  {
+                    game ? (
+                      <CategoryCreationDialog game={game} setGame={setGame} />
+                    ) : null
+                  }
                 </section>
               ) : null
             }
           </section>
         </Card>
         {
-          game ? <GameRunsCard game={game} /> : null
+          game ? <GameRunsCard game={game} setGame={setGame} /> : null
         }
       </section>
     </main>
