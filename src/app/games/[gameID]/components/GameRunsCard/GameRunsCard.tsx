@@ -10,9 +10,8 @@ import Link from "next/link";
 import convertMillisecondsToTime from "~/lib/millisecondsToTime";
 import Game from "~/api/Game";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
-import Category from "~/api/Category";
 
-export default function GameRunsCard({game}: {game: Game}) {
+export default function GameRunsCard({game, setGame}: {game: Game, setGame: (game: Game) => void}) {
 
   const [isLoading, setIsLoading] = useState<boolean>(!!game);
   const [runs, setRuns] = useState<Run[]>([]);
@@ -63,31 +62,20 @@ export default function GameRunsCard({game}: {game: Game}) {
 
   }, [game]);
 
-  const categoryOptions: Category[] = [];
-  for (const run of runs) {
-
-    if (run.category && !categoryOptions.find((category) => category._id === run.category?._id)) {
-
-      categoryOptions.push(run.category);
-
-    }
-
-  }
-
   const filteredRuns = runs.filter((run) => (!run.category && selectedCategoryID === "default") || (run.category?._id === selectedCategoryID));
 
   return (
     <Card className={styles.container}>
       <CardTitle>Runs</CardTitle>
       <section>
-        <Select value={selectedCategoryID} disabled={categoryOptions.length < 1} onValueChange={(newSelectedCategoryID) => setSelectedCategoryID(newSelectedCategoryID)}>
+        <Select value={selectedCategoryID} disabled={game.categories.length < 1} onValueChange={(newSelectedCategoryID) => setSelectedCategoryID(newSelectedCategoryID)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="default">Default</SelectItem>
             {
-              categoryOptions.map((category) => (
+              game.categories.map((category) => (
                 <SelectItem key={category._id} value={category._id}>
                   {category.name}
                 </SelectItem>

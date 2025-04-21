@@ -5,7 +5,7 @@
  * © 2025 Swiftplay Group
  */
 
-import { CategoryProperties } from "./Category.ts";
+import Category, { CategoryProperties } from "./Category.ts";
 import Client from "./Client.ts";
 import Run, { NewRunProperties, RunProperties } from "./Run.ts";
 import { UserProperties } from "./User.ts";
@@ -44,10 +44,11 @@ export default class Game extends Client {
 
   }
 
+  static async fetch(path: `/games/${string}/categories`, properties: {method: "POST", headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}, body: string}): Promise<CategoryProperties>;
   static async fetch(path: `/games/${string}/runs${string | undefined}`, properties: {method: "POST", headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}, body: string}): Promise<RunProperties>;
   static async fetch(path: `/games/${string}/runs${string | undefined}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties[]>;
   static async fetch(path: `/games/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<GameProperties>;
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<GameProperties | RunProperties[] | RunProperties> {
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<GameProperties | RunProperties[] | RunProperties | CategoryProperties> {
 
     return super.fetch(...parameters);
 
@@ -62,6 +63,27 @@ export default class Game extends Client {
     });
 
     return new Game(data);
+
+  }
+
+  async createRunCategory(properties: Omit<CategoryProperties, "_id">): Promise<Category> {
+
+    if (!Client.session?.token) {
+
+      throw new Error("User is unauthenticated.");
+
+    }
+
+    const data = await Game.fetch(`/games/${this._id}/categories`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: Client.session.token
+      },
+      body: JSON.stringify(properties)
+    });
+
+    return new Category(data);
 
   }
 

@@ -17,6 +17,12 @@
   flex-basis: 75%;
 }
 
+#gameTextData + section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
 #gameMetadata > section {
   display: flex;
   gap: 25px;
@@ -47,6 +53,10 @@
   #gameMetadata > section {
     flex-direction: row;
     align-items: center;
+  }
+  
+  #gameTextData + section {
+    flex-direction: row;
   }
 
 }
