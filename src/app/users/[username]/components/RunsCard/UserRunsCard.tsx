@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react"
 import User from "~/api/User.ts";
 import { Card, CardTitle } from "~/components/ui/card";
-import styles from "./RunsCard.module.css";
+import styles from "./UserRunsCard.module.css";
 import { Skeleton } from "~/components/ui/skeleton";
 import Run from "~/api/Run";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import Link from "next/link";
 import convertMillisecondsToTime from "~/lib/millisecondsToTime";
+import Game from "~/api/Game";
 
-export default function RunsCard({user}: {user: User}) {
+export default function UserRunsCard({user}: {user?: User, game?: Game}) {
 
   const [isLoading, setIsLoading] = useState<boolean>(!!user);
   const [runs, setRuns] = useState<Run[]>([]);
@@ -64,7 +65,11 @@ export default function RunsCard({user}: {user: User}) {
                         <Link href={`/games/${run.game._id}/runs/${run._id}`}>{run.game.name}</Link>
                       </TableCell>
                       <TableCell>{run.category?.name ?? "Default"}</TableCell>
-                      <TableCell>{convertMillisecondsToTime(run.durationMilliseconds)}</TableCell>
+                      <TableCell>
+                        <Link href={`/games/${run.game._id}/runs/${run._id}`}>
+                          {convertMillisecondsToTime(run.durationMilliseconds)}
+                        </Link>
+                      </TableCell>
                     </TableRow>
                   ))
                 }
