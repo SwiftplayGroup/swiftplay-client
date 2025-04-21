@@ -1,0 +1,46 @@
+#content {
+  margin: 64px auto;
+  max-width: 1080px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+#gameMetadata {
+  min-height: 212px;
+  display: flex;
+  flex-direction: column;
+}
+
+#gameMetadata > section {
+  display: flex;
+  gap: 25px;
+  flex-direction: column;
+}
+
+.container {
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 0 20px;
+  transition: 0.3s;
+}
+
+#coverArt {
+  width: 108px;
+  aspect-ratio: 27 / 40;
+}
+
+#gameName {
+  font-size: 25px;
+}
+
+@media screen and (min-width: 820px) {
+  
+  #gameMetadata > section {
+    flex-direction: row;
+    align-items: center;
+  }
+
+}

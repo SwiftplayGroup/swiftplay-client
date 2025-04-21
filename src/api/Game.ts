@@ -45,4 +45,16 @@ export default class Game extends Client {
 
   }
 
+  static async getFromID(gameID: string): Promise<Game> {
+
+    const data = await this.fetch(`/games/${gameID}`, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    return new Game(data);
+
+  }
+
 }
