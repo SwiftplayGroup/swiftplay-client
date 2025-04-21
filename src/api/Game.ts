@@ -24,6 +24,16 @@ export type GameApproval = {
   timestamp: Date;
 }
 
+type OrNull<T> = {
+  [P in keyof T]?: T[P] | null;
+};
+
+export type EditableGameProperties = OrNull<Omit<GameProperties, "_id" | "approval"> & {
+  approval: {
+    ownerID: string;
+  } | null
+}>
+
 export default class Game extends Client {
 
   _id: GameProperties["_id"];
@@ -41,14 +51,17 @@ export default class Game extends Client {
     this.publisherName = properties.publisherName;
     this.coverArtURL = properties.coverArtURL;
     this.categories = properties.categories;
+    this.approval = properties.approval;
 
   }
 
   static async fetch(path: `/games/${string}/categories`, properties: {method: "POST", headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}, body: string}): Promise<CategoryProperties>;
   static async fetch(path: `/games/${string}/runs${string | undefined}`, properties: {method: "POST", headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}, body: string}): Promise<RunProperties>;
   static async fetch(path: `/games/${string}/runs${string | undefined}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties[]>;
+  static async fetch(path: `/games/${string}`, properties: {method: "PATCH", headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}, body: string}): Promise<GameProperties>;
+  static async fetch(path: `/games/${string}`, properties: {method: "DELETE", headers: {authorization: `Bearer ${string}`}}): Promise<void>;
   static async fetch(path: `/games/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<GameProperties>;
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<GameProperties | RunProperties[] | RunProperties | CategoryProperties> {
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<GameProperties | RunProperties[] | RunProperties | CategoryProperties | void> {
 
     return super.fetch(...parameters);
 
@@ -71,6 +84,22 @@ export default class Game extends Client {
     }
 
     return new Game({...data, categories});
+
+  }
+
+  async approve(): Promise<Game> {
+  
+    if (!Client.session?.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    return await this.edit({
+      approval: {
+        ownerID: (await Client.session.getUser())._id
+      }
+    });
 
   }
 
@@ -134,6 +163,52 @@ export default class Game extends Client {
     });
 
     return new Run(data);
+
+  }
+
+  async delete(): Promise<void> {
+  
+    if (!Client.session?.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    await Game.fetch(`/games/${this._id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${Client.session.token}`
+      }
+    });
+
+  }
+
+  async edit(properties: EditableGameProperties): Promise<Game> {
+  
+    if (!Client.session?.token) {
+
+      throw new Error("User is not authenticated.");
+
+    }
+
+    const editedGameData = await Game.fetch(`/games/${this._id}`, {
+      method: "PATCH",
+      body: JSON.stringify(properties),
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${Client.session.token}`
+      }
+    });
+
+    return new Game(editedGameData);
+
+  }
+
+  async unapprove(): Promise<Game> {
+
+    return await this.edit({
+      approval: null
+    });
 
   }
 

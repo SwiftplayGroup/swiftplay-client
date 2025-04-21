@@ -42,6 +42,8 @@
 #coverArt {
   width: 108px;
   aspect-ratio: 27 / 40;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 #gameName {
