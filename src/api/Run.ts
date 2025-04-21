@@ -104,7 +104,7 @@ export default class Run extends Client {
     await Run.fetch(`/runs/${this._id}`, {
       method: "DELETE",
       headers: {
-        authorization: Run.session.token
+        authorization: `Bearer ${Run.session.token}`
       }
     });
 
@@ -123,7 +123,7 @@ export default class Run extends Client {
       body: JSON.stringify(properties),
       headers: {
         "Content-Type": "application/json",
-        authorization: Run.session.token
+        authorization: `Bearer ${Run.session.token}`
       }
     });
 

@@ -78,7 +78,7 @@ export default class Game extends Client {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: Client.session.token
+        authorization: `Bearer ${Client.session.token}`
       },
       body: JSON.stringify(properties)
     });
@@ -120,7 +120,7 @@ export default class Game extends Client {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: Client.session.token
+        authorization: `Bearer ${Client.session.token}`
       },
       body: JSON.stringify(properties)
     });

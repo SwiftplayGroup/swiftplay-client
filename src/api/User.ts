@@ -97,12 +97,12 @@ export default class User extends Client {
 
   }
 
-  static async getFromToken(token: `Bearer ${string}`): Promise<User> {
+  static async getFromToken(token: string): Promise<User> {
 
     const data = await this.fetch(`/user`, {
       headers: {
         "Content-Type": "application/json",
-        authorization: token
+        authorization: `Bearer ${token}`
       }
     });
 
@@ -157,7 +157,7 @@ export default class User extends Client {
       body: JSON.stringify(properties),
       headers: {
         "Content-Type": "application/json",
-        authorization: User.session.token
+        authorization: `Bearer ${User.session.token}`
       }
     });
 
