@@ -21,7 +21,7 @@ export default function GameApprovalDialog({game, setGame}: {game: Game, setGame
 
         try {
 
-          const newGame = await game.approve();
+          const newGame = game.approval ? await game.unapprove() : await game.approve();
 
           setGame(newGame);
           setIsOpen(false);
@@ -45,9 +45,11 @@ export default function GameApprovalDialog({game, setGame}: {game: Game, setGame
     async function updateAuthenticatedView() {
 
       const authenticatedUser = await Client.session?.getUser();
-      const permission = (await Permission.find()).find((permission) => permission.hierarchicalName === "games.approve")
-      const permissionLevel = permission ? authenticatedUser?.permissionOverrides?.[permission._id] ?? PermissionAccessLevel.DENIED : PermissionAccessLevel.DENIED;
-      const canShowDialog = permissionLevel >= PermissionAccessLevel.USER;
+      const approvePermission = (await Permission.find()).find((permission) => permission.hierarchicalName === "games.approve");
+      const editPermission = (await Permission.find()).find((permission) => permission.hierarchicalName === "games.edit");
+      const approvePermissionLevel = approvePermission ? authenticatedUser?.permissionOverrides?.[approvePermission._id] ?? PermissionAccessLevel.DENIED : PermissionAccessLevel.DENIED;
+      const editPermissionLevel = editPermission ? authenticatedUser?.permissionOverrides?.[editPermission._id] ?? PermissionAccessLevel.DENIED : PermissionAccessLevel.DENIED;
+      const canShowDialog = approvePermissionLevel >= PermissionAccessLevel.USER && editPermissionLevel >= PermissionAccessLevel.USER;
 
       setCanShowDialog(canShowDialog);
 
@@ -68,17 +70,17 @@ export default function GameApprovalDialog({game, setGame}: {game: Game, setGame
   return canShowDialog ? (
     <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
       <DialogTrigger asChild>
-        <Button type="button" disabled={!!game.approval}>Approve game</Button>
+        <Button type="button" variant={game.approval ? "destructive" : "default"} disabled={isProcessing}>{game.approval ? "Una" : "A"}pprove game</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Approve game</DialogTitle>
+          <DialogTitle>{game.approval ? "Una" : "A"}pprove game</DialogTitle>
           <DialogDescription>
-            This will make the game accessible in search and in the games directory.
+            This will make the game {game.approval ? "in" : ""}accessible in search and in the games directory.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button type="button" disabled={isProcessing} onClick={() => setIsProcessing(true)}>Approve game</Button>
+          <Button type="button" variant={game.approval ? "destructive" : "default"} disabled={isProcessing} onClick={() => setIsProcessing(true)}>{game.approval ? "Una" : "A"}pprove game</Button>
           <Button type="button" variant="secondary" disabled={isProcessing} onClick={() => setIsOpen(false)}>Close</Button>
         </DialogFooter>
       </DialogContent>
