@@ -12,11 +12,11 @@ import Client from "~/api/Client";
 import RunSubmissionDialog from "./components/RunSubmissionDialog/RunSubmissionDialog";
 import CategoryCreationDialog from "./components/CategoryCreationDialog/CategoryCreationDialog";
 import GameApprovalDialog from "./components/GameApprovalDialog/GameApprovalDialog";
+import CoverArtEditDialog from "./components/CoverArtEditDialog/CoverArtEditDialog";
 
 export default function GamePage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [canApproveGame, setCanApproveGame] = useState<boolean>(false);
   const { gameID } = useParams<{
     gameID: string;
   }>();
@@ -88,6 +88,11 @@ export default function GamePage() {
                   {
                     game ? (
                       <GameApprovalDialog game={game} setGame={setGame} />
+                    ) : null
+                  }
+                  {
+                    game ? (
+                      <CoverArtEditDialog game={game} setGame={setGame} />
                     ) : null
                   }
                 </section>
