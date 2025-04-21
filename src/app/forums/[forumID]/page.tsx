@@ -12,7 +12,6 @@ export default async function ForumPage({
   const forumID = await params.forumID;
   try {
     const threads = await Forum.getThreads(forumID);
-    console.log("Threads: ", threads);
     if (threads.message) {
       return (
         <div className="h-[50rem] flex items-center justify-center">
@@ -23,9 +22,9 @@ export default async function ForumPage({
     return (
       <div className="h-[50rem] pt-36">
         <div className="text-white ">
-          {threads.map((thread: Thread) => () => (
-            <Link href={`/threads/${thread._id}`}>
-              <div key={thread._id}>
+          {threads.map((thread: Thread) => (
+            <Link href={`/threads/${thread._id}`} key={thread._id}>
+              <div>
                 <ThreadCard {...thread} />
               </div>
             </Link>
