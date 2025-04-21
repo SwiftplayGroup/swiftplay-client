@@ -42,3 +42,4 @@ export default async function ForumThreadsPage({
     );
   }
 }
+export const runtime = "edge";
