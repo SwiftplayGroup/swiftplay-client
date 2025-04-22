@@ -74,6 +74,11 @@ export default function Navbar({ className }: { className?: string }) {
             <HoveredLink href="/forums">All Forums</HoveredLink>
           </div>
         </MenuItem>
+        <MenuItem setActive={setActive} active={active} item="Games">
+          <div className="flex flex-col space-y-4 text-sm">
+            <HoveredLink href="/games">All Games</HoveredLink>
+          </div>
+        </MenuItem>
         {!isLoading && user ? (
           <NavigationMenu>
             <NavigationMenuList>

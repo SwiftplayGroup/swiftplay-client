@@ -39,7 +39,7 @@ export default function games() {
   );
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center -mt-60">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center -mt-40">
       
 
       {/* Title Section */}
