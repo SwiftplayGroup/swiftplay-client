@@ -25,9 +25,10 @@ export function PostToForumButton(forumID: any, threadID: any) {
     const formData = new FormData(event.currentTarget as HTMLFormElement);
     const title = formData.get("title");
     const content = formData.get("content");
+    const user = await Client.session?.getUser();
     const ThreadPayload = {
       title: title,
-      authorID: Client.userID,
+      authorID: user._id,
       forumID: forumID.forumID,
       content: content,
     };

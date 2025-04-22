@@ -22,7 +22,7 @@ export default class Thread extends Client {
 
   static async createPost(
     threadID: string,
-    post: CreatePostPayload
+    post: CreatePostPayload,
   ): Promise<Post> {
     if (!Thread.session?.token) {
       throw new Error("User is not authenticated");
@@ -61,7 +61,7 @@ export default class Thread extends Client {
     properties: {
       method?: "GET";
       headers: { ["Content-Type"]: "application/json" };
-    }
+    },
   ): Promise<Thread>;
   static async fetch(
     path: `/threads/${string}/posts`,
@@ -69,7 +69,7 @@ export default class Thread extends Client {
       method?: "GET" | "POST";
       headers: { ["Content-Type"]: "application/json"; Authorization?: string };
       body?: string;
-    }
+    },
   ): Promise<Post[] | Post>;
   static async fetch(
     ...parameters: Parameters<(typeof Client)["fetch"]>

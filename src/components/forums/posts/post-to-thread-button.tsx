@@ -14,12 +14,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Thread from "@/api/threads";
 import Client from "@/api/Client";
+
 export function PostToThreadButton({
   forumID,
   threadID,
 }: {
-  forumID: string;
-  threadID: string;
+  forumID: any;
+  threadID: any;
 }) {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -30,15 +31,15 @@ export function PostToThreadButton({
       alert("Please fill in all fields");
       return;
     }
+    const user = await Client.session?.getUser();
 
     const PostPayload = {
       title: title,
-      authorID: Thread.session.userID,
+      authorID: user._id,
       forumID: forumID,
       threadID: threadID,
       content: content,
     };
-    console.log(PostPayload);
     try {
       await Thread.createPost(threadID, PostPayload);
     } catch (error) {

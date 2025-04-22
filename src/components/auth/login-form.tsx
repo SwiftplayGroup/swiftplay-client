@@ -13,6 +13,7 @@ import { useState } from "react";
 import { login } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import Client from "~/api/Client";
+import Session from "~/api/Session";
 
 export function LoginForm({
   className,
@@ -31,6 +32,7 @@ export function LoginForm({
 
     try {
       const session = await login(username, password);
+      Session.createSession(username, password);
 
       // Store session data in cookies
       document.cookie = `userID=${
@@ -48,9 +50,6 @@ export function LoginForm({
       }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
         session.expirationDate,
       )}`;
-
-      // Set up Client for API requests
-      Client.session = session;
 
       // Redirect to home page
       router.replace("/");
