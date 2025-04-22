@@ -1,7 +1,7 @@
 import { api } from "./api";
 
-export const login = async (email: string, password: string) => {
-  const response = await api.post("/user/sessions", { email, password });
+export const login = async (username: string, password: string) => {
+  const response = await api.post("/user/sessions", { username, password });
   return response.data; //     .json({ ...sessionData, token: sessionToken, sessionID });
 };
 

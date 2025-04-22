@@ -9,13 +9,62 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { login } from "@/api/auth";
+import { useRouter } from "next/navigation";
+import Client from "~/api/Client";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError(null);
+
+    const formData = new FormData(event.currentTarget);
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      const session = await login(username, password);
+
+      // Store session data in cookies
+      document.cookie = `userID=${
+        session.userID
+      }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
+        session.expirationDate,
+      )}`;
+      document.cookie = `token=${
+        session.token
+      }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
+        session.expirationDate,
+      )}`;
+      document.cookie = `sessionID=${
+        session._id
+      }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
+        session.expirationDate,
+      )}`;
+
+      // Set up Client for API requests
+      Client.token = session.token;
+      Client.userID = session.userID;
+
+      // Redirect to home page
+      router.replace("/");
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
+    }
+  };
   return (
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
@@ -24,14 +73,15 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
+                  id="username"
+                  name="username"
+                  type="username"
+                  placeholder="itsAidenJai"
                   required
                 />
               </div>
@@ -45,11 +95,14 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input name="password" id="password" type="password" required />
               </div>
               <Button type="submit" className="w-full">
                 Login
               </Button>
+              {error && (
+                <div className="text-sm text-red-500 text-center">{error}</div>
+              )}
               <Button variant="outline" className="w-full">
                 Login with Google
               </Button>

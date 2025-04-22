@@ -1,6 +1,6 @@
 /**
  * A class that represents a session.
- * 
+ *
  * Programmer: Christian Toney (https://github.com/Christian-Toney)
  * © 2025 Swiftplay Group
  */
@@ -13,11 +13,10 @@ export type SessionProperties = {
   userID?: string;
   expirationDate?: Date;
   creationIP?: string;
-  token?: `Bearer ${string}`;
-}
+  token?: string;
+};
 
 export default class Session extends Client {
-
   _id: string;
   userID: SessionProperties["userID"];
   expirationDate: SessionProperties["expirationDate"];
@@ -26,29 +25,30 @@ export default class Session extends Client {
   user?: User;
 
   constructor(properties: SessionProperties) {
-
     super();
     this._id = properties._id;
     this.userID = properties.userID;
     this.expirationDate = properties.expirationDate;
     this.creationIP = properties.creationIP;
     this.token = properties.token;
-
   }
 
-  static async createSession(properties: {username: string, password: string}): Promise<Session> {
-
+  static async createSession(properties: {
+    username: string;
+    password: string;
+  }): Promise<Session> {
     const data = await this.fetch("/user/sessions", {
       method: "POST",
       body: JSON.stringify(properties),
       headers: {
-        "Content-Type": "application/json"
-      }
-    })
+        "Content-Type": "application/json",
+      },
+    });
+
 
     return new Session({
       ...data,
-      token: `Bearer ${data.token}`
+      token: data.token
     });
 
   }
@@ -82,18 +82,16 @@ export default class Session extends Client {
 
     if (!this.user) {
 
-      if (!Session.session?.token) {
+      if (!Client.session?.token) {
 
         throw new Error("User is unauthenticated.");
 
       }
 
-      this.user = await User.getFromToken(Session.session.token);
+      this.user = await User.getFromToken(Client.session.token);
 
     }
 
     return this.user;
-
   }
-
 }

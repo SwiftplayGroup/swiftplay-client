@@ -3,12 +3,13 @@ export const runtime = "edge";
 
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import User from "~/api/User.ts";
 import { Card } from "~/components/ui/card";
 import styles from "./styles.module.css";
 import ObjectId from "bson-objectid";
 import { Skeleton } from "~/components/ui/skeleton";
+
 import RunsCard from "~/app/users/[username]/components/RunsCard/UserRunsCard";
 import RunCard from "~/components/RunCard/RunCard";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
@@ -20,26 +21,24 @@ import Client from "~/api/Client";
 import Run from "~/api/Run";
 
 export default function UserPage() {
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
+
   const [favoriteRun, setFavoriteRun] = useState<Run | null>(null);
   const { username } = useParams<{username: string}>()
 
+
   useEffect(() => {
-
     (async () => {
-
       try {
-
-        if (typeof(username) !== "string") {
-
+        if (typeof username !== "string") {
           throw new Error("User doesn't exist.");
- 
+
         }
 
         const user = await User.getFromUsername(username);
         setUser(user);
+
 
         if (user.favoriteRunID) {
 
@@ -49,16 +48,13 @@ export default function UserPage() {
         }
 
       } catch (error) {
-
         console.error(error);
-
       }
 
       setIsLoading(false);
-
     })();
-
   }, [username]);
+
 
   const [shouldShowPermissionEditor, setShouldShowPermissionEditor] = useState(false);
   const [canChangeProfilePhoto, setCanChangeProfilePhoto] = useState(false);

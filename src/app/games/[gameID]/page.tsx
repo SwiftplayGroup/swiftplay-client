@@ -11,6 +11,9 @@ import GameRunsCard from "./components/GameRunsCard/GameRunsCard";
 import Client from "~/api/Client";
 import RunSubmissionDialog from "./components/RunSubmissionDialog/RunSubmissionDialog";
 import CategoryCreationDialog from "./components/CategoryCreationDialog/CategoryCreationDialog";
+import GameApprovalDialog from "./components/GameApprovalDialog/GameApprovalDialog";
+import CoverArtEditDialog from "./components/CoverArtEditDialog/CoverArtEditDialog";
+import GameDeletionDialog from "./components/GameDeletionDialog/GameDeletionDialog";
 
 export default function GamePage() {
 
@@ -81,6 +84,21 @@ export default function GamePage() {
                   {
                     game ? (
                       <CategoryCreationDialog game={game} setGame={setGame} />
+                    ) : null
+                  }
+                  {
+                    game ? (
+                      <GameApprovalDialog game={game} setGame={setGame} />
+                    ) : null
+                  }
+                  {
+                    game ? (
+                      <CoverArtEditDialog game={game} setGame={setGame} />
+                    ) : null
+                  }
+                  {
+                    game ? (
+                      <GameDeletionDialog game={game} />
                     ) : null
                   }
                 </section>
