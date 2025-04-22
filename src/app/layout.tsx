@@ -48,7 +48,7 @@ export default function RootLayout({
       <body>
         <Navbar className="top-2" />
         <div className="dark:bg-black bg-white  dark:bg-dot-white/[0.2] bg-dot-black/[0.2]">
-          {children}
+          {isAuthenticating ? null : children}
         </div>
       </body>
     </html>
