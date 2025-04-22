@@ -38,17 +38,17 @@ export function LoginForm({
       document.cookie = `userID=${
         session.userID
       }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
-        session.expirationDate,
+        session.expirationDate
       )}`;
       document.cookie = `token=${
         session.token
       }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
-        session.expirationDate,
+        session.expirationDate
       )}`;
       document.cookie = `sessionID=${
         session._id
       }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
-        session.expirationDate,
+        session.expirationDate
       )}`;
 
       // Redirect to home page

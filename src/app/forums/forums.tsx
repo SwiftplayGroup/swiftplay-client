@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Forum from "@/api/forums";
+import Forum from "@/api/Forum";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 

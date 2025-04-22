@@ -1,7 +1,7 @@
 import { Thread } from "@/types/threads";
 import { ThreadCard } from "@/components/forums/threads/thread-card";
 import Link from "next/link";
-import Forum from "@/api/forums";
+import Forum from "@/api/Forum";
 import { PostToForumButton } from "~/components/forums/threads/post-to-forum-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 

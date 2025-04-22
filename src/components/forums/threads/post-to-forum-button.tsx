@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Client from "@/api/Client";
-import Forum from "@/api/forums";
+import Forum from "@/api/Forum";
 import { useEffect, useState } from "react";
 
 export function PostToForumButton({ forumID }: { forumID: any }) {

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import Thread from "@/api/threads";
+import Thread from "@/api/Thread";
 import Client from "@/api/Client";
 import { useEffect, useState } from "react";
 

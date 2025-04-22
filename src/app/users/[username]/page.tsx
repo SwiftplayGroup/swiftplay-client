@@ -67,7 +67,7 @@ export default function UserPage() {
       const authenticatedUser = await User.session?.getUser();
       if (authenticatedUser?.permissionOverrides) {
         for (const permissionID of Object.keys(
-          authenticatedUser.permissionOverrides,
+          authenticatedUser.permissionOverrides
         )) {
           if (
             authenticatedUser.permissionOverrides[permissionID] >=
@@ -121,7 +121,7 @@ export default function UserPage() {
                 <section>
                   Joined on{" "}
                   {new Intl.DateTimeFormat("en-US").format(
-                    new ObjectId(user._id).getTimestamp(),
+                    new ObjectId(user._id).getTimestamp()
                   )}
                 </section>
               )}

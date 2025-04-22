@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/card";
 import { Post } from "@/types/posts";
 import Users from "@/api/User";
+import { LikeButton } from "@/components/forums/likes/like-button";
 
 export async function PostCard(post: Post) {
   const user = await Users.getFromID(post.authorID);
@@ -17,7 +18,7 @@ export async function PostCard(post: Post) {
           {post.content}
         </CardContent>
         <CardFooter className="text-muted text-sm">
-          Like Button | Share Button | Save Button
+          <LikeButton postID={post._id} userID={user._id} />
         </CardFooter>
       </Card>
     </div>

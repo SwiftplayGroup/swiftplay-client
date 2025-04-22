@@ -1,6 +1,6 @@
 import { PostCard } from "@/components/forums/posts/post-card";
 import { ThreadCard } from "@/components/forums/threads/thread-card";
-import Thread from "@/api/threads";
+import Thread from "@/api/Thread";
 import { Post } from "@/types/posts";
 import { PostToThreadButton } from "@/components/forums/posts/post-to-thread-button";
 
