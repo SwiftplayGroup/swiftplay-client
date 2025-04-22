@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import NavbarDemo from "~/components/example/navbar-menu-demo";
 import { HeroHighlight, Highlight } from "~/components/ui/hero-highlight";
 import { Hexagon, Github, Twitter } from "lucide-react"
 import  Footer  from "~/components/ui/footer"
@@ -41,10 +40,10 @@ export default function games() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center -mt-60">
-      <NavbarDemo />
+      
 
       {/* Title Section */}
-      <div className="mt-20">
+      <div className="">
         <HeroHighlight>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
