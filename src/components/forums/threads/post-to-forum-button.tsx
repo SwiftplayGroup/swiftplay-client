@@ -15,22 +15,27 @@ import { Textarea } from "@/components/ui/textarea";
 import Client from "@/api/Client";
 import Forum from "@/api/forums";
 
-export function PostToForumButton(forumID: any, threadID: any) {
+export async function PostToForumButton(forumID: any, threadID: any) {
   const handleClick = () => {
     console.log(forumID.forumID);
   };
+  const user = await Client.session?.getUser();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget as HTMLFormElement);
     const title = formData.get("title");
     const content = formData.get("content");
-    const user = await Client.session?.getUser();
+    if (typeof title !== "string" || typeof content !== "string") {
+      alert("Title and content must be text");
+      return;
+    }
+
     const ThreadPayload = {
-      title: title,
-      authorID: user._id,
+      title: title!,
+      authorID: user!._id,
       forumID: forumID.forumID,
-      content: content,
+      content: content!,
     };
     try {
       console.log("Client Session: ", Client.session);
@@ -40,6 +45,14 @@ export function PostToForumButton(forumID: any, threadID: any) {
       console.error("Error creating thread:", error);
     }
   };
+
+  if (!user) {
+    return (
+      <div>
+        <Button>Login to Post</Button>
+      </div>
+    );
+  }
   return (
     <div>
       <Dialog>
@@ -53,11 +66,17 @@ export function PostToForumButton(forumID: any, threadID: any) {
               <DialogDescription>Whats on your mind?</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
-              <Input name="title" id="title" placeholder="Thread Title" />
+              <Input
+                name="title"
+                id="title"
+                placeholder="Thread Title"
+                required
+              />
               <Textarea
                 name="content"
                 id="content"
                 placeholder="Thread Content"
+                required
               />
             </div>
             <DialogFooter>

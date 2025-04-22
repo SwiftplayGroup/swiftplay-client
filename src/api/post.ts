@@ -8,7 +8,7 @@ export default class Post extends Client {
   title: string;
   content: string;
   threadID: string;
-  orumID: string;
+  forumID: string;
   embeddings: number[];
 
   constructor(properties: PostType) {

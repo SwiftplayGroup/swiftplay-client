@@ -1,5 +1,6 @@
 import Client from "./Client.ts";
 import { Forum as ForumType } from "@/types/forums";
+import { CreateThreadPayload, Thread as ThreadType } from "@/types/threads";
 
 export default class Forum extends Client {
   _id: string;
@@ -33,11 +34,14 @@ export default class Forum extends Client {
     return data;
   }
 
-  static async createThread(forumID: string, thread: CreateThreadPayload) {
+  static async createThread(
+    forumID: string,
+    thread: CreateThreadPayload,
+  ): Promise<ThreadType> {
     const data = await this.fetch(`/forums/${forumID}/threads`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${Forum.session.token}`,
+        Authorization: `Bearer ${Forum?.session?.token}`,
       },
       method: "POST",
       body: JSON.stringify(thread),
@@ -46,12 +50,12 @@ export default class Forum extends Client {
   }
 
   static async getFromID(forumID: string): Promise<Forum> {
-    const data = await this.fetch(`/forums/${forumID}`, {
+    const data = await this.fetchForumByID(`/forums/${forumID}`, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    return data;
+    return new Forum(data);
   }
 
   static async fetch(
@@ -61,6 +65,7 @@ export default class Forum extends Client {
       headers: { ["Content-Type"]: "application/json" };
     },
   ): Promise<ForumType[]>;
+
   static async fetch(
     path: `/forums/${string}/threads`,
     properties: {
@@ -68,9 +73,32 @@ export default class Forum extends Client {
       headers: { ["Content-Type"]: "application/json" };
     },
   ): Promise<any>;
+
+  static async fetch(
+    path: `/forums/${string}/threads`,
+    properties: {
+      method: "POST";
+      headers: {
+        ["Content-Type"]: "application/json";
+        Authorization: string;
+      };
+      body: string;
+    },
+  ): Promise<ThreadType>;
+
   static async fetch(
     ...parameters: Parameters<(typeof Client)["fetch"]>
-  ): Promise<ForumType[] | any> {
+  ): Promise<ForumType[] | ThreadType | any> {
     return super.fetch(...parameters);
+  }
+
+  static async fetchForumByID(
+    path: `/forums/${string}`,
+    properties: {
+      method?: "GET";
+      headers: { ["Content-Type"]: "application/json" };
+    },
+  ): Promise<ForumType> {
+    return super.fetch(path, properties);
   }
 }

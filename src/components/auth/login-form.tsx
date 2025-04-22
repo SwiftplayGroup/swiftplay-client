@@ -32,7 +32,7 @@ export function LoginForm({
 
     try {
       const session = await login(username, password);
-      Session.createSession(username, password);
+      Session.createSession({ username, password });
 
       // Store session data in cookies
       document.cookie = `userID=${
