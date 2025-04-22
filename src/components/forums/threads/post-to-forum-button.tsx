@@ -16,13 +16,7 @@ import Client from "@/api/Client";
 import Forum from "@/api/forums";
 import { useEffect, useState } from "react";
 
-export function PostToForumButton({
-  forumID,
-  threadID,
-}: {
-  forumID: any;
-  threadID: any;
-}) {
+export function PostToForumButton({ forumID }: { forumID: any }) {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
