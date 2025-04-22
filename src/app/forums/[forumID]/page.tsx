@@ -2,7 +2,7 @@ import { Thread } from "@/types/threads";
 import { ThreadCard } from "@/components/forums/threads/thread-card";
 import Link from "next/link";
 import Forum from "@/api/forums";
-import { PostToThreadButton } from "@/components/forums/threads/post-to-thread-button";
+import { PostToForumButton } from "~/components/forums/threads/post-to-forum-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function ForumThreadsPage({
@@ -25,7 +25,7 @@ export default async function ForumThreadsPage({
           </CardContent>
         </Card>
         <div className="flex justify-center">
-          <PostToThreadButton forumID={forumID} />
+          <PostToForumButton forumID={forumID} />
         </div>
         <div className="space-y-4 max-w-4xl mx-auto">
           {threads.map((thread: Thread) => (

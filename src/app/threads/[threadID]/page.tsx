@@ -1,8 +1,8 @@
 import { PostCard } from "@/components/forums/posts/post-card";
 import { ThreadCard } from "@/components/forums/threads/thread-card";
-import { getReplies, getThread } from "@/api/threads";
+import Thread from "@/api/threads";
 import { Post } from "@/types/posts";
-import { Button } from "@/components/ui/button";
+import { PostToThreadButton } from "@/components/forums/posts/post-to-thread-button";
 
 export default async function ForumPage({
   params,
@@ -12,14 +12,14 @@ export default async function ForumPage({
   const { threadID } = await params;
 
   try {
-    const thread = await getThread(threadID);
-    const replies = await getReplies(threadID);
+    const thread = await Thread.getFromID(threadID);
+    const replies = await Thread.getReplies(threadID);
 
     return (
-      <div className="pt-36">
+      <div className="h-[50rem] pt-36">
         <ThreadCard {...thread} />
         <div className="h-[50rem]">
-          <Button onClick={() => {}}>Add Reply</Button>
+          <PostToThreadButton threadID={thread._id} forumID={thread.forumID} />
           <div className="text-white">
             {replies.map((reply: Post) => (
               <div key={reply._id}>

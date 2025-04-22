@@ -12,29 +12,35 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import Thread from "@/api/threads";
 import Client from "@/api/Client";
-import Forum from "@/api/forums";
-
-export function PostToThreadButton(forumID: any, threadID: any) {
-  const handleClick = () => {
-    console.log(forumID.forumID);
-  };
-
+export function PostToThreadButton({
+  forumID,
+  threadID,
+}: {
+  forumID: string;
+  threadID: string;
+}) {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget as HTMLFormElement);
-    const title = formData.get("title");
-    const content = formData.get("content");
-    const ThreadPayload = {
+    const title = formData.get("title") as string;
+    const content = formData.get("content") as string;
+    if (!title || !content) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    const PostPayload = {
       title: title,
-      authorID: Client.userID,
-      forumID: forumID.forumID,
+      authorID: Thread.session.userID,
+      forumID: forumID,
+      threadID: threadID,
       content: content,
     };
+    console.log(PostPayload);
     try {
-      console.log("Client Session: ", Client.session);
-      const resp = await Forum.createThread(forumID.forumID, ThreadPayload);
-      console.log("Thread created successfully:", resp);
+      await Thread.createPost(threadID, PostPayload);
     } catch (error) {
       console.error("Error creating thread:", error);
     }
@@ -43,7 +49,7 @@ export function PostToThreadButton(forumID: any, threadID: any) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button onClick={handleClick}>Post to Thread</Button>
+          <Button>Post to Thread</Button>
         </DialogTrigger>
         <DialogContent>
           <form onSubmit={handleSubmit}>
@@ -52,11 +58,11 @@ export function PostToThreadButton(forumID: any, threadID: any) {
               <DialogDescription>Whats on your mind?</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
-              <Input name="title" id="title" placeholder="Thread Title" />
+              <Input name="title" id="title" placeholder="Post Title" />
               <Textarea
                 name="content"
                 id="content"
-                placeholder="Thread Content"
+                placeholder="Post Content"
               />
             </div>
             <DialogFooter>

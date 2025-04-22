@@ -9,4 +9,4 @@ export interface Post {
   embeddings: number[];
 }
 
-export type CreatePostPayload = Omit<Post, "id" | "embeddings">;
+export type CreatePostPayload = Omit<Post, "_id" | "embeddings">;
