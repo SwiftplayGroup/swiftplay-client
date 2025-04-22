@@ -14,12 +14,28 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Client from "@/api/Client";
 import Forum from "@/api/forums";
+import { useEffect, useState } from "react";
 
-export async function PostToForumButton(forumID: any, threadID: any) {
+export function PostToForumButton({
+  forumID,
+  threadID,
+}: {
+  forumID: any;
+  threadID: any;
+}) {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await Client.session?.getUser();
+      setUser(currentUser);
+    };
+    fetchUser();
+  }, []);
+
   const handleClick = () => {
-    console.log(forumID.forumID);
+    console.log(forumID);
   };
-  const user = await Client.session?.getUser();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -34,12 +50,12 @@ export async function PostToForumButton(forumID: any, threadID: any) {
     const ThreadPayload = {
       title: title!,
       authorID: user!._id,
-      forumID: forumID.forumID,
+      forumID: forumID,
       content: content!,
     };
     try {
       console.log("Client Session: ", Client.session);
-      const resp = await Forum.createThread(forumID.forumID, ThreadPayload);
+      const resp = await Forum.createThread(forumID, ThreadPayload);
       console.log("Thread created successfully:", resp);
     } catch (error) {
       console.error("Error creating thread:", error);
@@ -53,6 +69,7 @@ export async function PostToForumButton(forumID: any, threadID: any) {
       </div>
     );
   }
+
   return (
     <div>
       <Dialog>

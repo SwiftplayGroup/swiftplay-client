@@ -14,15 +14,24 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Thread from "@/api/threads";
 import Client from "@/api/Client";
+import { useEffect, useState } from "react";
 
-export async function PostToThreadButton({
+export function PostToThreadButton({
   forumID,
   threadID,
 }: {
   forumID: any;
   threadID: any;
 }) {
-  const user = await Client.session?.getUser();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await Client.session?.getUser();
+      setUser(currentUser);
+    };
+    fetchUser();
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -36,7 +45,7 @@ export async function PostToThreadButton({
 
     const PostPayload = {
       title: title,
-      authorID: user!._id, // has to exist
+      authorID: user!._id,
       forumID: forumID,
       threadID: threadID,
       content: content,
@@ -47,6 +56,7 @@ export async function PostToThreadButton({
       console.error("Error creating thread:", error);
     }
   };
+
   if (!user) {
     return (
       <div>
@@ -54,6 +64,7 @@ export async function PostToThreadButton({
       </div>
     );
   }
+
   return (
     <div>
       <Dialog>

@@ -16,29 +16,44 @@ export default async function ForumPage({
     const replies = await Thread.getReplies(threadID);
 
     return (
-      <div className="h-[50rem] pt-36">
-        <ThreadCard {...thread} />
-        <div className="h-[50rem]">
-          <PostToThreadButton threadID={thread._id} forumID={thread.forumID} />
-          <div className="text-white">
-            {replies.map((reply: Post) => (
-              <div key={reply._id}>
-                <PostCard {...reply} />
-              </div>
-            ))}
+      <main className="min-h-screen pt-36 px-4 sm:px-8">
+        <div className="max-w-3xl mx-auto space-y-6">
+          {/* Thread Header */}
+          <ThreadCard {...thread} />
+
+          {/* Post Reply Button */}
+          <div className="flex justify-end">
+            <PostToThreadButton
+              threadID={thread._id}
+              forumID={thread.forumID}
+            />
+          </div>
+
+          {/* Replies */}
+          <div className="p-4 max-h-[40rem] overflow-y-auto space-y-4">
+            {replies.length > 0 ? (
+              replies.map((reply: Post) => (
+                <div key={reply._id}>
+                  <PostCard {...reply} />
+                </div>
+              ))
+            ) : (
+              <p className="text-center">No replies yet.</p>
+            )}
           </div>
         </div>
-      </div>
+      </main>
     );
   } catch (error) {
     console.error("Error loading thread or replies:", error);
     return (
-      <div className="h-[50rem] flex items-center justify-center">
-        <div className="text-red-500">
+      <main className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center">
           Error loading replies. Please try again later.
         </div>
-      </div>
+      </main>
     );
   }
 }
+
 export const runtime = "edge";
