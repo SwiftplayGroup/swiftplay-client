@@ -9,8 +9,8 @@ export default function WebAppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="">
-      <main className="dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] space-y-8">
+    <div>
+      <main className="dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] pt-24">
         {children}
       </main>
     </div>

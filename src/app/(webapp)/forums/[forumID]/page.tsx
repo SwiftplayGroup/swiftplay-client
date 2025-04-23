@@ -15,8 +15,8 @@ export default async function ForumThreadsPage({
   try {
     const threads = await Forum.getThreads(forumID);
     return (
-      <div className="h-screen pt-36 mx-auto px-4 md:px-6 space-y-4 ">
-        <Card className="transition-all duration-300 hover:shadow-md hover:bg-zinc-900/50 sticky top-0 z-10">
+      <div className="h-screen mx-auto px-4 md:px-6 space-y-4 ">
+        <Card className="backdrop-blur-sm sticky top-0 z-10">
           <CardHeader className="pb-2">
             <CardTitle className="text-xl">{forum.name}</CardTitle>
           </CardHeader>
@@ -27,13 +27,11 @@ export default async function ForumThreadsPage({
         <div className="flex justify-center">
           <PostToForumButton forumID={forumID} />
         </div>
-        <div className="space-y-4 max-w-4xl mx-auto">
+        <div className="space-y-4 mx-auto">
           {threads.map((thread: Thread) => (
-            <Link href={`/threads/${thread._id}`} key={thread._id}>
-              <div>
-                <ThreadCard {...thread} />
-              </div>
-            </Link>
+            <div key={thread._id} className="mb-4">
+              <ThreadCard {...thread} />
+            </div>
           ))}
         </div>
       </div>
