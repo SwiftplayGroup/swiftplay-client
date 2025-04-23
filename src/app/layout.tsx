@@ -1,15 +1,11 @@
 "use client";
-import type { Metadata } from "next";
-
 import "./globals.css";
-import Navbar from "~/components/navigation/navbar-menu";
-
 import "./globals.css";
 import { useEffect, useState } from "react";
 import getCookie from "~/lib/getCookie";
-import Header from "~/components/Header/Header";
 import Session from "~/api/Session";
 import Client from "~/api/Client";
+import { NavigationBar } from "~/components/navigation/navigation-bar";
 
 export default function RootLayout({
   children,
@@ -46,10 +42,8 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Navbar className="top-2" />
-        <div className="dark:bg-black bg-white  dark:bg-dot-white/[0.2] bg-dot-black/[0.2]">
-          {isAuthenticating ? null : children}
-        </div>
+        <NavigationBar />
+        <div>{isAuthenticating ? null : children}</div>
       </body>
     </html>
   );

@@ -10,7 +10,7 @@ import styles from "./styles.module.css";
 import ObjectId from "bson-objectid";
 import { Skeleton } from "~/components/ui/skeleton";
 
-import RunsCard from "~/app/users/[username]/components/RunsCard/UserRunsCard";
+import RunsCard from "~/app/(webapp)/users/[username]/components/RunsCard/UserRunsCard";
 import RunCard from "~/components/RunCard/RunCard";
 import {
   Dialog,
@@ -67,7 +67,7 @@ export default function UserPage() {
       const authenticatedUser = await User.session?.getUser();
       if (authenticatedUser?.permissionOverrides) {
         for (const permissionID of Object.keys(
-          authenticatedUser.permissionOverrides
+          authenticatedUser.permissionOverrides,
         )) {
           if (
             authenticatedUser.permissionOverrides[permissionID] >=
@@ -121,7 +121,7 @@ export default function UserPage() {
                 <section>
                   Joined on{" "}
                   {new Intl.DateTimeFormat("en-US").format(
-                    new ObjectId(user._id).getTimestamp()
+                    new ObjectId(user._id).getTimestamp(),
                   )}
                 </section>
               )}
