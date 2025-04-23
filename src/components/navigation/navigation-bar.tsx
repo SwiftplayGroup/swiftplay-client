@@ -137,7 +137,7 @@ export function NavigationBar() {
                     href="https://github.com/SwiftplayGroup"
                     title="Contribute"
                   >
-                    We are open source! Come checkout our Github Organization
+                    We are open source! Come checkout our Github Organization.
                   </ListItem>
                 </ul>
               </NavigationMenuContent>
