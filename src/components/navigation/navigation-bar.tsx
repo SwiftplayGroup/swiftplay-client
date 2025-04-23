@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/popover";
 import getCookie from "@/lib/getCookie";
 import User from "@/api/User";
+import { Play } from "lucide-react";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -202,18 +203,24 @@ export function NavigationBar() {
             <PopoverContent className="w-72 ml-2 mt-2 p-0 max-h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               <div className="grid">
                 <div className="pl-4 pb-2 pt-4">
-                  <h4 className="font-medium leading-none">Getting Started</h4>
+                  <h4 className="font-medium flex align-center items-middle leading-none gap-1">
+                    Getting Started
+                    </h4>
                   <div className="mt-2 grid">
-                    <Link href="/" className="text-sm hover:bg-accent p-2 rounded-md">
+                    <Link href="/" className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md">
+                    <Play size="8" fill="white"/>
                       Home
                     </Link>
-                    <Link href="/about" className="text-sm hover:bg-accent p-2 rounded-md">
+                    <Link href="/about" className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md">
+                    <Play size="8" fill="white"/>
                       About
                     </Link>
-                    <Link href="/careers" className="text-sm hover:bg-accent p-2 rounded-md">
+                    <Link href="/careers" className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md">
+                    <Play size="8" fill="white"/>
                       Careers
                     </Link>
-                    <Link href="https://github.com/SwiftplayGroup" className="text-sm hover:bg-accent p-2 rounded-md">
+                    <Link href="https://github.com/SwiftplayGroup" className="text-sm hover:bg-accent p-2 rounded-md flex flex-row align-middle items-center gap-1">
+                    <Play size="8" fill="white"/>  
                       Contribute
                     </Link>
                   </div>
@@ -225,8 +232,8 @@ export function NavigationBar() {
                       <Link
                         key={component.title}
                         href={component.href}
-                        className="text-sm hover:bg-accent p-2 rounded-md"
-                      >
+                        className="text-sm hover:bg-accent p-2 rounded-md flex flex-row align-middle items-center gap-1"
+                      > <Play size="8" fill="white"/>
                         {component.title}
                       </Link>
                     ))}
@@ -239,8 +246,8 @@ export function NavigationBar() {
                       <Link
                         key={run.title}
                         href={run.href}
-                        className="text-sm hover:bg-accent p-2 rounded-md"
-                      >
+                        className="text-sm hover:bg-accent p-2 rounded-md flex flex-row align-middle items-center gap-1"
+                      > <Play size="8" fill="white"/>
                         {run.title}
                       </Link>
                     ))}
