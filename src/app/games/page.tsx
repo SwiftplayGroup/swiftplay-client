@@ -1,42 +1,30 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HeroHighlight, Highlight } from "~/components/ui/hero-highlight";
 import { Hexagon, Github, Twitter } from "lucide-react"
 import  Footer  from "~/components/ui/footer"
-const game = [
-  { id: 1, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 2, title: "God of War", cover: "https://cdn.mobygames.com/e7439ec0-ab80-11ed-aa5a-02420a0001a0.webp" },
-  { id: 3, title: "Hades", cover: "https://cdn.mobygames.com/a681555e-ac10-11ed-92cb-02420a000132.webp" },
-  { id: 4, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 5, title: "Stardew", cover: "https://cdn.mobygames.com/7edc0cbc-abf5-11ed-9fde-02420a000132.webp" },
-  { id: 6, title: "Mario and Wario", cover: "https://cdn.mobygames.com/beac7fac-abf0-11ed-b6e7-02420a000135.webp" },
-  { id: 7, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 8, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 9, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 10, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 11, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 12, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 13, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 14, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 15, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 16, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 17, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 18, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 19, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 20, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 21, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 22, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 23, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-  { id: 24, title: "Elden Ring", cover: "https://cdn.mobygames.com/9a736412-ac12-11ed-b013-02420a00012e.webp" },
-];
+import Game from "~/api/Game";
+import Link from "next/link";
 
-export default function games() {
-  const [query, setQuery] = useState("");
+export default function Games() {
+  const [query, setQuery] = useState<string>("");
+  const [games, setGames] = useState<Game[]>([]);
 
-  const filteredGames = game.filter(gamer =>
-    gamer.title.toLowerCase().includes(query.toLowerCase())
+  const filteredGames = games.filter(gamer =>
+    gamer.name.toLowerCase().includes(query.toLowerCase())
   );
+
+  useEffect(() => {
+
+    (async () => {
+
+      const games = await Game.find();
+      setGames(games);
+
+    })();
+
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center -mt-40">
@@ -82,24 +70,26 @@ export default function games() {
         >
           <AnimatePresence>
             {filteredGames.map((game) => (
-              <motion.div
-                key={game.id}
-                className="relative rounded-2xl overflow-hidden shadow-xl transform hover:scale-105 transition duration-300"
-                variants={{
-                  hidden: { opacity: 0, scale: 0.8, y: 20 },
-                  visible: { opacity: 1, scale: 1, y: 0 },
-                }}
-                exit={{ opacity: 0, scale: 0.8, y: 20 }}
-              >
-                <img
-                  src={game.cover}
-                  alt={game.title}
-                  className="w-full h-40 object-cover"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 text-center text-lg">
-                  {game.title}
-                </div>
-              </motion.div>
+              <Link href={`/games/${game._id}`}>
+                <motion.div
+                  key={game._id}
+                  className="relative rounded-2xl overflow-hidden shadow-xl transform hover:scale-105 transition duration-300"
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.8, y: 20 },
+                    visible: { opacity: 1, scale: 1, y: 0 },
+                  }}
+                  exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                >
+                  <img
+                    src={game.coverArtURL}
+                    alt={game.name}
+                    className="w-full h-40 object-cover"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 text-center text-lg">
+                    {game.name}
+                  </div>
+                </motion.div>
+              </Link>
             ))}
           </AnimatePresence>
         </motion.div>

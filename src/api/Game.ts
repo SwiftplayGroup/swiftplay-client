@@ -61,7 +61,8 @@ export default class Game extends Client {
   static async fetch(path: `/games/${string}`, properties: {method: "PATCH", headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}, body: string}): Promise<GameProperties>;
   static async fetch(path: `/games/${string}`, properties: {method: "DELETE", headers: {authorization: `Bearer ${string}`}}): Promise<void>;
   static async fetch(path: `/games/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<GameProperties>;
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<GameProperties | RunProperties[] | RunProperties | CategoryProperties | void> {
+  static async fetch(path: `/games`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<GameProperties[]>;
+  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<GameProperties | GameProperties[] | RunProperties[] | RunProperties | CategoryProperties | void> {
 
     return super.fetch(...parameters);
 
@@ -84,6 +85,33 @@ export default class Game extends Client {
     }
 
     return new Game({...data, categories});
+
+  }
+
+  static async find(): Promise<Game[]> {
+
+    const data = await this.fetch(`/games`, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    const games = [];
+    for (const gameData of data) {
+
+      const categories = [];
+      for (const categoryData of gameData.categories) {
+
+        const category = new Category(categoryData);
+        categories.push(category);
+  
+      }
+
+      games.push(new Game({...gameData, categories}));
+
+    }
+
+    return games;
 
   }
 

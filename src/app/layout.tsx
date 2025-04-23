@@ -10,6 +10,7 @@ import getCookie from "~/lib/getCookie";
 import Header from "~/components/Header/Header";
 import Session from "~/api/Session";
 import Client from "~/api/Client";
+import Game from "~/api/Game";
 
 export default function RootLayout({
   children,
