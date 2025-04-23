@@ -14,8 +14,14 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import getCookie from "@/lib/getCookie";
 import User from "@/api/User";
+import { Play } from "lucide-react";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -102,9 +108,9 @@ export function NavigationBar() {
 
   return (
     <div className="p-2 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 w-full border-b">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center max-w-screen-xl mx-auto">
         {/* Left Side - Navigation */}
-        <NavigationMenu>
+        <NavigationMenu className="hidden md:block">
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger className="bg-transparent">
@@ -185,6 +191,80 @@ export function NavigationBar() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+
+        {/* Mobile Navigation */}
+        <div className="md:hidden">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" className="p-2">
+                Menu
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-72 ml-2 mt-2 p-0 max-h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              <div className="grid">
+                <div className="pl-4 pb-2 pt-4">
+                  <h4 className="font-medium flex align-center items-middle leading-none gap-1">
+                    Getting Started
+                    </h4>
+                  <div className="mt-2 grid">
+                    <Link href="/" className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md">
+                    <Play size="8" fill="white"/>
+                      Home
+                    </Link>
+                    <Link href="/about" className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md">
+                    <Play size="8" fill="white"/>
+                      About
+                    </Link>
+                    <Link href="/careers" className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md">
+                    <Play size="8" fill="white"/>
+                      Careers
+                    </Link>
+                    <Link href="https://github.com/SwiftplayGroup" className="text-sm hover:bg-accent p-2 rounded-md flex flex-row align-middle items-center gap-1">
+                    <Play size="8" fill="white"/>  
+                      Contribute
+                    </Link>
+                  </div>
+                </div>
+                <div className="pl-4 pb-2">
+                  <h4 className="font-medium leading-none">Forums | Threads</h4>
+                  <div className="mt-2 grid">
+                    {components.map((component) => (
+                      <Link
+                        key={component.title}
+                        href={component.href}
+                        className="text-sm hover:bg-accent p-2 rounded-md flex flex-row align-middle items-center gap-1"
+                      > <Play size="8" fill="white"/>
+                        {component.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <div className="pl-4 pb-2">
+                  <h4 className="font-medium leading-none">Competitions</h4>
+                  <div className="mt-2 grid">
+                    {runs.map((run) => (
+                      <Link
+                        key={run.title}
+                        href={run.href}
+                        className="text-sm hover:bg-accent p-2 rounded-md flex flex-row align-middle items-center gap-1"
+                      > <Play size="8" fill="white"/>
+                        {run.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-2">
+                  <Link
+                    href="https://github.com/SwiftplayGroup"
+                    className="hover:bg-accent rounded-md block p-2"
+                  >
+                    <h4 className="font-medium leading-none">Documentation  </h4>
+                  </Link>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
 
         <div className="flex items-center ml-4">
           {!isLoading && user ? (
