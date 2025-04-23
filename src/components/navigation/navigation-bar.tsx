@@ -199,11 +199,11 @@ export function NavigationBar() {
                 Menu
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-72 p-0 max-h-[80vh] overflow-y-auto">
-              <div className="grid gap-1">
-                <div className="p-2">
+            <PopoverContent className="w-72 ml-2 mt-2 p-0 max-h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              <div className="grid">
+                <div className="pl-4 pb-2 pt-4">
                   <h4 className="font-medium leading-none">Getting Started</h4>
-                  <div className="mt-2 grid gap-1">
+                  <div className="mt-2 grid">
                     <Link href="/" className="text-sm hover:bg-accent p-2 rounded-md">
                       Home
                     </Link>
@@ -218,9 +218,9 @@ export function NavigationBar() {
                     </Link>
                   </div>
                 </div>
-                <div className="p-2">
+                <div className="pl-4 pb-2">
                   <h4 className="font-medium leading-none">Forums | Threads</h4>
-                  <div className="mt-2 grid gap-1">
+                  <div className="mt-2 grid">
                     {components.map((component) => (
                       <Link
                         key={component.title}
@@ -232,9 +232,9 @@ export function NavigationBar() {
                     ))}
                   </div>
                 </div>
-                <div className="p-2">
+                <div className="pl-4 pb-2">
                   <h4 className="font-medium leading-none">Competitions</h4>
-                  <div className="mt-2 grid gap-1">
+                  <div className="mt-2 grid">
                     {runs.map((run) => (
                       <Link
                         key={run.title}
@@ -249,9 +249,9 @@ export function NavigationBar() {
                 <div className="p-2">
                   <Link
                     href="https://github.com/SwiftplayGroup"
-                    className="text-sm hover:bg-accent p-2 rounded-md block"
+                    className="hover:bg-accent rounded-md block p-2"
                   >
-                    Documentation
+                    <h4 className="font-medium leading-none">Documentation  </h4>
                   </Link>
                 </div>
               </div>
