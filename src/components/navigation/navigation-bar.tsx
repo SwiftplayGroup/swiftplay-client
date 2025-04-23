@@ -37,7 +37,7 @@ const components: { title: string; href: string; description: string }[] = [
   {
     title: "Threads",
     href: "/threads/trending",
-    description: "Find the latest threads and trending topics",
+    description: "Find the latest threads and trending topics.",
   },
   {
     title: "For You Page",
@@ -52,7 +52,7 @@ const runs: { title: string; href: string; description: string }[] = [
   {
     title: "Games",
     href: "/games",
-    description: "Find, search, and create game catagories",
+    description: "Find, search, and create game catagories.",
   },
   {
     title: "Runs",
@@ -62,7 +62,7 @@ const runs: { title: string; href: string; description: string }[] = [
   {
     title: "Trending Runs",
     href: "/runs/trending",
-    description: "Find Runs that are making the most noise",
+    description: "Find Runs that are making the most noise.",
   },
   {
     title: "Runs For You",

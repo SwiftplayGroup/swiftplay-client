@@ -12,19 +12,19 @@ export default function AboutPage() {
           <AboutUsCard
             name="Christian Toney"
             title="Product Manager"
-            description="Christian is the product manager at Swiftplay. He has contributed to massive projects on github and built websites for Central Michigan University!."
+            description="Christian is the product manager at Swiftplay. He has contributed to massive projects on github and built websites for Central Michigan University!"
             githubUrl="https://github.com/christian-toney"
           />
           <AboutUsCard
             name="Aiden Jastrzembski"
             title="Front End Lead"
-            description="Aiden is the front-end lead at Swiftplay. He is a full time Full Stack Engineer at Atomic Industries and has built custom ERP systems utilizing unique data models."
+            description="Aiden is the front-end lead at Swiftplay. He is a full-time Full Stack Engineer at Atomic Industries and has built custom ERP systems utilizing unique data models."
             githubUrl="https://github.com/aidenjastrzembski"
           />
           <AboutUsCard
             name="Michael Strange"
             title="Full Stack Developer"
-            description="Michael is a Full Stack Developer at Swiftplay. He has a passion for data science and has built data pipelines used by many communities. Michael is fleunt in nearly any language you can think of!"
+            description="Michael is a Full Stack Developer at Swiftplay. He has a passion for data science and has built data pipelines used by many communities. Michael is fluent in nearly any language you can think of!"
             githubUrl="https://github.com/michael-strange"
           />
           <AboutUsCard
