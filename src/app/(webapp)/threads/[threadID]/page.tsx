@@ -64,7 +64,7 @@ export default async function ForumPage({
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="sort">Sort By</Label>
-                <Select id="sort">
+                <Select>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Newest" />
                   </SelectTrigger>

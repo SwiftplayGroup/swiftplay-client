@@ -67,7 +67,7 @@ const runs: { title: string; href: string; description: string }[] = [
 ];
 
 export function NavigationBar() {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
