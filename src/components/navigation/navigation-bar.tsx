@@ -14,6 +14,11 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import getCookie from "@/lib/getCookie";
 import User from "@/api/User";
 
@@ -102,9 +107,9 @@ export function NavigationBar() {
 
   return (
     <div className="p-2 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 w-full border-b">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center max-w-screen-xl mx-auto">
         {/* Left Side - Navigation */}
-        <NavigationMenu>
+        <NavigationMenu className="hidden md:block">
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger className="bg-transparent">
@@ -185,6 +190,74 @@ export function NavigationBar() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+
+        {/* Mobile Navigation */}
+        <div className="md:hidden">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" className="p-2">
+                Menu
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-72 p-0 max-h-[80vh] overflow-y-auto">
+              <div className="grid gap-1">
+                <div className="p-2">
+                  <h4 className="font-medium leading-none">Getting Started</h4>
+                  <div className="mt-2 grid gap-1">
+                    <Link href="/" className="text-sm hover:bg-accent p-2 rounded-md">
+                      Home
+                    </Link>
+                    <Link href="/about" className="text-sm hover:bg-accent p-2 rounded-md">
+                      About
+                    </Link>
+                    <Link href="/careers" className="text-sm hover:bg-accent p-2 rounded-md">
+                      Careers
+                    </Link>
+                    <Link href="https://github.com/SwiftplayGroup" className="text-sm hover:bg-accent p-2 rounded-md">
+                      Contribute
+                    </Link>
+                  </div>
+                </div>
+                <div className="p-2">
+                  <h4 className="font-medium leading-none">Forums | Threads</h4>
+                  <div className="mt-2 grid gap-1">
+                    {components.map((component) => (
+                      <Link
+                        key={component.title}
+                        href={component.href}
+                        className="text-sm hover:bg-accent p-2 rounded-md"
+                      >
+                        {component.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-2">
+                  <h4 className="font-medium leading-none">Competitions</h4>
+                  <div className="mt-2 grid gap-1">
+                    {runs.map((run) => (
+                      <Link
+                        key={run.title}
+                        href={run.href}
+                        className="text-sm hover:bg-accent p-2 rounded-md"
+                      >
+                        {run.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-2">
+                  <Link
+                    href="https://github.com/SwiftplayGroup"
+                    className="text-sm hover:bg-accent p-2 rounded-md block"
+                  >
+                    Documentation
+                  </Link>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
 
         <div className="flex items-center ml-4">
           {!isLoading && user ? (
