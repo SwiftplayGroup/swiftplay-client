@@ -188,7 +188,7 @@ export function NavigationBar() {
 
         <div className="flex items-center ml-4">
           {!isLoading && user ? (
-            <Link href={`/users/${user._id}`} legacyBehavior passHref>
+            <Link href={`/users/${user.username}`} legacyBehavior passHref>
               <a>
                 <Avatar>
                   <AvatarImage src={user.avatarURL} alt={user.username} />
