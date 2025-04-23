@@ -205,22 +205,34 @@ export function NavigationBar() {
                 <div className="pl-4 pb-2 pt-4">
                   <h4 className="font-medium flex align-center items-middle leading-none gap-1">
                     Getting Started
-                    </h4>
+                  </h4>
                   <div className="mt-2 grid">
-                    <Link href="/" className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md">
-                    <Play size="8" fill="white"/>
+                    <Link
+                      href="/"
+                      className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md"
+                    >
+                      <Play size="8" fill="white" />
                       Home
                     </Link>
-                    <Link href="/about" className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md">
-                    <Play size="8" fill="white"/>
+                    <Link
+                      href="/about"
+                      className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md"
+                    >
+                      <Play size="8" fill="white" />
                       About
                     </Link>
-                    <Link href="/careers" className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md">
-                    <Play size="8" fill="white"/>
+                    <Link
+                      href="/careers"
+                      className="text-sm flex flex-row align-middle items-center gap-1 hover:bg-accent p-2 rounded-md"
+                    >
+                      <Play size="8" fill="white" />
                       Careers
                     </Link>
-                    <Link href="https://github.com/SwiftplayGroup" className="text-sm hover:bg-accent p-2 rounded-md flex flex-row align-middle items-center gap-1">
-                    <Play size="8" fill="white"/>  
+                    <Link
+                      href="https://github.com/SwiftplayGroup"
+                      className="text-sm hover:bg-accent p-2 rounded-md flex flex-row align-middle items-center gap-1"
+                    >
+                      <Play size="8" fill="white" />
                       Contribute
                     </Link>
                   </div>
@@ -233,7 +245,9 @@ export function NavigationBar() {
                         key={component.title}
                         href={component.href}
                         className="text-sm hover:bg-accent p-2 rounded-md flex flex-row align-middle items-center gap-1"
-                      > <Play size="8" fill="white"/>
+                      >
+                        {" "}
+                        <Play size="8" fill="white" />
                         {component.title}
                       </Link>
                     ))}
@@ -247,7 +261,9 @@ export function NavigationBar() {
                         key={run.title}
                         href={run.href}
                         className="text-sm hover:bg-accent p-2 rounded-md flex flex-row align-middle items-center gap-1"
-                      > <Play size="8" fill="white"/>
+                      >
+                        {" "}
+                        <Play size="8" fill="white" />
                         {run.title}
                       </Link>
                     ))}
@@ -258,7 +274,7 @@ export function NavigationBar() {
                     href="https://github.com/SwiftplayGroup"
                     className="hover:bg-accent rounded-md block p-2"
                   >
-                    <h4 className="font-medium leading-none">Documentation  </h4>
+                    <h4 className="font-medium leading-none">Documentation </h4>
                   </Link>
                 </div>
               </div>
@@ -279,7 +295,9 @@ export function NavigationBar() {
               </a>
             </Link>
           ) : (
-            <Button>Login</Button>
+            <Link href="/login" legacyBehavior passHref>
+              <Button>Login</Button>
+            </Link>
           )}
         </div>
       </div>
