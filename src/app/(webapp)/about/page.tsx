@@ -1,5 +1,3 @@
-import React from "react";
-import { PlaceholdersAndVanishInputDemo } from "~/components/contact/contact-us-input";
 import { FlipWordsSection } from "~/components/about/flip-words";
 import { AboutUsCard } from "~/components/ui/about-us-card";
 
@@ -41,7 +39,6 @@ export default function AboutPage() {
           githubUrl="https://github.com/bennettELHS"
         />
       </div>
-      <PlaceholdersAndVanishInputDemo />
     </div>
   );
 }
