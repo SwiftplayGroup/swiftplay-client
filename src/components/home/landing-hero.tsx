@@ -187,7 +187,7 @@ function HeroGeometric({
             animate="visible"
           >
             <p className="text-base sm:text-lg md:text-xl text-white/40 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4">
-              Create, Share, and Compete, all in one place.
+              Share, create, and compete, all in one place.
             </p>
           </motion.div>
           <motion.div

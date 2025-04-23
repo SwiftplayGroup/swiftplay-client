@@ -128,7 +128,7 @@ export function NavigationBar() {
                           Swiftplay
                         </div>
                         <p className="text-sm leading-tight text-muted-foreground">
-                          Share, Create, and Compete, all in one place.
+                          Share, create, and compete, all in one place.
                         </p>
                       </a>
                     </NavigationMenuLink>
