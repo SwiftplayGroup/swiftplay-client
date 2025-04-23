@@ -45,51 +45,50 @@ export default class Session extends Client {
       },
     });
 
-
     return new Session({
       ...data,
-      token: data.token
+      token: data.token,
     });
-
   }
 
-  static async fetch(path: `/user/sessions/${string}`, properties: {method: "DELETE", headers: {"authorization": string}}): Promise<void>;
-  static async fetch(path: "/user/sessions", properties: {method: "POST", body: string, headers: {["Content-Type"]: "application/json"}}): Promise<SessionProperties>;
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<SessionProperties | void> {
-
+  static async fetch(
+    path: `/user/sessions/${string}`,
+    properties: { method: "DELETE"; headers: { authorization: string } },
+  ): Promise<void>;
+  static async fetch(
+    path: "/user/sessions",
+    properties: {
+      method: "POST";
+      body: string;
+      headers: { ["Content-Type"]: "application/json" };
+    },
+  ): Promise<SessionProperties>;
+  static async fetch(
+    ...parameters: Parameters<(typeof Client)["fetch"]>
+  ): Promise<SessionProperties | void> {
     return await super.fetch(...parameters);
-
   }
 
   async delete(): Promise<void> {
-
     if (!Session?.session?.token) {
-
       throw new Error("User is unauthenticated.");
-
     }
 
     await Session.fetch(`/user/sessions/${this._id}`, {
       method: "DELETE",
       headers: {
-        authorization: Session.session.token
-      }
+        authorization: Session.session.token,
+      },
     });
-
   }
 
   async getUser(): Promise<User> {
-
     if (!this.user) {
-
       if (!Client.session?.token) {
-
         throw new Error("User is unauthenticated.");
-
       }
 
       this.user = await User.getFromToken(Client.session.token);
-
     }
 
     return this.user;

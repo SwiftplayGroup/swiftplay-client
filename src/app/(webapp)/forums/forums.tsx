@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Forum from "@/api/forums";
+import Forum from "@/api/Forum";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 
@@ -24,7 +24,7 @@ export default function ForumsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen py-12">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 md:px-6">
         <h1 className="text-3xl font-bold mb-8 text-center">Forums</h1>
 
@@ -39,20 +39,21 @@ export default function ForumsPage() {
         ) : (
           <div className="space-y-4 max-w-4xl mx-auto">
             {forums.map((forum) => (
-              <Link
-                href={`/forums/${forum._id}`}
+              <Card
                 key={forum._id}
-                className="block"
+                className="transition-all duration-300 hover:shadow-md hover:bg-zinc-900/50"
               >
-                <Card className="transition-all duration-300 hover:shadow-md hover:bg-zinc-900/50">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-xl">{forum.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm text-gray-400">
-                    {forum.description}
-                  </CardContent>
-                </Card>
-              </Link>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xl hover:underline">
+                    <Link href={`/forums/${forum._id}`} key={forum._id}>
+                      {forum.name}
+                    </Link>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-gray-400">
+                  {forum.description}
+                </CardContent>
+              </Card>
             ))}
           </div>
         )}

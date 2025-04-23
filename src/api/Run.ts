@@ -13,13 +13,13 @@ import User, { UserProperties } from "./User.ts";
 export type RunVerification = {
   owner: UserProperties;
   timestamp: Date;
-}
+};
 
 export type RunRemoval = {
   owner: UserProperties;
   timestamp: Date;
   reason?: string;
-}
+};
 
 export type RunProperties = {
   _id: string;
@@ -30,19 +30,22 @@ export type RunProperties = {
   game: GameProperties;
   verification?: RunVerification;
   removal?: RunRemoval;
-}
+};
 
-export type NewRunProperties = Omit<RunProperties, "_id" | "category" | "owner" | "game" | "verification" | "removal"> & {
+export type NewRunProperties = Omit<
+  RunProperties,
+  "_id" | "category" | "owner" | "game" | "verification" | "removal"
+> & {
   categoryID?: string;
   ownerID?: string;
   gameID?: string;
   verification?: {
-    ownerID: string
+    ownerID: string;
   } | null;
   removal?: {
     ownerID: string;
     reason?: string;
-  } | null
+  } | null;
 };
 
 export type EditableRunProperties = Partial<NewRunProperties>;
@@ -79,37 +82,53 @@ export default class Run extends Client {
     return new Run(data);
   }
 
-  static async fetch(path: `/runs/${string}`, properties: {method?: "GET", headers: {"Content-Type": "application/json"}}): Promise<RunProperties>
-  static async fetch(path: `/runs/${string}`, properties: {method: "DELETE", headers: {authorization: `Bearer ${string}`}}): Promise<void>
-  static async fetch(path: `/runs/${string}`, properties: {method: "PATCH", body: string, headers: {"Content-Type": "application/json", authorization: `Bearer ${string}`}}): Promise<RunProperties>
-  static async fetch(...parameters: Parameters<(typeof Client)["fetch"]>): Promise<RunProperties | RunRemoval | void> {
-  return super.fetch(...parameters);
+  static async fetch(
+    path: `/runs/${string}`,
+    properties: {
+      method?: "GET";
+      headers: { "Content-Type": "application/json" };
+    },
+  ): Promise<RunProperties>;
+  static async fetch(
+    path: `/runs/${string}`,
+    properties: {
+      method: "DELETE";
+      headers: { authorization: `Bearer ${string}` };
+    },
+  ): Promise<void>;
+  static async fetch(
+    path: `/runs/${string}`,
+    properties: {
+      method: "PATCH";
+      body: string;
+      headers: {
+        "Content-Type": "application/json";
+        authorization: `Bearer ${string}`;
+      };
+    },
+  ): Promise<RunProperties>;
+  static async fetch(
+    ...parameters: Parameters<(typeof Client)["fetch"]>
+  ): Promise<RunProperties | RunRemoval | void> {
+    return super.fetch(...parameters);
   }
 
-
   async delete(): Promise<void> {
-
     if (!Run.session?.token) {
-
       throw new Error("User is not authenticated.");
-
     }
 
     await Run.fetch(`/runs/${this._id}`, {
       method: "DELETE",
       headers: {
-        authorization: `Bearer ${Run.session.token}`
-      }
+        authorization: `Bearer ${Run.session.token}`,
+      },
     });
-
   }
 
   async edit(properties: EditableRunProperties): Promise<Run> {
-
     if (!Run.session?.token) {
-
       throw new Error("User is not authenticated.");
-
     }
 
     const editedRunData = await Run.fetch(`/runs/${this._id}`, {
@@ -117,60 +136,47 @@ export default class Run extends Client {
       body: JSON.stringify(properties),
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${Run.session.token}`
-      }
+        authorization: `Bearer ${Run.session.token}`,
+      },
     });
 
     return new Run(editedRunData);
-
   }
 
   async verify(): Promise<Run> {
-
     if (!Run.session?.token) {
-
       throw new Error("User is not authenticated.");
-
     }
 
     return await this.edit({
       verification: {
-        ownerID: (await Run.session.getUser())._id
-      }
+        ownerID: (await Run.session.getUser())._id,
+      },
     });
-
   }
 
   async unverify(): Promise<Run> {
-
     return await this.edit({
-      verification: null
+      verification: null,
     });
-
   }
 
   async remove(reason?: string): Promise<Run> {
-
     if (!Run.session?.token) {
-
       throw new Error("User is not authenticated.");
-
     }
 
     return await this.edit({
       removal: {
         ownerID: Run.session.token,
-        reason
-      }
+        reason,
+      },
     });
-
   }
 
   async restore(): Promise<Run> {
-
     return await this.edit({
-      removal: null
+      removal: null,
     });
-
   }
 }
