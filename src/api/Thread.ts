@@ -69,6 +69,15 @@ export default class Thread extends Client {
     );
     return data;
   }
+  static async getAllThreads(): Promise<Thread[]> {
+    const data = await this.fetch<Thread[]>(`/threads`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return data;
+  }
 
   static async fetch<T>(
     path: string,
