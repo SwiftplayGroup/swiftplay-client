@@ -69,34 +69,45 @@ export default function Games() {
             visible: { transition: { staggerChildren: 0.1 } },
           }}
         >
-          <AnimatePresence>
-            {filteredGames.map((game) => (
-              
-              <Link href={`/games/${game._id}`}>
-                <motion.div
-                  key={game._id}
-                  className="relative rounded-2xl overflow-hidden shadow-xl transform hover:scale-105 transition duration-300"
-                  variants={{
-                    hidden: { opacity: 0, scale: 0.8, y: 20 },
-                    visible: { opacity: 1, scale: 1, y: 0 },
-                  }}
-                  exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                >
-                {game.coverArtURL ? (
-                  <img
-                    src={game.coverArtURL}
-                    className="w-30 h-40 object-cover"
-                    />
-                  ) : (
-                    <Skeleton className="h-40 w-30" />
-                    )}
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 text-center text-lg">
-                    {game.name}
-                  </div>
-                </motion.div>
-              </Link>
-            ))}
-          </AnimatePresence>
+         <AnimatePresence>
+  {filteredGames.length > 0 ? (
+    filteredGames.map((game) => (
+      <Link key={game._id} href={`/games/${game._id}`}>
+        <motion.div
+          className="relative rounded-2xl overflow-hidden shadow-xl transform hover:scale-105 transition duration-300"
+          variants={{
+            hidden: { opacity: 0, scale: 0.8, y: 20 },
+            visible: { opacity: 1, scale: 1, y: 0 },
+          }}
+          exit={{ opacity: 0, scale: 0.8, y: 20 }}
+        >
+          {game.coverArtURL ? (
+            <img
+              src={game.coverArtURL}
+              className="w-30 h-40 object-cover"
+            />
+          ) : (
+            <Skeleton className="w-30 h-40" />
+          )}
+          <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 text-center text-lg">
+            {game.name}
+          </div>
+        </motion.div>
+      </Link>
+    ))
+  ) : (
+    <motion.div    >
+      <Skeleton className="w-30 h-40" />
+      <p className="">No games found</p>
+      <Link
+        href="/games/create"
+        className="text-sm text-purple-400 hover:underline"
+      >
+        Create a new game
+      </Link>
+    </motion.div>
+  )}
+</AnimatePresence>
         </motion.div>
       </div>
   </div>
