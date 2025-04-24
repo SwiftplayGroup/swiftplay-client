@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { login } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import Client from "~/api/Client";
 import Session from "~/api/Session";
 
 export function LoginForm({
@@ -38,17 +37,17 @@ export function LoginForm({
       document.cookie = `userID=${
         session.userID
       }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
-        session.expirationDate
+        session.expirationDate,
       )}`;
       document.cookie = `token=${
         session.token
       }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
-        session.expirationDate
+        session.expirationDate,
       )}`;
       document.cookie = `sessionID=${
         session._id
       }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
-        session.expirationDate
+        session.expirationDate,
       )}`;
 
       // Redirect to home page
