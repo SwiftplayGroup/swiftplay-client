@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardHeader,
@@ -8,26 +9,41 @@ import { Post } from "@/types/posts";
 import Users from "@/api/User";
 import { LikeButton } from "@/components/forums/likes/like-button";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export async function PostCard(post: Post) {
-  const user = await Users.getFromID(post.authorID);
+interface PostCardProps {
+  post: Post;
+}
+
+export function PostCard({ post }: PostCardProps) {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await Users.session?.getUser();
+      setUser(currentUser);
+    };
+    fetchUser();
+  }, []);
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center h-screen justify-center">
+        Loading...
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4 w-full max-w-4xl">
       <Card className="transition-all duration-300 hover:shadow-md hover:bg-zinc-900/50">
         <CardHeader className="pb-2 text-sm flex items-start justify-start space-x-2">
-          <Link
-            href={`/users/${user.username}`}
-            key={post._id}
-            className="hover:underline"
-          >
+          <Link href={`/users/${user.username}`} className="hover:underline">
             <div className="flex items-start space-x-2">
               <Avatar>
                 <AvatarImage src={user.avatarURL} alt="User Avatar" />
-                <AvatarFallback>
-                  {user.username.charAt(0).toUpperCase()}
-                </AvatarFallback>
               </Avatar>
               <span className="align-start">@{user.username}</span>
             </div>

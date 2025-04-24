@@ -23,6 +23,8 @@ export default async function ForumPage({
   try {
     const thread = await Thread.getFromID(threadID);
     const replies = await Thread.getReplies(threadID);
+    console.log("Thread:", thread);
+    console.log("Replies:", replies);
 
     return (
       <main className="min-h-screen px-4 sm:px-8 flex">
@@ -44,7 +46,8 @@ export default async function ForumPage({
             {replies.length > 0 ? (
               replies.map((reply: Post) => (
                 <div key={reply._id}>
-                  <PostCard {...reply} />
+                  <PostCard post={reply} />
+                  {/*My bad gang i forgot to test this, fixed it uwu*/}
                 </div>
               ))
             ) : (

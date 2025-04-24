@@ -27,19 +27,20 @@ export default class Thread extends Client {
     if (!Thread.session?.token) {
       throw new Error("User is not authenticated");
     }
-    const data = (await this.fetch(`/threads/${threadID}/posts`, {
+
+    return await this.fetch<Post>(`/threads/${threadID}/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${Thread.session.token}`,
       },
       body: JSON.stringify(post),
-    })) as Post;
-    return data;
+    });
   }
 
   static async getFromID(threadID: string): Promise<Thread> {
-    const data = await this.fetch(`/threads/${threadID}`, {
+    const data = await this.fetch<ThreadType>(`/threads/${threadID}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
@@ -48,39 +49,36 @@ export default class Thread extends Client {
   }
 
   static async getReplies(threadID: string): Promise<Post[]> {
-    const data = await this.fetch(`/threads/${threadID}/posts`, {
+    return await this.fetch<Post[]>(`/threads/${threadID}/posts`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
-    return data as unknown as Post[];
   }
 
-  static async fetch(
-    path: `/threads/${string}`,
-    properties: {
-      method?: "GET";
-      headers: { ["Content-Type"]: "application/json" };
-    },
-  ): Promise<Thread>;
-  static async fetch(
-    path: `/threads/${string}/posts`,
+  static async getRecommendedThreads(userID: string): Promise<Thread[]> {
+    const data = await this.fetch<ThreadType[]>(
+      `/threads/recommended/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    return data;
+  }
+
+  static async fetch<T>(
+    path: string,
     properties: {
       method?: "GET" | "POST";
       headers: { ["Content-Type"]: "application/json"; Authorization?: string };
       body?: string;
     },
-  ): Promise<Post[] | Post>;
-  static async fetch(
-    ...parameters: Parameters<(typeof Client)["fetch"]>
-  ): Promise<Thread | Post[] | Post> {
-    const result = await super.fetch(...parameters);
-    if (Array.isArray(result)) {
-      return result as Post[];
-    }
-    if (result.threadID) {
-      return result as Post;
-    }
-    return new Thread(result as ThreadType);
+  ): Promise<T> {
+    const result = await super.fetch(path, properties);
+    return result;
   }
 }
