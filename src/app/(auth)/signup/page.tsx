@@ -3,18 +3,14 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import User from "~/api/User.ts";
 import { useRouter } from "next/navigation";
 import Client from "~/api/Client";
+import Link from "next/link";
 
 export default function SignupFormPage() {
-  
   const [emailAddress, setEmailAddress] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -23,25 +19,23 @@ export default function SignupFormPage() {
   const router = useRouter();
 
   function handleSignUp(event: FormEvent) {
-
     // Prevent the website from refreshing.
     event.preventDefault();
 
     setErrorMessage(null);
     setShouldProcessData(true);
-
   }
 
   useEffect(() => {
-
     (async () => {
-
       if (shouldProcessData) {
-
         try {
-
           // Create the user account.
-          const user = await User.createUser({emailAddress, username, password});
+          const user = await User.createUser({
+            emailAddress,
+            username,
+            password,
+          });
 
           // Create a new session and save the data.
           const session = await user.createSession(password);
@@ -55,29 +49,19 @@ export default function SignupFormPage() {
 
           // Redirect the user back home.
           router.replace("/");
-
         } catch (error) {
-
           console.error(error);
 
           if (error instanceof Error) {
-
             setErrorMessage(error.message);
-
           } else {
-
             setErrorMessage("Unknown error. Try that again.");
-
           }
 
           setShouldProcessData(false);
-
         }
-
       }
-
     })();
-
   }, [emailAddress, password, router, shouldProcessData, username]);
 
   return (
@@ -87,38 +71,57 @@ export default function SignupFormPage() {
           Welcome to Swiftplay
         </h2>
         <p>Create an account to share your runs and join the community</p>
-        {
-          errorMessage ? (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Registration error</AlertTitle>
-              <AlertDescription>
-                {errorMessage}
-              </AlertDescription>
-            </Alert>
-          ) : null
-        }
+        {errorMessage ? (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Registration error</AlertTitle>
+            <AlertDescription>{errorMessage}</AlertDescription>
+          </Alert>
+        ) : null}
         <form className="my-8" onSubmit={handleSignUp}>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
-            <Input id="email" type="email" value={emailAddress} onChange={(event) => setEmailAddress(event.target.value)} required disabled={shouldProcessData} />
+            <Input
+              id="email"
+              type="email"
+              value={emailAddress}
+              onChange={(event) => setEmailAddress(event.target.value)}
+              required
+              disabled={shouldProcessData}
+            />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="username">Username</Label>
-            <Input id="username" type="text" value={username} onChange={(event) => setUsername(event.target.value)} required disabled={shouldProcessData} />
+            <Input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              required
+              disabled={shouldProcessData}
+            />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required disabled={shouldProcessData} />
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+              disabled={shouldProcessData}
+            />
           </LabelInputContainer>
-          <button
-            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
-            type="submit"
-            disabled={shouldProcessData} 
-          >
-            Sign up &rarr;
-            <BottomGradient />
-          </button>
+          <Link href="/welcome">
+            <button
+              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
+              type="submit"
+              disabled={shouldProcessData}
+            >
+              Sign up &rarr;
+              <BottomGradient />
+            </button>
+          </Link>
         </form>
       </section>
     </main>

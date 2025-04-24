@@ -97,6 +97,23 @@ export default class User extends Client {
     return new User(data);
   }
 
+  static async updateEmbeddings(
+    embedString: string,
+    userID: string,
+  ): Promise<any> {
+    console.log("Updating embeddings for user:", userID);
+    console.log("Embed string:", JSON.stringify({ embedString }));
+    const response = await this.fetch(`/users/${userID}/embeddings`, {
+      method: "PATCH",
+      body: JSON.stringify({ embedString }),
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${User.session?.token}`,
+      },
+    });
+    return response;
+  }
+
   static async fetch(
     path: "/users",
     properties: {
@@ -138,6 +155,17 @@ export default class User extends Client {
     },
   ): Promise<UserProperties>;
   static async fetch(
+    path: `/users/${string}/embeddings`,
+    properties: {
+      method: "PATCH";
+      headers: {
+        ["Content-Type"]: "application/json";
+        authorization: `Bearer ${string}`;
+      };
+      body: string;
+    },
+  ): Promise<any>;
+  static async fetch(
     path: `/user`,
     properties: {
       method?: "GET";
@@ -149,7 +177,7 @@ export default class User extends Client {
   ): Promise<UserProperties>;
   static async fetch(
     ...parameters: Parameters<(typeof Client)["fetch"]>
-  ): Promise<UserProperties | UserProperties[] | RunProperties[]> {
+  ): Promise<UserProperties | UserProperties[] | RunProperties[] | void> {
     return super.fetch(...parameters);
   }
 
