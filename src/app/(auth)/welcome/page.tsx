@@ -5,7 +5,7 @@ import { ToggleGroup } from "~/components/ui/toggle-group";
 import { motion } from "framer-motion";
 import User from "~/api/User";
 import { Button } from "~/components/ui/button";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const interests = [
   "Valorant",
@@ -79,6 +79,7 @@ const itemVariants = {
 
 export default function WelcomePage() {
   const [selectedGames, setSelectedGames] = useState<string[]>([]);
+  const router = useRouter();
   const handleSubmit = async () => {
     const user = await User.session?.getUser();
     console.log("User: ", user);
@@ -87,6 +88,7 @@ export default function WelcomePage() {
       return;
     }
     await User.updateEmbeddings(selectedGames.join(", "), user._id);
+    router.push("/");
   };
 
   return (
@@ -134,15 +136,13 @@ export default function WelcomePage() {
               : "Nothing selected yet"}
           </p>
         </div>
-        <Link href="/home">
-          <Button
-            className="mt-4"
-            disabled={selectedGames.length == 0}
-            onClick={handleSubmit}
-          >
-            Submit
-          </Button>
-        </Link>
+        <Button
+          className="mt-4"
+          disabled={selectedGames.length == 0}
+          onClick={handleSubmit}
+        >
+          Submit
+        </Button>
       </div>
     </div>
   );

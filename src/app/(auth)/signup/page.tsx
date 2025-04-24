@@ -8,7 +8,6 @@ import { AlertCircle } from "lucide-react";
 import User from "~/api/User.ts";
 import { useRouter } from "next/navigation";
 import Client from "~/api/Client";
-import Link from "next/link";
 
 export default function SignupFormPage() {
   const [emailAddress, setEmailAddress] = useState<string>("");
@@ -24,6 +23,7 @@ export default function SignupFormPage() {
 
     setErrorMessage(null);
     setShouldProcessData(true);
+    router.push("/welcome");
   }
 
   useEffect(() => {
@@ -46,9 +46,6 @@ export default function SignupFormPage() {
           // Let the rest of the scripts know.
           const channel = new BroadcastChannel("authentication");
           channel.postMessage(null);
-
-          // Redirect the user back home.
-          router.replace("/");
         } catch (error) {
           console.error(error);
 
@@ -112,16 +109,14 @@ export default function SignupFormPage() {
               disabled={shouldProcessData}
             />
           </LabelInputContainer>
-          <Link href="/welcome">
-            <button
-              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
-              type="submit"
-              disabled={shouldProcessData}
-            >
-              Sign up &rarr;
-              <BottomGradient />
-            </button>
-          </Link>
+          <button
+            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
+            type="submit"
+            disabled={shouldProcessData}
+          >
+            Sign up &rarr;
+            <BottomGradient />
+          </button>
         </form>
       </section>
     </main>
