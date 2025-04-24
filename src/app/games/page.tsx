@@ -2,15 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HeroHighlight, Highlight } from "~/components/ui/hero-highlight";
-import { Hexagon, Github, Twitter } from "lucide-react"
-import  Footer  from "~/components/ui/footer"
+import { Skeleton } from "~/components/ui/skeleton";
 import Game from "~/api/Game";
 import Link from "next/link";
 
 export default function Games() {
   const [query, setQuery] = useState<string>("");
   const [games, setGames] = useState<Game[]>([]);
-
   const filteredGames = games.filter(gamer =>
     gamer.name.toLowerCase().includes(query.toLowerCase())
   );
@@ -21,10 +19,13 @@ export default function Games() {
 
       const games = await Game.find();
       setGames(games);
+      
 
     })();
 
   }, []);
+
+  
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center -mt-40">
@@ -70,6 +71,7 @@ export default function Games() {
         >
           <AnimatePresence>
             {filteredGames.map((game) => (
+              
               <Link href={`/games/${game._id}`}>
                 <motion.div
                   key={game._id}
@@ -80,11 +82,14 @@ export default function Games() {
                   }}
                   exit={{ opacity: 0, scale: 0.8, y: 20 }}
                 >
+                {game.coverArtURL ? (
                   <img
                     src={game.coverArtURL}
-                    alt={game.name}
-                    className="w-full h-40 object-cover"
-                  />
+                    className="w-30 h-40 object-cover"
+                    />
+                  ) : (
+                    <Skeleton className="h-40 w-30" />
+                    )}
                   <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 text-center text-lg">
                     {game.name}
                   </div>
@@ -94,38 +99,6 @@ export default function Games() {
           </AnimatePresence>
         </motion.div>
       </div>
-    <div className="w-full">
-      <Footer
-        logo={<Hexagon className="h-10 w-10" />}
-        brandName="Swiftplay"
-        socialLinks={[
-          {
-            icon: <Twitter className="h-5 w-5" />,
-            href: "https://twitter.com",
-            label: "Twitter",
-          },
-          {
-            icon: <Github className="h-5 w-5" />,
-            href: "https://github.com",
-            label: "GitHub",
-          },
-        ]}
-        mainLinks={[
-          { href: "/products", label: "Products" },
-          { href: "/about", label: "About" },
-          { href: "/forum", label: "Forum" },
-          { href: "/contact", label: "Contact" },
-        ]}
-        legalLinks={[
-          { href: "/privacy", label: "Privacy" },
-          { href: "/terms", label: "Terms" },
-        ]}
-        copyright={{
-          text: "© 2024 Swiftplay",
-          license: "All rights reserved",
-        }}
-      />
-    </div>
   </div>
     
   );
