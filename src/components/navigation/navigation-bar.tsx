@@ -36,7 +36,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
   {
     title: "Threads",
-    href: "/threads/trending",
+    href: "/trending/threads",
     description: "Find the latest threads and trending topics.",
   },
   {
