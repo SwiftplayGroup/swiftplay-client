@@ -13,6 +13,8 @@ import { useState } from "react";
 import { login } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import Session from "~/api/Session";
+import { useAuth } from "@/context/auth-context";
+import User from "@/api/User";
 
 export function LoginForm({
   className,
@@ -20,6 +22,7 @@ export function LoginForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { setUser } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,26 +35,35 @@ export function LoginForm({
     try {
       const session = await login(username, password);
       Session.createSession({ username, password });
-
+      console.log(session);
       // Store session data in cookies
       document.cookie = `userID=${
         session.userID
       }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
-        session.expirationDate,
+        session.expirationDate
       )}`;
       document.cookie = `token=${
         session.token
       }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
-        session.expirationDate,
+        session.expirationDate
       )}`;
       document.cookie = `sessionID=${
         session._id
       }; SameSite=Strict; Secure; Path=/; Expires=${new Date(
-        session.expirationDate,
+        session.expirationDate
       )}`;
 
-      // Redirect to home page
-      router.replace("/");
+      // Get user and update auth context
+      try {
+        const currentUser = await User.getFromToken(session.token);
+        if (currentUser) {
+          setUser(currentUser);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+
+      router.push("/");
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);

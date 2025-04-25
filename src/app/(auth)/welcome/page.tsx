@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import User from "~/api/User";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 const interests = [
   "Valorant",
@@ -79,8 +80,10 @@ const itemVariants = {
 
 export default function WelcomePage() {
   const [selectedGames, setSelectedGames] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const handleSubmit = async () => {
+    setIsLoading(true);
     const user = await User.session?.getUser();
     console.log("User: ", user);
     if (!user) {
@@ -88,6 +91,7 @@ export default function WelcomePage() {
       return;
     }
     await User.updateEmbeddings(selectedGames.join(", "), user._id);
+    setIsLoading(false);
     router.push("/");
   };
 
@@ -141,7 +145,13 @@ export default function WelcomePage() {
           disabled={selectedGames.length == 0}
           onClick={handleSubmit}
         >
-          Submit
+          {isLoading ? (
+            <div className="flex items-center">
+              <Loader2 /> Loading...
+            </div>
+          ) : (
+            "Submit"
+          )}
         </Button>
       </div>
     </div>

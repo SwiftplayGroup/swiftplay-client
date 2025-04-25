@@ -8,6 +8,7 @@ import { AlertCircle } from "lucide-react";
 import User from "~/api/User.ts";
 import { useRouter } from "next/navigation";
 import Client from "~/api/Client";
+import { useAuth } from "@/context/auth-context";
 
 export default function SignupFormPage() {
   const [emailAddress, setEmailAddress] = useState<string>("");
@@ -16,6 +17,7 @@ export default function SignupFormPage() {
   const [shouldProcessData, setShouldProcessData] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
+  const { setUser } = useAuth();
 
   function handleSignUp(event: FormEvent) {
     // Prevent the website from refreshing.
@@ -39,13 +41,22 @@ export default function SignupFormPage() {
 
           // Create a new session and save the data.
           const session = await user.createSession(password);
-          document.cookie = `sessionID=${session._id}; SameSite=Strict; Secure; Path=/; ${session.expirationDate ? `Expires=${new Date(session.expirationDate)}` : ""}`;
-          document.cookie = `token=${session.token}; SameSite=Strict; Secure; Path=/; ${session.expirationDate ? `Expires=${new Date(session.expirationDate)}` : ""}`;
+          document.cookie = `sessionID=${
+            session._id
+          }; SameSite=Strict; Secure; Path=/; ${
+            session.expirationDate
+              ? `Expires=${new Date(session.expirationDate)}`
+              : ""
+          }`;
+          document.cookie = `token=${
+            session.token
+          }; SameSite=Strict; Secure; Path=/; ${
+            session.expirationDate
+              ? `Expires=${new Date(session.expirationDate)}`
+              : ""
+          }`;
           Client.session = session;
-
-          // Let the rest of the scripts know.
-          const channel = new BroadcastChannel("authentication");
-          channel.postMessage(null);
+          setUser(user);
         } catch (error) {
           console.error(error);
 
@@ -59,7 +70,7 @@ export default function SignupFormPage() {
         }
       }
     })();
-  }, [emailAddress, password, router, shouldProcessData, username]);
+  }, [emailAddress, password, router, shouldProcessData, username, setUser]);
 
   return (
     <main>

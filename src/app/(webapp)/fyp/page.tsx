@@ -94,7 +94,7 @@ export default function ForYouPage() {
             ))
           ) : (
             <p className="text-muted-foreground col-span-full">
-              No posts on Swiftplay yet.
+              No posts on match your interests... yet.
             </p>
           )}
         </div>

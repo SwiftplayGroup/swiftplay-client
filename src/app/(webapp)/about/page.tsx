@@ -3,22 +3,21 @@ import { AboutUsCard } from "~/components/ui/about-us-card";
 
 export default function AboutPage() {
   return (
-    <div className="w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative">
+    <div>
       {/* Radial gradient for the container to give a faded look */}
-      <div className="absolute pointer-events-none inset-0 dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_50%,black)]"></div>
       <div className="relative z-10">
         <FlipWordsSection />
         <div className="flex flex-wrap justify-center gap-4 py-8 px-4 pb-20">
           <AboutUsCard
             name="Christian Toney"
-            title="Product Manager"
+            title="Product Manager | Backend Lead"
             description="Christian is the product manager at Swiftplay. He has contributed to massive projects on github and built websites for Central Michigan University!"
             githubUrl="https://github.com/christian-toney"
           />
           <AboutUsCard
             name="Aiden Jastrzembski"
-            title="Front End Lead"
-            description="Aiden is the front-end lead at Swiftplay. He is a full-time Full Stack Engineer at Atomic Industries and has built custom ERP systems utilizing unique data models."
+            title="Frontend Lead | Mobile Lead"
+            description="As the Mobile Lead and Frontend Lead at swiftplay, Aiden has lots of experience not only in programming but also in leading a team. He is a Software Engineer at Atomic Industries, and is an avid Neovim lover."
             githubUrl="https://github.com/aidenjastrzembski"
           />
           <AboutUsCard
@@ -29,7 +28,7 @@ export default function AboutPage() {
           />
           <AboutUsCard
             name="Austin Vandegriff"
-            title="Front End Developer"
+            title="Frontend Developer"
             description="Austin is a front-end developer at Swiftplay. He is fluent in React, Typescript, Express, and Node.js, and has used those skills to build components within this website!"
             githubUrl="https://github.com/a-vandegriff"
           />

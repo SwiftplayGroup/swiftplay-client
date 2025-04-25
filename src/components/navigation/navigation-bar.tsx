@@ -19,9 +19,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import getCookie from "@/lib/getCookie";
-import User from "@/api/User";
 import { Play } from "lucide-react";
+import { useAuth } from "@/context/auth-context";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -72,38 +71,7 @@ const runs: { title: string; href: string; description: string }[] = [
   },
 ];
 export function NavigationBar() {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const token = getCookie("token");
-    const userID = getCookie("userID");
-
-    if (token && userID) {
-      (async () => {
-        try {
-          const response = await fetch(
-            `https://swiftplay.onrender.com/users/${userID}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                token: token,
-              },
-            },
-          );
-          if (!response.ok) throw new Error("Failed to fetch user data");
-          const userData = await response.json();
-          setUser(new User(userData));
-        } catch (error) {
-          console.error("Failed to fetch user data:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      })();
-    } else {
-      setIsLoading(false);
-    }
-  }, []);
+  const { user, isLoading } = useAuth();
 
   return (
     <div className="p-2 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 w-full border-b">
@@ -314,7 +282,7 @@ const ListItem = React.forwardRef<
           ref={ref}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className,
+            className
           )}
           {...props}
         >
