@@ -124,16 +124,27 @@
 
 }
 
+@layer utilities {
+    .no-scrollbar::webkil-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
 :root {
     --header-height: 50px;
 }
 
 main {
-  min-height: calc(100vh - var(--header-height));
-  overflow-y: auto;
+    min-height: calc(100vh - var(--header-height));
+    overflow-y: auto;
 }
 
 body {
-  min-height: 100vh;
-  overflow-y: auto;
+    min-height: 100vh;
+    overflow-y: auto;
 }

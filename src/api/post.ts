@@ -5,7 +5,6 @@ export default class Post extends Client {
   _id: string;
   authorID: string;
   parentPostID?: string;
-  title: string;
   content: string;
   threadID: string;
   forumID: string;
@@ -16,7 +15,6 @@ export default class Post extends Client {
     this._id = properties._id;
     this.authorID = properties.authorID;
     this.parentPostID = properties.parentPostID;
-    this.title = properties.title;
     this.content = properties.content;
     this.threadID = properties.threadID;
     this.forumID = properties.forumID;

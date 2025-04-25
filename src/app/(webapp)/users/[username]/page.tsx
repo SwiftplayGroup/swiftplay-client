@@ -2,13 +2,14 @@
 export const runtime = "edge";
 
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import User from "~/api/User.ts";
 import { Card } from "~/components/ui/card";
 import styles from "./styles.module.css";
 import ObjectId from "bson-objectid";
 import { Skeleton } from "~/components/ui/skeleton";
+import { useAuth } from "@/context/auth-context";
 
 import RunsCard from "~/app/(webapp)/users/[username]/components/RunsCard/UserRunsCard";
 import RunCard from "~/components/RunCard/RunCard";
@@ -31,6 +32,8 @@ import Run from "~/api/Run";
 export default function UserPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
+  const { setUser: setAuthUser } = useAuth();
+  const router = useRouter();
 
   const [favoriteRun, setFavoriteRun] = useState<Run | null>(null);
   const { username } = useParams<{ username: string }>();
@@ -67,7 +70,7 @@ export default function UserPage() {
       const authenticatedUser = await User.session?.getUser();
       if (authenticatedUser?.permissionOverrides) {
         for (const permissionID of Object.keys(
-          authenticatedUser.permissionOverrides,
+          authenticatedUser.permissionOverrides
         )) {
           if (
             authenticatedUser.permissionOverrides[permissionID] >=
@@ -96,6 +99,26 @@ export default function UserPage() {
     };
   }, [user]);
 
+  const handleSignOut = async () => {
+    if (Client.session) {
+      await Client.session.delete();
+    }
+
+    document.cookie = "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    document.cookie =
+      "sessionID=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    Client.session = undefined;
+
+    // Update auth context
+    setAuthUser(null);
+
+    // Navigate to home page
+    router.push("/");
+
+    const channel = new BroadcastChannel("authentication");
+    channel.postMessage(null);
+  };
+
   return (
     <main id={styles.main}>
       <section id={styles.content}>
@@ -121,7 +144,7 @@ export default function UserPage() {
                 <section>
                   Joined on{" "}
                   {new Intl.DateTimeFormat("en-US").format(
-                    new ObjectId(user._id).getTimestamp(),
+                    new ObjectId(user._id).getTimestamp()
                   )}
                 </section>
               )}
@@ -173,19 +196,7 @@ export default function UserPage() {
                 <Button
                   type="button"
                   variant="destructive"
-                  onClick={async () => {
-                    if (Client.session) {
-                      await Client.session.delete();
-                    }
-
-                    document.cookie =
-                      "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-                    document.cookie =
-                      "sessionID=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-                    Client.session = undefined;
-                    const channel = new BroadcastChannel("authentication");
-                    channel.postMessage(null);
-                  }}
+                  onClick={handleSignOut}
                 >
                   Sign out
                 </Button>
