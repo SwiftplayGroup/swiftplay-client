@@ -39,6 +39,18 @@ export default class Post extends Client {
     return new Post(data);
   }
 
+  static async getRecommendedPosts(
+    userID: string,
+  ): Promise<{ recommendedPosts: Post[] }> {
+    const data = await this.fetch(`/posts/recommended/${userID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return data;
+  }
+
   static async fetch(
     path: "/posts",
     properties: {
@@ -47,6 +59,15 @@ export default class Post extends Client {
       body: string;
     },
   ): Promise<PostType>;
+
+  static async fetch(
+    path: `/posts/recommended/${string}`,
+    properties: {
+      method: "GET";
+      headers: { ["Content-Type"]: "application/json" };
+    },
+  ): Promise<any>;
+
   static async fetch(
     ...parameters: Parameters<(typeof Client)["fetch"]>
   ): Promise<PostType> {

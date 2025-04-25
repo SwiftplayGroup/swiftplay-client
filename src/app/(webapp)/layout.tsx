@@ -1,7 +1,6 @@
 // app/(webapp)/layout.tsx
 
 import React from "react";
-import { NavigationBar } from "@/components/navigation/navigation-bar";
 
 export default function WebAppLayout({
   children,
@@ -10,7 +9,7 @@ export default function WebAppLayout({
 }) {
   return (
     <div>
-      <main className="dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] pt-24">
+      <main className="h-screen dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] pt-24">
         {children}
       </main>
     </div>

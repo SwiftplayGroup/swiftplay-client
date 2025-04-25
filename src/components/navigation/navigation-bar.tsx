@@ -36,7 +36,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
   {
     title: "Threads",
-    href: "/threads/trending",
+    href: "/trending/threads",
     description: "Find the latest threads and trending topics.",
   },
   {
@@ -71,7 +71,6 @@ const runs: { title: string; href: string; description: string }[] = [
       "Find runs that are related to your interests and preferences.",
   },
 ];
-
 export function NavigationBar() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
