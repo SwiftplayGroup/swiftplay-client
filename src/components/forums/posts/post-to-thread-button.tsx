@@ -10,11 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Thread from "@/api/Thread";
 import Client from "@/api/Client";
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react"; // <- Spinner icon
 
 export function PostToThreadButton({
   forumID,
@@ -24,6 +24,8 @@ export function PostToThreadButton({
   threadID: any;
 }) {
   const [user, setUser] = useState<any>(null);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -36,24 +38,27 @@ export function PostToThreadButton({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget as HTMLFormElement);
-    const title = formData.get("title") as string;
     const content = formData.get("content") as string;
-    if (!title || !content) {
+    if (!content) {
       alert("Please fill in all fields");
       return;
     }
 
     const PostPayload = {
-      title: title,
       authorID: user!._id,
-      forumID: forumID,
-      threadID: threadID,
-      content: content,
+      forumID,
+      threadID,
+      content,
     };
+
     try {
+      setLoading(true);
       await Thread.createPost(threadID, PostPayload);
+      setOpen(false);
     } catch (error) {
       console.error("Error creating thread:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,26 +72,35 @@ export function PostToThreadButton({
 
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button>Post to Thread</Button>
         </DialogTrigger>
         <DialogContent>
           <form onSubmit={handleSubmit}>
             <DialogHeader>
-              <DialogTitle>Post to Forum</DialogTitle>
-              <DialogDescription>Whats on your mind?</DialogDescription>
+              <DialogTitle>Post to Thread</DialogTitle>
+              <DialogDescription>What's on your mind?</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
-              <Input name="title" id="title" placeholder="Post Title" />
               <Textarea
                 name="content"
                 id="content"
                 placeholder="Post Content"
+                disabled={loading}
               />
             </div>
             <DialogFooter>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="animate-spin h-4 w-4" />
+                    Posting...
+                  </span>
+                ) : (
+                  "Submit"
+                )}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

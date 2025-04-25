@@ -1,5 +1,6 @@
 import { cn } from "~/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -13,15 +14,20 @@ import { useState } from "react";
 import { login } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import Session from "~/api/Session";
+import { useAuth } from "@/context/auth-context";
+import User from "@/api/User";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setUser } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     event.preventDefault();
     setError(null);
 
@@ -32,7 +38,7 @@ export function LoginForm({
     try {
       const session = await login(username, password);
       Session.createSession({ username, password });
-
+      console.log(session);
       // Store session data in cookies
       document.cookie = `userID=${
         session.userID
@@ -50,19 +56,30 @@ export function LoginForm({
         session.expirationDate,
       )}`;
 
-      // Redirect to home page
-      router.replace("/");
+      // Get user and update auth context
+      try {
+        const currentUser = await User.getFromToken(session.token);
+        if (currentUser) {
+          setUser(currentUser);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+      setLoading(false);
+      router.push("/");
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       } else {
         setError("An unknown error occurred");
       }
+    } finally {
+      setLoading(false); // Ensure loading is set to false even if there's an error
     }
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="bg-black">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
@@ -94,8 +111,15 @@ export function LoginForm({
                 </div>
                 <Input name="password" id="password" type="password" required />
               </div>
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="animate-spin h-4 w-4" />
+                    Logging in...
+                  </div>
+                ) : (
+                  "Login"
+                )}
               </Button>
               {error && (
                 <div className="text-sm text-red-500 text-center">{error}</div>

@@ -27,8 +27,9 @@ export default class Thread extends Client {
     if (!Thread.session?.token) {
       throw new Error("User is not authenticated");
     }
+    console.log(post);
 
-    return await this.fetch<Post>(`/threads/${threadID}/posts`, {
+    const data = await this.fetch<Post>(`/threads/${threadID}/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,6 +37,8 @@ export default class Thread extends Client {
       },
       body: JSON.stringify(post),
     });
+    console.log(data);
+    return data;
   }
 
   static async getFromID(threadID: string): Promise<Thread> {
