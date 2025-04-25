@@ -2,7 +2,6 @@ import { Thread } from "@/types/threads";
 import { ThreadCard } from "@/components/forums/threads/thread-card";
 import Forum from "@/api/Forum";
 import { PostToForumButton } from "~/components/forums/threads/post-to-forum-button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function ForumThreadsPage({
   params,
@@ -14,15 +13,11 @@ export default async function ForumThreadsPage({
   try {
     const threads = await Forum.getThreads(forumID);
     return (
-      <div className="h-screen mx-auto px-4 md:px-6 space-y-4 ">
-        <Card className="backdrop-blur-sm sticky top-0 z-10">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xl">{forum.name}</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-gray-400">
-            {forum.description}
-          </CardContent>
-        </Card>
+      <div className="h-screen mx-auto px-4 md:px-6 space-y-4">
+        <header className="sticky top-0 z-20 bg-black/80 backdrop-blur-md w-full px-4 py-3 border-b border-zinc-700">
+          <h1 className="text-lg font-semibold">{forum.name}</h1>
+          <p className="text-sm text-gray-500">{forum.description}</p>
+        </header>
         <div className="flex justify-center">
           <PostToForumButton forumID={forumID} />
         </div>
@@ -46,4 +41,5 @@ export default async function ForumThreadsPage({
     );
   }
 }
+
 export const runtime = "edge";
