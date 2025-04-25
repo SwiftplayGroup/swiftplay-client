@@ -57,6 +57,7 @@ export default class Like extends Client {
       },
       body: JSON.stringify({ userID, postID }),
     })) as Like;
+    console.log("Like deleted:", data);
     return data;
   }
 

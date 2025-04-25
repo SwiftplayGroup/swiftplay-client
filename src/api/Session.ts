@@ -53,7 +53,10 @@ export default class Session extends Client {
 
   static async fetch(
     path: `/user/sessions/${string}`,
-    properties: { method: "DELETE"; headers: { authorization: string } },
+    properties: {
+      method: "DELETE";
+      headers: { "Content-Type": string; Authorization: string };
+    },
   ): Promise<void>;
   static async fetch(
     path: "/user/sessions",
@@ -73,11 +76,13 @@ export default class Session extends Client {
     if (!Session?.session?.token) {
       throw new Error("User is unauthenticated.");
     }
+    console.log(Session.session.token);
 
     await Session.fetch(`/user/sessions/${this._id}`, {
       method: "DELETE",
       headers: {
-        authorization: Session.session.token,
+        "Content-Type": "application/json",
+        Authorization: `Bearer: ${Session.session.token}`,
       },
     });
   }

@@ -73,8 +73,8 @@ export default function SignupFormPage() {
   }, [emailAddress, password, router, shouldProcessData, username, setUser]);
 
   return (
-    <main>
-      <section className="shadow-input mx-auto w-full mt-32 max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+    <main className="bg-black bg-dot-white/[.2] h-screen">
+      <section className="shadow-input border-zinc-900 border mx-auto w-full mt-32 max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
         <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
           Welcome to Swiftplay
         </h2>
