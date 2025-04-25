@@ -14,7 +14,7 @@ export default async function ForumThreadsPage({
     const threads = await Forum.getThreads(forumID);
     return (
       <div className="h-screen mx-auto px-4 md:px-6 space-y-4">
-        <header className="sticky top-0 z-20 bg-black/80 backdrop-blur-md w-full px-4 py-3 border-b border-zinc-700">
+        <header className="top-0 z-20 bg-black/80 backdrop-blur-md w-full px-4 py-3 border-b border-zinc-700">
           <h1 className="text-lg font-semibold">{forum.name}</h1>
           <p className="text-sm text-gray-500">{forum.description}</p>
         </header>
