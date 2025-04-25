@@ -39,7 +39,9 @@ export default class Post extends Client {
     return new Post(data);
   }
 
-  static async getRecommendedPosts(userID: string): Promise<any> {
+  static async getRecommendedPosts(
+    userID: string,
+  ): Promise<{ recommendedPosts: Post[] }> {
     const data = await this.fetch(`/posts/recommended/${userID}`, {
       method: "GET",
       headers: {

@@ -57,8 +57,10 @@ export default class Thread extends Client {
     });
   }
 
-  static async getRecommendedThreads(userID: string): Promise<Thread[]> {
-    const data = await this.fetch<ThreadType[]>(
+  static async getRecommendedThreads(
+    userID: string,
+  ): Promise<{ recommendedThreads: Thread[] }> {
+    const data = await this.fetch<{ recommendedThreads: Thread[] }>(
       `/threads/recommended/${userID}`,
       {
         method: "GET",
